@@ -1,0 +1,70 @@
+### Logistic Mixed Model (Betas) - ES Phase ###
+
+#### Model Summary ####
+Generalized linear mixed
+  model fit by maximum
+  likelihood (Laplace
+  Approximation) [glmerMod]
+ Family: binomial  ( logit )
+Formula: 
+chose_right ~ OV * DwellLeft + (1 + OV | sub_id)
+   Data: data
+
+     AIC      BIC   logLik 
+ 10002.3  10050.8  -4994.2 
+deviance df.resid 
+  9988.3     7553 
+
+Scaled residuals: 
+    Min      1Q  Median 
+-3.4299 -0.9285 -0.3351 
+     3Q     Max 
+ 0.9822  3.1095 
+
+Random effects:
+ Groups Name        Variance
+ sub_id (Intercept) 2.1254  
+        OV          0.5264  
+ Std.Dev. Corr 
+ 1.4579        
+ 0.7256   -0.99
+Number of obs: 7560, groups:  
+sub_id, 21
+
+Fixed effects:
+             Estimate
+(Intercept)   0.26535
+OV           -0.16925
+DwellLeft     0.33640
+OV:DwellLeft -0.09446
+             Std. Error
+(Intercept)     0.32520
+OV              0.16168
+DwellLeft       0.06987
+OV:DwellLeft    0.03414
+             z value Pr(>|z|)
+(Intercept)    0.816  0.41452
+OV            -1.047  0.29519
+DwellLeft      4.815 1.47e-06
+OV:DwellLeft  -2.767  0.00566
+                
+(Intercept)     
+OV              
+DwellLeft    ***
+OV:DwellLeft ** 
+---
+Signif. codes:  
+  0 ‘***’ 0.001 ‘**’ 0.01
+  ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
+
+Correlation of Fixed Effects:
+            (Intr) OV    
+OV          -0.985       
+DwellLeft    0.006 -0.005
+OV:DwellLft -0.005  0.004
+            DwllLf
+OV                
+DwellLeft         
+OV:DwellLft -0.937
+
+#### Tab Model Output ####

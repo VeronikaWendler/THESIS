@@ -1,0 +1,224 @@
+### Linear Mixed Model: Predicting P(Choose Right) ###
+Linear mixed model fit by REML. t-tests use Satterthwaite's method ['lmerModLmerTest']
+Formula: mean_p_choose_right ~ FixationAdvantage_bin * OVcate_2 + (1 |      sub_id)
+   Data: agg_data
+
+REML criterion at convergence: -101.1
+
+Scaled residuals: 
+     Min       1Q   Median       3Q      Max 
+-2.76370 -0.54058  0.00569  0.54901  2.89155 
+
+Random effects:
+ Groups   Name        Variance  Std.Dev.
+ sub_id   (Intercept) 0.0005475 0.0234  
+ Residual             0.0311945 0.1766  
+Number of obs: 244, groups:  sub_id, 21
+
+Fixed effects:
+                                       Estimate Std. Error        df t value Pr(>|t|)    
+(Intercept)                             0.58040    0.03888 228.25687  14.929  < 2e-16 ***
+FixationAdvantage_bin2                 -0.09440    0.05451 208.52726  -1.732  0.08477 .  
+FixationAdvantage_bin3                 -0.15350    0.05519 209.26161  -2.781  0.00591 ** 
+FixationAdvantage_bin4                 -0.03102    0.05676 210.99211  -0.546  0.58537    
+FixationAdvantage_bin5                  0.02493    0.10960 225.61412   0.227  0.82026    
+OVcate_2medium                         -0.04942    0.05451 208.52726  -0.907  0.36566    
+OVcate_2high                           -0.07993    0.05451 208.52726  -1.466  0.14405    
+FixationAdvantage_bin2:OVcate_2medium   0.01388    0.07708 208.52726   0.180  0.85728    
+FixationAdvantage_bin3:OVcate_2medium   0.09260    0.07806 209.32697   1.186  0.23681    
+FixationAdvantage_bin4:OVcate_2medium   0.05814    0.08330 210.72273   0.698  0.48599    
+FixationAdvantage_bin5:OVcate_2medium   0.10418    0.15449 216.76166   0.674  0.50082    
+FixationAdvantage_bin2:OVcate_2high    -0.03883    0.07811 209.34269  -0.497  0.61959    
+FixationAdvantage_bin3:OVcate_2high     0.07312    0.07806 209.31435   0.937  0.34999    
+FixationAdvantage_bin4:OVcate_2high     0.02172    0.08163 211.53764   0.266  0.79043    
+FixationAdvantage_bin5:OVcate_2high     0.02635    0.13673 220.72985   0.193  0.84734    
+---
+Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
+
+### Pairwise Comparisons (Bonferroni-adjusted) - Fixation Advantage Bins Within OV Levels ###
+$emmeans
+OVcate_2 = low:
+ FixationAdvantage_bin emmean     SE  df lower.CL upper.CL
+ 1                      0.580 0.0389 228    0.504    0.657
+ 2                      0.486 0.0389 228    0.409    0.563
+ 3                      0.427 0.0399 228    0.348    0.505
+ 4                      0.549 0.0420 229    0.467    0.632
+ 5                      0.605 0.1034 229    0.402    0.809
+
+OVcate_2 = medium:
+ FixationAdvantage_bin emmean     SE  df lower.CL upper.CL
+ 1                      0.531 0.0389 228    0.454    0.608
+ 2                      0.450 0.0389 228    0.374    0.527
+ 3                      0.470 0.0398 228    0.392    0.549
+ 4                      0.558 0.0477 229    0.464    0.652
+ 5                      0.660 0.1034 229    0.456    0.864
+
+OVcate_2 = high:
+ FixationAdvantage_bin emmean     SE  df lower.CL upper.CL
+ 1                      0.500 0.0389 228    0.424    0.577
+ 2                      0.367 0.0409 229    0.287    0.448
+ 3                      0.420 0.0399 228    0.342    0.499
+ 4                      0.491 0.0446 229    0.403    0.579
+ 5                      0.552 0.0731 229    0.408    0.696
+
+Degrees-of-freedom method: kenward-roger 
+Confidence level used: 0.95 
+
+$contrasts
+OVcate_2 = low:
+ contrast                                        estimate     SE  df t.ratio p.value
+ FixationAdvantage_bin1 - FixationAdvantage_bin2   0.0944 0.0545 209   1.732  0.8477
+ FixationAdvantage_bin1 - FixationAdvantage_bin3   0.1535 0.0552 210   2.781  0.0592
+ FixationAdvantage_bin1 - FixationAdvantage_bin4   0.0310 0.0568 212   0.546  1.0000
+ FixationAdvantage_bin1 - FixationAdvantage_bin5  -0.0249 0.1103 226  -0.226  1.0000
+ FixationAdvantage_bin2 - FixationAdvantage_bin3   0.0591 0.0552 210   1.071  1.0000
+ FixationAdvantage_bin2 - FixationAdvantage_bin4  -0.0634 0.0568 212  -1.116  1.0000
+ FixationAdvantage_bin2 - FixationAdvantage_bin5  -0.1193 0.1103 226  -1.082  1.0000
+ FixationAdvantage_bin3 - FixationAdvantage_bin4  -0.1225 0.0575 212  -2.131  0.3422
+ FixationAdvantage_bin3 - FixationAdvantage_bin5  -0.1784 0.1107 227  -1.611  1.0000
+ FixationAdvantage_bin4 - FixationAdvantage_bin5  -0.0559 0.1113 225  -0.502  1.0000
+
+OVcate_2 = medium:
+ contrast                                        estimate     SE  df t.ratio p.value
+ FixationAdvantage_bin1 - FixationAdvantage_bin2   0.0805 0.0545 209   1.477  1.0000
+ FixationAdvantage_bin1 - FixationAdvantage_bin3   0.0609 0.0552 210   1.103  1.0000
+ FixationAdvantage_bin1 - FixationAdvantage_bin4  -0.0271 0.0611 215  -0.444  1.0000
+ FixationAdvantage_bin1 - FixationAdvantage_bin5  -0.1291 0.1102 226  -1.171  1.0000
+ FixationAdvantage_bin2 - FixationAdvantage_bin3  -0.0196 0.0552 210  -0.355  1.0000
+ FixationAdvantage_bin2 - FixationAdvantage_bin4  -0.1076 0.0611 215  -1.761  0.7964
+ FixationAdvantage_bin2 - FixationAdvantage_bin5  -0.2096 0.1102 226  -1.901  0.5852
+ FixationAdvantage_bin3 - FixationAdvantage_bin4  -0.0880 0.0618 216  -1.425  1.0000
+ FixationAdvantage_bin3 - FixationAdvantage_bin5  -0.1900 0.1106 226  -1.718  0.8711
+ FixationAdvantage_bin4 - FixationAdvantage_bin5  -0.1020 0.1137 226  -0.897  1.0000
+
+OVcate_2 = high:
+ contrast                                        estimate     SE  df t.ratio p.value
+ FixationAdvantage_bin1 - FixationAdvantage_bin2   0.1332 0.0560 211   2.381  0.1817
+ FixationAdvantage_bin1 - FixationAdvantage_bin3   0.0804 0.0552 210   1.456  1.0000
+ FixationAdvantage_bin1 - FixationAdvantage_bin4   0.0093 0.0587 213   0.158  1.0000
+ FixationAdvantage_bin1 - FixationAdvantage_bin5  -0.0513 0.0824 223  -0.622  1.0000
+ FixationAdvantage_bin2 - FixationAdvantage_bin3  -0.0528 0.0566 211  -0.933  1.0000
+ FixationAdvantage_bin2 - FixationAdvantage_bin4  -0.1239 0.0601 215  -2.062  0.4043
+ FixationAdvantage_bin2 - FixationAdvantage_bin5  -0.1845 0.0835 224  -2.211  0.2806
+ FixationAdvantage_bin3 - FixationAdvantage_bin4  -0.0711 0.0594 214  -1.197  1.0000
+ FixationAdvantage_bin3 - FixationAdvantage_bin5  -0.1317 0.0829 223  -1.589  1.0000
+ FixationAdvantage_bin4 - FixationAdvantage_bin5  -0.0606 0.0854 224  -0.710  1.0000
+
+Degrees-of-freedom method: kenward-roger 
+P value adjustment: bonferroni method for 10 tests 
+
+
+### Pairwise Comparisons (Bonferroni-adjusted) - OV Levels Within Each Fixation Bin ###
+$emmeans
+FixationAdvantage_bin = 1:
+ OVcate_2 emmean     SE  df lower.CL upper.CL
+ low       0.580 0.0389 228    0.504    0.657
+ medium    0.531 0.0389 228    0.454    0.608
+ high      0.500 0.0389 228    0.424    0.577
+
+FixationAdvantage_bin = 2:
+ OVcate_2 emmean     SE  df lower.CL upper.CL
+ low       0.486 0.0389 228    0.409    0.563
+ medium    0.450 0.0389 228    0.374    0.527
+ high      0.367 0.0409 229    0.287    0.448
+
+FixationAdvantage_bin = 3:
+ OVcate_2 emmean     SE  df lower.CL upper.CL
+ low       0.427 0.0399 228    0.348    0.505
+ medium    0.470 0.0398 228    0.392    0.549
+ high      0.420 0.0399 228    0.342    0.499
+
+FixationAdvantage_bin = 4:
+ OVcate_2 emmean     SE  df lower.CL upper.CL
+ low       0.549 0.0420 229    0.467    0.632
+ medium    0.558 0.0477 229    0.464    0.652
+ high      0.491 0.0446 229    0.403    0.579
+
+FixationAdvantage_bin = 5:
+ OVcate_2 emmean     SE  df lower.CL upper.CL
+ low       0.605 0.1034 229    0.402    0.809
+ medium    0.660 0.1034 229    0.456    0.864
+ high      0.552 0.0731 229    0.408    0.696
+
+Degrees-of-freedom method: kenward-roger 
+Confidence level used: 0.95 
+
+$contrasts
+FixationAdvantage_bin = 1:
+ contrast      estimate     SE  df t.ratio p.value
+ low - medium   0.04942 0.0545 209   0.907  1.0000
+ low - high     0.07993 0.0545 209   1.466  0.4321
+ medium - high  0.03051 0.0545 209   0.560  1.0000
+
+FixationAdvantage_bin = 2:
+ contrast      estimate     SE  df t.ratio p.value
+ low - medium   0.03554 0.0545 209   0.652  1.0000
+ low - high     0.11876 0.0560 211   2.122  0.1050
+ medium - high  0.08322 0.0560 211   1.487  0.4155
+
+FixationAdvantage_bin = 3:
+ contrast      estimate     SE  df t.ratio p.value
+ low - medium  -0.04319 0.0559 211  -0.773  1.0000
+ low - high     0.00681 0.0559 211   0.122  1.0000
+ medium - high  0.05000 0.0559 211   0.895  1.0000
+
+FixationAdvantage_bin = 4:
+ contrast      estimate     SE  df t.ratio p.value
+ low - medium  -0.00872 0.0631 213  -0.138  1.0000
+ low - high     0.05821 0.0608 214   0.957  1.0000
+ medium - high  0.06693 0.0649 217   1.031  0.9106
+
+FixationAdvantage_bin = 5:
+ contrast      estimate     SE  df t.ratio p.value
+ low - medium  -0.05476 0.1449 218  -0.378  1.0000
+ low - high     0.05357 0.1259 223   0.425  1.0000
+ medium - high  0.10834 0.1264 226   0.857  1.0000
+
+Degrees-of-freedom method: kenward-roger 
+P value adjustment: bonferroni method for 3 tests 
+
+
+### Model Comparison: Does OV Level Influence Fixation Effects? ###
+Data: agg_data
+Models:
+lmm_no_OV: mean_p_choose_right ~ FixationAdvantage_bin + (1 | sub_id)
+lmm_model: mean_p_choose_right ~ FixationAdvantage_bin * OVcate_2 + (1 | sub_id)
+          npar     AIC      BIC logLik deviance  Chisq Df Pr(>Chisq)
+lmm_no_OV    7 -140.87 -116.394 77.437  -154.87                     
+lmm_model   17 -131.22  -71.766 82.609  -165.22 10.345 10     0.4108
+
+### Linear Mixed Model (Continuous Fixation Advantage) ###
+Linear mixed model fit by REML. t-tests use Satterthwaite's method ['lmerModLmerTest']
+Formula: chose_right ~ FixationAdvantage * OVcate_2 + (1 | sub_id)
+   Data: data
+
+REML criterion at convergence: 10918.8
+
+Scaled residuals: 
+    Min      1Q  Median      3Q     Max 
+-1.4999 -0.9612 -0.7647  1.0158  1.3561 
+
+Random effects:
+ Groups   Name        Variance Std.Dev.
+ sub_id   (Intercept) 0.003408 0.05838 
+ Residual             0.245697 0.49568 
+Number of obs: 7560, groups:  sub_id, 21
+
+Fixed effects:
+                                   Estimate Std. Error         df t value Pr(>|t|)    
+(Intercept)                       5.025e-01  1.614e-02  3.573e+01  31.140  < 2e-16 ***
+FixationAdvantage                -1.673e-02  6.782e-03  7.518e+03  -2.467   0.0137 *  
+OVcate_2medium                   -1.331e-02  1.363e-02  7.534e+03  -0.977   0.3288    
+OVcate_2high                     -5.969e-02  1.506e-02  7.535e+03  -3.965 7.42e-05 ***
+FixationAdvantage:OVcate_2medium  3.541e-04  9.501e-03  7.539e+03   0.037   0.9703    
+FixationAdvantage:OVcate_2high    4.368e-03  1.020e-02  7.543e+03   0.428   0.6684    
+---
+Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
+
+Correlation of Fixed Effects:
+                   (Intr) FxtnAd OVct_2m OVct_2h FxtnAdvntg:OVct_2m
+FixtnAdvntg         0.132                                          
+OVcate_2mdm        -0.446 -0.152                                   
+OVcate_2hgh        -0.404 -0.139  0.478                            
+FxtnAdvntg:OVct_2m -0.092 -0.692  0.216   0.098                    
+FxtnAdvntg:OVct_2h -0.086 -0.652  0.101   0.209   0.462            

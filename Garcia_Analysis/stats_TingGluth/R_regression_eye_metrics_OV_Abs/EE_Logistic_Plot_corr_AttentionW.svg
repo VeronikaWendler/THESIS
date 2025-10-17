@@ -1,0 +1,55 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<svg xmlns='http://www.w3.org/2000/svg' xmlns:xlink='http://www.w3.org/1999/xlink' class='svglite' width='576.00pt' height='432.00pt' viewBox='0 0 576.00 432.00'>
+<defs>
+  <style type='text/css'><![CDATA[
+    .svglite line, .svglite polyline, .svglite polygon, .svglite path, .svglite rect, .svglite circle {
+      fill: none;
+      stroke: #000000;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+      stroke-miterlimit: 10.00;
+    }
+    .svglite text {
+      white-space: pre;
+    }
+  ]]></style>
+</defs>
+<rect width='100%' height='100%' style='stroke: none; fill: #FFFFFF;'/>
+<defs>
+  <clipPath id='cpMC4wMHw1NzYuMDB8MC4wMHw0MzIuMDA='>
+    <rect x='0.00' y='0.00' width='576.00' height='432.00' />
+  </clipPath>
+</defs>
+<g clip-path='url(#cpMC4wMHw1NzYuMDB8MC4wMHw0MzIuMDA=)'>
+<rect x='0.00' y='0.000000000000057' width='576.00' height='432.00' style='stroke-width: 1.07; stroke: #FFFFFF; fill: #FFFFFF;' />
+</g>
+<defs>
+  <clipPath id='cpMzUuNzZ8NTcwLjUyfDI3LjY0fDM5NS42OQ=='>
+    <rect x='35.76' y='27.64' width='534.76' height='368.05' />
+  </clipPath>
+</defs>
+<g clip-path='url(#cpMzUuNzZ8NTcwLjUyfDI3LjY0fDM5NS42OQ==)'>
+<rect x='35.76' y='27.64' width='534.76' height='368.05' style='stroke-width: 1.07; stroke: #FFFFFF; fill: #FFFFFF;' />
+<rect x='120.83' y='94.48' width='121.54' height='226.42' style='stroke-width: 2.13; stroke-linecap: butt; stroke-linejoin: miter; fill: #00BFFF; fill-opacity: 0.70;' />
+<rect x='363.91' y='320.91' width='121.54' height='33.59' style='stroke-width: 2.13; stroke-linecap: butt; stroke-linejoin: miter; fill: #00BFFF; fill-opacity: 0.70;' />
+<polyline points='175.53,49.50 187.68,49.50 ' style='stroke-width: 2.13; stroke-linecap: butt;' />
+<polyline points='181.60,49.50 181.60,139.47 ' style='stroke-width: 2.13; stroke-linecap: butt;' />
+<polyline points='175.53,139.47 187.68,139.47 ' style='stroke-width: 2.13; stroke-linecap: butt;' />
+<polyline points='418.60,335.17 430.75,335.17 ' style='stroke-width: 2.13; stroke-linecap: butt;' />
+<polyline points='424.68,335.17 424.68,373.83 ' style='stroke-width: 2.13; stroke-linecap: butt;' />
+<polyline points='418.60,373.83 430.75,373.83 ' style='stroke-width: 2.13; stroke-linecap: butt;' />
+<text x='181.60' y='54.55' text-anchor='middle' style='font-size: 28.45px; font-weight: bold; font-family: "Arial";' textLength='33.20px' lengthAdjust='spacingAndGlyphs'>***</text>
+<text x='424.68' y='389.14' text-anchor='middle' style='font-size: 28.45px; font-weight: bold; font-family: "Arial";' textLength='33.20px' lengthAdjust='spacingAndGlyphs'>***</text>
+<line x1='35.76' y1='320.91' x2='570.52' y2='320.91' style='stroke-width: 2.13; stroke-linecap: butt;' />
+</g>
+<g clip-path='url(#cpMC4wMHw1NzYuMDB8MC4wMHw0MzIuMDA=)'>
+<polyline points='35.76,395.69 35.76,27.64 ' style='stroke-width: 2.13; stroke-linecap: butt;' />
+<text x='30.83' y='325.92' text-anchor='end' style='font-size: 14.00px; font-family: "Arial";' textLength='7.78px' lengthAdjust='spacingAndGlyphs'>0</text>
+<text x='30.83' y='223.36' text-anchor='end' style='font-size: 14.00px; font-family: "Arial";' textLength='7.78px' lengthAdjust='spacingAndGlyphs'>1</text>
+<text x='30.83' y='120.80' text-anchor='end' style='font-size: 14.00px; font-family: "Arial";' textLength='7.78px' lengthAdjust='spacingAndGlyphs'>2</text>
+<text x='181.60' y='410.64' text-anchor='middle' style='font-size: 14.00px; font-family: "Arial";' textLength='68.46px' lengthAdjust='spacingAndGlyphs'>AttentionW</text>
+<text x='424.68' y='410.64' text-anchor='middle' style='font-size: 14.00px; font-family: "Arial";' textLength='92.05px' lengthAdjust='spacingAndGlyphs'>OV:AttentionW</text>
+<text transform='translate(16.93,211.66) rotate(-90)' text-anchor='middle' style='font-size: 16.00px; font-family: "Arial";' textLength='120.66px' lengthAdjust='spacingAndGlyphs'>Beta Coefficients</text>
+<text x='303.14' y='18.37' text-anchor='middle' style='font-size: 18.00px; font-family: "Arial";' textLength='437.85px' lengthAdjust='spacingAndGlyphs'>EE - Beta Coefficients for VD, OV &amp; AttentionW on corr</text>
+</g>
+</svg>

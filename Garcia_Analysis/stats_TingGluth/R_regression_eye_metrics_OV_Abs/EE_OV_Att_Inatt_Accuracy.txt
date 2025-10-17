@@ -1,0 +1,34 @@
+### Logistic Mixed Model for Accuracy (EE Phase) ###
+
+#### Model Summary ####
+Generalized linear mixed model fit by maximum likelihood (Laplace Approximation) ['glmerMod']
+ Family: binomial  ( logit )
+Formula: corr ~ AttentionW + OV_num_2:InattentionW + (1 | sub_id)
+   Data: ee_data
+
+     AIC      BIC   logLik deviance df.resid 
+  1807.5   1831.2   -899.8   1799.5     2762 
+
+Scaled residuals: 
+     Min       1Q   Median       3Q      Max 
+-14.8167   0.0774   0.1787   0.3771   2.8032 
+
+Random effects:
+ Groups Name        Variance Std.Dev.
+ sub_id (Intercept) 1.015    1.007   
+Number of obs: 2766, groups:  sub_id, 22
+
+Fixed effects:
+                      Estimate Std. Error z value Pr(>|z|)    
+(Intercept)            2.51385    0.23697   10.61   <2e-16 ***
+AttentionW             1.94527    0.09950   19.55   <2e-16 ***
+OV_num_2:InattentionW  0.61562    0.06606    9.32   <2e-16 ***
+---
+Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
+
+Correlation of Fixed Effects:
+            (Intr) AttntW
+AttentionW  0.281        
+OV_nm_2:InW 0.164  0.673 
+
+#### Tabulated Model Output ####

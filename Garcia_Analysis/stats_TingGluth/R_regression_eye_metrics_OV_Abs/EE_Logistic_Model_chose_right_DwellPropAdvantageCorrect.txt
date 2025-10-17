@@ -1,0 +1,69 @@
+### Logistic Mixed Model (Betas, NOT Odds Ratios) - EE Phase ###
+
+#### Model Summary ####
+Generalized linear mixed
+  model fit by maximum
+  likelihood (Laplace
+  Approximation) [glmerMod]
+ Family: binomial  ( logit )
+Formula: 
+chose_right ~ OV * DwellPropAdvantageCorrect + (1 + OV | sub_id)
+   Data: data
+
+     AIC      BIC   logLik 
+  3832.2   3873.6  -1909.1 
+deviance df.resid 
+  3818.2     2750 
+
+Scaled residuals: 
+    Min      1Q  Median 
+-1.0778 -0.9711 -0.9160 
+     3Q     Max 
+ 1.0223  1.1285 
+
+Random effects:
+ Groups Name        Variance
+ sub_id (Intercept) 0.000000
+        OV          0.002938
+ Std.Dev. Corr
+ 0.0000       
+ 0.0542    NaN
+Number of obs: 2757, groups:  
+sub_id, 21
+
+Fixed effects:
+                              Estimate
+(Intercept)                  -0.002688
+OV                           -0.025730
+DwellPropAdvantageCorrect    -0.047320
+OV:DwellPropAdvantageCorrect  0.018236
+                             Std. Error
+(Intercept)                    0.094245
+OV                             0.046991
+DwellPropAdvantageCorrect      0.094128
+OV:DwellPropAdvantageCorrect   0.045555
+                             z value
+(Intercept)                   -0.029
+OV                            -0.548
+DwellPropAdvantageCorrect     -0.503
+OV:DwellPropAdvantageCorrect   0.400
+                             Pr(>|z|)
+(Intercept)                     0.977
+OV                              0.584
+DwellPropAdvantageCorrect       0.615
+OV:DwellPropAdvantageCorrect    0.689
+
+Correlation of Fixed Effects:
+            (Intr) OV    
+OV          -0.885       
+DwllPrpAdvC -0.004  0.003
+OV:DwllPrAC  0.003 -0.002
+            DwlPAC
+OV                
+DwllPrpAdvC       
+OV:DwllPrAC -0.913
+optimizer (Nelder_Mead) convergence code: 0 (OK)
+boundary (singular) fit: see help('isSingular')
+
+
+#### Tabulated Model Output ####

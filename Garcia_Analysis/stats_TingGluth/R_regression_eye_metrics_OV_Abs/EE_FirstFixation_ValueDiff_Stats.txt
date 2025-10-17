@@ -1,0 +1,309 @@
+### LMM Model (Without OV levels) ###
+Linear mixed model fit by maximum likelihood . t-tests use Satterthwaite's method [
+lmerModLmerTest]
+Formula: mean_p_choose_right ~ ValueDifference_bin * FirstFixLocBinary +  
+    (1 | sub_id)
+   Data: agg_data
+
+     AIC      BIC   logLik deviance df.resid 
+    28.8     79.5     -2.4      4.8      492 
+
+Scaled residuals: 
+    Min      1Q  Median      3Q     Max 
+-3.8841 -0.3174  0.0000  0.4672  3.2433 
+
+Random effects:
+ Groups   Name        Variance Std.Dev.
+ sub_id   (Intercept) 0.00000  0.0000  
+ Residual             0.05912  0.2431  
+Number of obs: 504, groups:  sub_id, 21
+
+Fixed effects:
+                                                  Estimate Std. Error         df
+(Intercept)                                       0.038741   0.030632 504.000000
+ValueDifference_binL>R                            0.172689   0.043321 504.000000
+ValueDifference_binL ~ R                          0.505106   0.046582 504.000000
+ValueDifference_binR>L                            0.679736   0.044244 504.000000
+ValueDifference_binR>>L                           0.905619   0.044654 504.000000
+FirstFixLocBinaryRight                           -0.007089   0.049940 504.000000
+ValueDifference_binL>R:FirstFixLocBinaryRight     0.076947   0.069569 504.000000
+ValueDifference_binL ~ R:FirstFixLocBinaryRight   0.191657   0.072672 504.000000
+ValueDifference_binR>L:FirstFixLocBinaryRight     0.175019   0.069073 504.000000
+ValueDifference_binR>>L:FirstFixLocBinaryRight    0.062729   0.068620 504.000000
+                                                t value Pr(>|t|)    
+(Intercept)                                       1.265  0.20656    
+ValueDifference_binL>R                            3.986  7.7e-05 ***
+ValueDifference_binL ~ R                         10.843  < 2e-16 ***
+ValueDifference_binR>L                           15.363  < 2e-16 ***
+ValueDifference_binR>>L                          20.281  < 2e-16 ***
+FirstFixLocBinaryRight                           -0.142  0.88718    
+ValueDifference_binL>R:FirstFixLocBinaryRight     1.106  0.26923    
+ValueDifference_binL ~ R:FirstFixLocBinaryRight   2.637  0.00862 ** 
+ValueDifference_binR>L:FirstFixLocBinaryRight     2.534  0.01158 *  
+ValueDifference_binR>>L:FirstFixLocBinaryRight    0.914  0.36108    
+---
+Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
+
+Correlation of Fixed Effects:
+            (Intr) VlD_L>R VlD_L~R VlD_R>L VlD_R>>L FrFLBR VD_L>R: VD_L~R: VD_R>L:
+VlDffrn_L>R -0.707                                                                
+VlDffrn_L~R -0.658  0.465                                                         
+VlDffrn_R>L -0.692  0.490   0.455                                                 
+VlDffr_R>>L -0.686  0.485   0.451   0.475                                         
+FrstFxLcBnR -0.613  0.434   0.403   0.425   0.421                                 
+VD_L>R:FFLB  0.440 -0.623  -0.290  -0.305  -0.302   -0.718                        
+VD_L~R:FFLB  0.422 -0.298  -0.641  -0.292  -0.289   -0.687  0.493                 
+VD_R>L:FFLB  0.443 -0.314  -0.292  -0.641  -0.304   -0.723  0.519   0.497         
+VD_R>>L:FFL  0.446 -0.316  -0.294  -0.309  -0.651   -0.728  0.522   0.500   0.526 
+optimizer (nloptwrap) convergence code: 0 (OK)
+boundary (singular) fit: see help('isSingular')
+
+
+### LMM Model (With OV levels) ###
+Linear mixed model fit by maximum likelihood . t-tests use Satterthwaite's method [
+lmerModLmerTest]
+Formula: mean_p_choose_right ~ ValueDifference_bin * FirstFixLocBinary *  
+    OVcate_2 + (1 | sub_id)
+   Data: agg_data
+
+     AIC      BIC   logLik deviance df.resid 
+    32.6    167.7     15.7    -31.4      472 
+
+Scaled residuals: 
+    Min      1Q  Median      3Q     Max 
+-3.9319 -0.3101  0.0000  0.4473  3.1187 
+
+Random effects:
+ Groups   Name        Variance Std.Dev.
+ sub_id   (Intercept) 0.00000  0.0000  
+ Residual             0.05501  0.2345  
+Number of obs: 504, groups:  sub_id, 21
+
+Fixed effects:
+                                                                 Estimate Std. Error
+(Intercept)                                                      0.054335   0.051182
+ValueDifference_binL>R                                           0.226933   0.072383
+ValueDifference_binL ~ R                                         0.532227   0.072383
+ValueDifference_binR>L                                           0.655314   0.072383
+ValueDifference_binR>>L                                          0.882854   0.072383
+FirstFixLocBinaryRight                                           0.004640   0.082773
+OVcate_2medium                                                  -0.025780   0.072383
+OVcate_2high                                                    -0.021001   0.072383
+ValueDifference_binL>R:FirstFixLocBinaryRight                    0.066393   0.111925
+ValueDifference_binL ~ R:FirstFixLocBinaryRight                  0.105858   0.112725
+ValueDifference_binR>L:FirstFixLocBinaryRight                    0.209786   0.114623
+ValueDifference_binR>>L:FirstFixLocBinaryRight                   0.058172   0.112725
+ValueDifference_binL>R:OVcate_2medium                           -0.098080   0.102365
+ValueDifference_binL ~ R:OVcate_2medium                          0.216996   0.130490
+ValueDifference_binR>L:OVcate_2medium                            0.094376   0.105332
+ValueDifference_binR>>L:OVcate_2medium                           0.065249   0.105332
+ValueDifference_binL>R:OVcate_2high                             -0.064650   0.102365
+ValueDifference_binL ~ R:OVcate_2high                           -0.131266   0.102365
+ValueDifference_binR>L:OVcate_2high                             -0.011703   0.103002
+ValueDifference_binR>>L:OVcate_2high                             0.006035   0.104475
+FirstFixLocBinaryRight:OVcate_2medium                           -0.017454   0.114623
+FirstFixLocBinaryRight:OVcate_2high                             -0.017973   0.122361
+ValueDifference_binL>R:FirstFixLocBinaryRight:OVcate_2medium    -0.138259   0.162589
+ValueDifference_binL ~ R:FirstFixLocBinaryRight:OVcate_2medium   0.129178   0.197902
+ValueDifference_binR>L:FirstFixLocBinaryRight:OVcate_2medium    -0.136328   0.162262
+ValueDifference_binR>>L:FirstFixLocBinaryRight:OVcate_2medium   -0.022015   0.159017
+ValueDifference_binL>R:FirstFixLocBinaryRight:OVcate_2high       0.110765   0.165829
+ValueDifference_binL ~ R:FirstFixLocBinaryRight:OVcate_2high     0.150041   0.163969
+ValueDifference_binR>L:FirstFixLocBinaryRight:OVcate_2high       0.021701   0.165063
+ValueDifference_binR>>L:FirstFixLocBinaryRight:OVcate_2high      0.032939   0.165295
+                                                                       df t value
+(Intercept)                                                    504.000000   1.062
+ValueDifference_binL>R                                         504.000000   3.135
+ValueDifference_binL ~ R                                       504.000000   7.353
+ValueDifference_binR>L                                         504.000000   9.053
+ValueDifference_binR>>L                                        504.000000  12.197
+FirstFixLocBinaryRight                                         504.000000   0.056
+OVcate_2medium                                                 504.000000  -0.356
+OVcate_2high                                                   504.000000  -0.290
+ValueDifference_binL>R:FirstFixLocBinaryRight                  504.000000   0.593
+ValueDifference_binL ~ R:FirstFixLocBinaryRight                504.000000   0.939
+ValueDifference_binR>L:FirstFixLocBinaryRight                  504.000000   1.830
+ValueDifference_binR>>L:FirstFixLocBinaryRight                 504.000000   0.516
+ValueDifference_binL>R:OVcate_2medium                          504.000000  -0.958
+ValueDifference_binL ~ R:OVcate_2medium                        504.000000   1.663
+ValueDifference_binR>L:OVcate_2medium                          504.000000   0.896
+ValueDifference_binR>>L:OVcate_2medium                         504.000000   0.619
+ValueDifference_binL>R:OVcate_2high                            504.000000  -0.632
+ValueDifference_binL ~ R:OVcate_2high                          504.000000  -1.282
+ValueDifference_binR>L:OVcate_2high                            504.000000  -0.114
+ValueDifference_binR>>L:OVcate_2high                           504.000000   0.058
+FirstFixLocBinaryRight:OVcate_2medium                          504.000000  -0.152
+FirstFixLocBinaryRight:OVcate_2high                            504.000000  -0.147
+ValueDifference_binL>R:FirstFixLocBinaryRight:OVcate_2medium   504.000000  -0.850
+ValueDifference_binL ~ R:FirstFixLocBinaryRight:OVcate_2medium 504.000000   0.653
+ValueDifference_binR>L:FirstFixLocBinaryRight:OVcate_2medium   504.000000  -0.840
+ValueDifference_binR>>L:FirstFixLocBinaryRight:OVcate_2medium  504.000000  -0.138
+ValueDifference_binL>R:FirstFixLocBinaryRight:OVcate_2high     504.000000   0.668
+ValueDifference_binL ~ R:FirstFixLocBinaryRight:OVcate_2high   504.000000   0.915
+ValueDifference_binR>L:FirstFixLocBinaryRight:OVcate_2high     504.000000   0.131
+ValueDifference_binR>>L:FirstFixLocBinaryRight:OVcate_2high    504.000000   0.199
+                                                               Pr(>|t|)    
+(Intercept)                                                     0.28893    
+ValueDifference_binL>R                                          0.00182 ** 
+ValueDifference_binL ~ R                                        7.9e-13 ***
+ValueDifference_binR>L                                          < 2e-16 ***
+ValueDifference_binR>>L                                         < 2e-16 ***
+FirstFixLocBinaryRight                                          0.95532    
+OVcate_2medium                                                  0.72187    
+OVcate_2high                                                    0.77183    
+ValueDifference_binL>R:FirstFixLocBinaryRight                   0.55332    
+ValueDifference_binL ~ R:FirstFixLocBinaryRight                 0.34814    
+ValueDifference_binR>L:FirstFixLocBinaryRight                   0.06781 .  
+ValueDifference_binR>>L:FirstFixLocBinaryRight                  0.60605    
+ValueDifference_binL>R:OVcate_2medium                           0.33845    
+ValueDifference_binL ~ R:OVcate_2medium                         0.09695 .  
+ValueDifference_binR>L:OVcate_2medium                           0.37069    
+ValueDifference_binR>>L:OVcate_2medium                          0.53590    
+ValueDifference_binL>R:OVcate_2high                             0.52796    
+ValueDifference_binL ~ R:OVcate_2high                           0.20032    
+ValueDifference_binR>L:OVcate_2high                             0.90959    
+ValueDifference_binR>>L:OVcate_2high                            0.95396    
+FirstFixLocBinaryRight:OVcate_2medium                           0.87903    
+FirstFixLocBinaryRight:OVcate_2high                             0.88328    
+ValueDifference_binL>R:FirstFixLocBinaryRight:OVcate_2medium    0.39553    
+ValueDifference_binL ~ R:FirstFixLocBinaryRight:OVcate_2medium  0.51422    
+ValueDifference_binR>L:FirstFixLocBinaryRight:OVcate_2medium    0.40121    
+ValueDifference_binR>>L:FirstFixLocBinaryRight:OVcate_2medium   0.88994    
+ValueDifference_binL>R:FirstFixLocBinaryRight:OVcate_2high      0.50447    
+ValueDifference_binL ~ R:FirstFixLocBinaryRight:OVcate_2high    0.36060    
+ValueDifference_binR>L:FirstFixLocBinaryRight:OVcate_2high      0.89546    
+ValueDifference_binR>>L:FirstFixLocBinaryRight:OVcate_2high     0.84213    
+---
+Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
+optimizer (nloptwrap) convergence code: 0 (OK)
+boundary (singular) fit: see help('isSingular')
+
+
+### Model Comparison: Does OV Influence Fixation Effects? ###
+Data: agg_data
+Models:
+lmm_model: mean_p_choose_right ~ ValueDifference_bin * FirstFixLocBinary + (1 | sub_id)
+lmm_model_OV: mean_p_choose_right ~ ValueDifference_bin * FirstFixLocBinary * OVcate_2 + (1 | sub_id)
+             npar    AIC     BIC  logLik deviance  Chisq Df Pr(>Chisq)  
+lmm_model      12 28.846  79.517 -2.4228   4.8456                       
+lmm_model_OV   32 32.589 167.712 15.7053 -31.4105 36.256 20    0.01435 *
+---
+Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
+
+### LMM for L ~ R Bin: Fixation Effect ###
+Linear mixed model fit by maximum likelihood . t-tests use Satterthwaite's method [
+lmerModLmerTest]
+Formula: mean_p_choose_right ~ FirstFixLocBinary + (1 | sub_id)
+   Data: agg_data_LR
+
+     AIC      BIC   logLik deviance df.resid 
+    61.1     70.9    -26.5     53.1       82 
+
+Scaled residuals: 
+     Min       1Q   Median       3Q      Max 
+-2.22386 -0.66942 -0.03444  0.78599  1.44893 
+
+Random effects:
+ Groups   Name        Variance Std.Dev.
+ sub_id   (Intercept) 0.003352 0.0579  
+ Residual             0.105344 0.3246  
+Number of obs: 86, groups:  sub_id, 21
+
+Fixed effects:
+                       Estimate Std. Error       df t value Pr(>|t|)    
+(Intercept)             0.54181    0.04858 53.00825  11.154 1.61e-15 ***
+FirstFixLocBinaryRight  0.18407    0.07069 73.23218   2.604   0.0112 *  
+---
+Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
+
+Correlation of Fixed Effects:
+            (Intr)
+FrstFxLcBnR -0.638
+
+### LMM for L ~ R Bin: Fixation * OV Interaction ###
+Linear mixed model fit by maximum likelihood . t-tests use Satterthwaite's method [
+lmerModLmerTest]
+Formula: mean_p_choose_right ~ FirstFixLocBinary * OVcate_2 + (1 | sub_id)
+   Data: agg_data_LR
+
+     AIC      BIC   logLik deviance df.resid 
+    59.0     78.6    -21.5     43.0       78 
+
+Scaled residuals: 
+    Min      1Q  Median      3Q     Max 
+-2.5033 -0.6240  0.0000  0.9745  1.8208 
+
+Random effects:
+ Groups   Name        Variance Std.Dev.
+ sub_id   (Intercept) 0.00000  0.0000  
+ Residual             0.09653  0.3107  
+Number of obs: 86, groups:  sub_id, 21
+
+Fixed effects:
+                                      Estimate Std. Error       df t value Pr(>|t|)    
+(Intercept)                            0.58656    0.06780 86.00000   8.651 2.52e-13 ***
+FirstFixLocBinaryRight                 0.11050    0.10137 86.00000   1.090    0.279    
+OVcate_2medium                         0.19122    0.14383 86.00000   1.330    0.187    
+OVcate_2high                          -0.15227    0.09588 86.00000  -1.588    0.116    
+FirstFixLocBinaryRight:OVcate_2medium  0.11172    0.21371 86.00000   0.523    0.602    
+FirstFixLocBinaryRight:OVcate_2high    0.13207    0.14459 86.00000   0.913    0.364    
+---
+Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
+
+Correlation of Fixed Effects:
+                         (Intr) FrFLBR OVct_2m OVct_2h FrstFxLcBnryRght:OVct_2m
+FrstFxLcBnR              -0.669                                                
+OVcate_2mdm              -0.471  0.315                                         
+OVcate_2hgh              -0.707  0.473  0.333                                  
+FrstFxLcBnryRght:OVct_2m  0.317 -0.474 -0.673  -0.224                          
+FrstFxLcBnryRght:OVct_2h  0.469 -0.701 -0.221  -0.663   0.333                  
+optimizer (nloptwrap) convergence code: 0 (OK)
+boundary (singular) fit: see help('isSingular')
+
+
+### Model Comparison for L ~ R Bin: OV Effects on Fixation ###
+Data: agg_data_LR
+Models:
+lmm_LR: mean_p_choose_right ~ FirstFixLocBinary + (1 | sub_id)
+lmm_LR_OV: mean_p_choose_right ~ FirstFixLocBinary * OVcate_2 + (1 | sub_id)
+          npar    AIC    BIC  logLik deviance  Chisq Df Pr(>Chisq)  
+lmm_LR       4 61.070 70.888 -26.535   53.070                       
+lmm_LR_OV    8 59.001 78.636 -21.501   43.001 10.069  4    0.03929 *
+---
+Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
+
+### Post-hoc Pairwise Comparisons (Bonferroni Adjusted) ###
+$emmeans
+OVcate_2 = low:
+ FirstFixLocBinary emmean     SE   df lower.CL upper.CL
+ Left               0.587 0.0703 92.5    0.447    0.726
+ Right              0.697 0.0783 92.5    0.541    0.853
+
+OVcate_2 = medium:
+ FirstFixLocBinary emmean     SE   df lower.CL upper.CL
+ Left               0.778 0.1341 92.5    0.511    1.044
+ Right              1.000 0.1473 92.5    0.708    1.292
+
+OVcate_2 = high:
+ FirstFixLocBinary emmean     SE   df lower.CL upper.CL
+ Left               0.434 0.0703 92.5    0.295    0.574
+ Right              0.677 0.0808 92.5    0.516    0.837
+
+Degrees-of-freedom method: kenward-roger 
+Confidence level used: 0.95 
+
+$contrasts
+OVcate_2 = low:
+ contrast     estimate    SE   df t.ratio p.value
+ Left - Right   -0.110 0.105 74.9  -1.050  0.2972
+
+OVcate_2 = medium:
+ contrast     estimate    SE   df t.ratio p.value
+ Left - Right   -0.222 0.196 74.5  -1.135  0.2598
+
+OVcate_2 = high:
+ contrast     estimate    SE   df t.ratio p.value
+ Left - Right   -0.243 0.107 75.9  -2.264  0.0264
+
+Degrees-of-freedom method: kenward-roger 
+

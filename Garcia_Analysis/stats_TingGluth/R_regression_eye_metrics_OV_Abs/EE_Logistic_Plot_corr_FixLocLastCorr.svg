@@ -1,0 +1,55 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<svg xmlns='http://www.w3.org/2000/svg' xmlns:xlink='http://www.w3.org/1999/xlink' class='svglite' width='576.00pt' height='432.00pt' viewBox='0 0 576.00 432.00'>
+<defs>
+  <style type='text/css'><![CDATA[
+    .svglite line, .svglite polyline, .svglite polygon, .svglite path, .svglite rect, .svglite circle {
+      fill: none;
+      stroke: #000000;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+      stroke-miterlimit: 10.00;
+    }
+    .svglite text {
+      white-space: pre;
+    }
+  ]]></style>
+</defs>
+<rect width='100%' height='100%' style='stroke: none; fill: #FFFFFF;'/>
+<defs>
+  <clipPath id='cpMC4wMHw1NzYuMDB8MC4wMHw0MzIuMDA='>
+    <rect x='0.00' y='0.00' width='576.00' height='432.00' />
+  </clipPath>
+</defs>
+<g clip-path='url(#cpMC4wMHw1NzYuMDB8MC4wMHw0MzIuMDA=)'>
+<rect x='0.00' y='0.000000000000057' width='576.00' height='432.00' style='stroke-width: 1.07; stroke: #FFFFFF; fill: #FFFFFF;' />
+</g>
+<defs>
+  <clipPath id='cpNDcuNDN8NTcwLjUyfDI3LjY0fDM5NS42OQ=='>
+    <rect x='47.43' y='27.64' width='523.09' height='368.05' />
+  </clipPath>
+</defs>
+<g clip-path='url(#cpNDcuNDN8NTcwLjUyfDI3LjY0fDM5NS42OQ==)'>
+<rect x='47.43' y='27.64' width='523.09' height='368.05' style='stroke-width: 1.07; stroke: #FFFFFF; fill: #FFFFFF;' />
+<rect x='130.65' y='105.95' width='118.88' height='219.59' style='stroke-width: 2.13; stroke-linecap: butt; stroke-linejoin: miter; fill: #00BFFF; fill-opacity: 0.70;' />
+<rect x='368.42' y='325.54' width='118.88' height='19.48' style='stroke-width: 2.13; stroke-linecap: butt; stroke-linejoin: miter; fill: #00BFFF; fill-opacity: 0.70;' />
+<polyline points='184.15,53.62 196.04,53.62 ' style='stroke-width: 2.13; stroke-linecap: butt;' />
+<polyline points='190.09,53.62 190.09,158.29 ' style='stroke-width: 2.13; stroke-linecap: butt;' />
+<polyline points='184.15,158.29 196.04,158.29 ' style='stroke-width: 2.13; stroke-linecap: butt;' />
+<polyline points='421.92,320.34 433.80,320.34 ' style='stroke-width: 2.13; stroke-linecap: butt;' />
+<polyline points='427.86,320.34 427.86,369.70 ' style='stroke-width: 2.13; stroke-linecap: butt;' />
+<polyline points='421.92,369.70 433.80,369.70 ' style='stroke-width: 2.13; stroke-linecap: butt;' />
+<text x='190.09' y='54.55' text-anchor='middle' style='font-size: 28.45px; font-weight: bold; font-family: "Arial";' textLength='33.20px' lengthAdjust='spacingAndGlyphs'>***</text>
+<line x1='47.43' y1='325.54' x2='570.52' y2='325.54' style='stroke-width: 2.13; stroke-linecap: butt;' />
+</g>
+<g clip-path='url(#cpMC4wMHw1NzYuMDB8MC4wMHw0MzIuMDA=)'>
+<polyline points='47.43,395.69 47.43,27.64 ' style='stroke-width: 2.13; stroke-linecap: butt;' />
+<text x='42.50' y='330.55' text-anchor='end' style='font-size: 14.00px; font-family: "Arial";' textLength='19.45px' lengthAdjust='spacingAndGlyphs'>0.0</text>
+<text x='42.50' y='238.02' text-anchor='end' style='font-size: 14.00px; font-family: "Arial";' textLength='19.45px' lengthAdjust='spacingAndGlyphs'>0.5</text>
+<text x='42.50' y='145.49' text-anchor='end' style='font-size: 14.00px; font-family: "Arial";' textLength='19.45px' lengthAdjust='spacingAndGlyphs'>1.0</text>
+<text x='42.50' y='52.96' text-anchor='end' style='font-size: 14.00px; font-family: "Arial";' textLength='19.45px' lengthAdjust='spacingAndGlyphs'>1.5</text>
+<text x='190.09' y='410.64' text-anchor='middle' style='font-size: 14.00px; font-family: "Arial";' textLength='94.88px' lengthAdjust='spacingAndGlyphs'>FixLocLastCorr</text>
+<text x='427.86' y='410.64' text-anchor='middle' style='font-size: 14.00px; font-family: "Arial";' textLength='118.48px' lengthAdjust='spacingAndGlyphs'>OV:FixLocLastCorr</text>
+<text transform='translate(16.93,211.66) rotate(-90)' text-anchor='middle' style='font-size: 16.00px; font-family: "Arial";' textLength='120.66px' lengthAdjust='spacingAndGlyphs'>Beta Coefficients</text>
+<text x='308.98' y='18.37' text-anchor='middle' style='font-size: 18.00px; font-family: "Arial";' textLength='472.84px' lengthAdjust='spacingAndGlyphs'>EE - Beta Coefficients for VD, OV &amp; FixLocLastCorr on corr</text>
+</g>
+</svg>

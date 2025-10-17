@@ -1,0 +1,70 @@
+### Logistic Mixed Model (Betas, NOT Odds Ratios) - ES Phase ###
+
+#### Model Summary ####
+Generalized linear mixed
+  model fit by maximum
+  likelihood (Laplace
+  Approximation) [glmerMod]
+ Family: binomial  ( logit )
+Formula: 
+corr ~ OV * MiddleFixDur + (1 + OV | sub_id)
+   Data: data
+
+     AIC      BIC   logLik 
+  5565.3   5613.8  -2775.7 
+deviance df.resid 
+  5551.3     7553 
+
+Scaled residuals: 
+    Min      1Q  Median 
+-5.8359  0.2653  0.3318 
+     3Q     Max 
+ 0.3939  1.5265 
+
+Random effects:
+ Groups Name        Variance
+ sub_id (Intercept) 0.8373  
+        OV          0.1129  
+ Std.Dev. Corr 
+ 0.9150        
+ 0.3361   -0.87
+Number of obs: 7560, groups:  
+sub_id, 21
+
+Fixed effects:
+                Estimate
+(Intercept)      1.92606
+OV               0.06512
+MiddleFixDur    -0.23546
+OV:MiddleFixDur -0.01704
+                Std. Error
+(Intercept)        0.22445
+OV                 0.08850
+MiddleFixDur       0.07745
+OV:MiddleFixDur    0.03872
+                z value
+(Intercept)       8.581
+OV                0.736
+MiddleFixDur     -3.040
+OV:MiddleFixDur  -0.440
+                Pr(>|z|)    
+(Intercept)      < 2e-16 ***
+OV               0.46181    
+MiddleFixDur     0.00236 ** 
+OV:MiddleFixDur  0.65979    
+---
+Signif. codes:  
+  0 ‘***’ 0.001 ‘**’ 0.01
+  ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
+
+Correlation of Fixed Effects:
+            (Intr) OV    
+OV          -0.878       
+MiddleFixDr -0.058  0.074
+OV:MddlFxDr  0.057 -0.086
+            MddlFD
+OV                
+MiddleFixDr       
+OV:MddlFxDr -0.929
+
+#### Tabulated Model Output ####

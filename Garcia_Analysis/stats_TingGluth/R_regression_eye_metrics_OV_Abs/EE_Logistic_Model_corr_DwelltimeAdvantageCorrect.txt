@@ -1,0 +1,75 @@
+### Logistic Mixed Model (Betas, NOT Odds Ratios) - EE Phase ###
+
+#### Model Summary ####
+Generalized linear mixed
+  model fit by maximum
+  likelihood (Laplace
+  Approximation) [glmerMod]
+ Family: binomial  ( logit )
+Formula: 
+corr ~ OV * DwelltimeAdvantageCorrect + (1 + OV | sub_id)
+   Data: data
+
+     AIC      BIC   logLik 
+  2094.6   2136.5  -1040.3 
+deviance df.resid 
+  2080.6     2933 
+
+Scaled residuals: 
+    Min      1Q  Median 
+-494.08    0.10    0.24 
+     3Q     Max 
+   0.41    2.23 
+
+Random effects:
+ Groups Name        Variance
+ sub_id (Intercept) 3.2665  
+        OV          0.6162  
+ Std.Dev. Corr 
+ 1.807         
+ 0.785    -0.86
+Number of obs: 2940, groups:  
+sub_id, 21
+
+Fixed effects:
+                             Estimate
+(Intercept)                  2.259972
+OV                           0.003766
+DwelltimeAdvantageCorrect    1.179844
+OV:DwelltimeAdvantageCorrect 0.020216
+                             Std. Error
+(Intercept)                    0.442354
+OV                             0.196293
+DwelltimeAdvantageCorrect      0.173165
+OV:DwelltimeAdvantageCorrect   0.082348
+                             z value
+(Intercept)                    5.109
+OV                             0.019
+DwelltimeAdvantageCorrect      6.813
+OV:DwelltimeAdvantageCorrect   0.245
+                             Pr(>|z|)
+(Intercept)                  3.24e-07
+OV                              0.985
+DwelltimeAdvantageCorrect    9.53e-12
+OV:DwelltimeAdvantageCorrect    0.806
+                                
+(Intercept)                  ***
+OV                              
+DwelltimeAdvantageCorrect    ***
+OV:DwelltimeAdvantageCorrect    
+---
+Signif. codes:  
+  0 ‘***’ 0.001 ‘**’ 0.01
+  ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
+
+Correlation of Fixed Effects:
+            (Intr) OV    
+OV          -0.873       
+DwlltmAdvnC  0.221 -0.215
+OV:DwlltmAC -0.201  0.235
+            DwllAC
+OV                
+DwlltmAdvnC       
+OV:DwlltmAC -0.918
+
+#### Tabulated Model Output ####

@@ -1,0 +1,70 @@
+### Logistic Mixed Model (Betas, NOT Odds Ratios) - ES Phase ###
+
+#### Model Summary ####
+Generalized linear mixed
+  model fit by maximum
+  likelihood (Laplace
+  Approximation) [glmerMod]
+ Family: binomial  ( logit )
+Formula: 
+corr ~ OV * PropDwell_sub + (1 + OV | sub_id)
+   Data: data
+
+     AIC      BIC   logLik 
+  5398.8   5447.0  -2692.4 
+deviance df.resid 
+  5384.8     7227 
+
+Scaled residuals: 
+    Min      1Q  Median 
+-5.9186  0.2728  0.3461 
+     3Q     Max 
+ 0.4047  0.7384 
+
+Random effects:
+ Groups Name        Variance
+ sub_id (Intercept) 0.77696 
+        OV          0.09933 
+ Std.Dev. Corr 
+ 0.8815        
+ 0.3152   -0.86
+Number of obs: 7234, groups:  
+sub_id, 21
+
+Fixed effects:
+                 Estimate
+(Intercept)       1.96105
+OV                0.03283
+PropDwell_sub     0.33780
+OV:PropDwell_sub -0.13834
+                 Std. Error
+(Intercept)         0.21863
+OV                  0.08500
+PropDwell_sub       0.09495
+OV:PropDwell_sub    0.04618
+                 z value
+(Intercept)        8.970
+OV                 0.386
+PropDwell_sub      3.558
+OV:PropDwell_sub  -2.995
+                 Pr(>|z|)    
+(Intercept)       < 2e-16 ***
+OV               0.699313    
+PropDwell_sub    0.000374 ***
+OV:PropDwell_sub 0.002742 ** 
+---
+Signif. codes:  
+  0 ‘***’ 0.001 ‘**’ 0.01
+  ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
+
+Correlation of Fixed Effects:
+            (Intr) OV    
+OV          -0.870       
+PropDwll_sb  0.041 -0.035
+OV:PrpDwll_ -0.028  0.021
+            PrpDw_
+OV                
+PropDwll_sb       
+OV:PrpDwll_ -0.926
+
+#### Tabulated Model Output ####

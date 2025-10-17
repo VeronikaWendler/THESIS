@@ -1,0 +1,70 @@
+### Logistic Mixed Model (Betas, NOT Odds Ratios) - EE Phase ###
+
+#### Model Summary ####
+Generalized linear mixed
+  model fit by maximum
+  likelihood (Laplace
+  Approximation) [glmerMod]
+ Family: binomial  ( logit )
+Formula: 
+corr ~ OV * AttentionW + (1 + OV | sub_id)
+   Data: data
+
+     AIC      BIC   logLik 
+  1808.2   1849.6   -897.1 
+deviance df.resid 
+  1794.2     2750 
+
+Scaled residuals: 
+    Min      1Q  Median 
+-9.9439  0.0689  0.1820 
+     3Q     Max 
+ 0.3649  3.3116 
+
+Random effects:
+ Groups Name        Variance
+ sub_id (Intercept) 4.2653  
+        OV          0.7742  
+ Std.Dev. Corr 
+ 2.0653        
+ 0.8799   -0.87
+Number of obs: 2757, groups:  
+sub_id, 21
+
+Fixed effects:
+              Estimate
+(Intercept)    3.02025
+OV            -0.24049
+AttentionW     2.20768
+OV:AttentionW -0.32751
+              Std. Error
+(Intercept)      0.51741
+OV               0.22289
+AttentionW       0.22379
+OV:AttentionW    0.09617
+              z value
+(Intercept)     5.837
+OV             -1.079
+AttentionW      9.865
+OV:AttentionW  -3.406
+              Pr(>|z|)    
+(Intercept)   5.31e-09 ***
+OV             0.28060    
+AttentionW     < 2e-16 ***
+OV:AttentionW  0.00066 ***
+---
+Signif. codes:  
+  0 ‘***’ 0.001 ‘**’ 0.01
+  ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
+
+Correlation of Fixed Effects:
+            (Intr) OV    
+OV          -0.884       
+AttentionW   0.324 -0.291
+OV:AttentnW -0.294  0.300
+            AttntW
+OV                
+AttentionW        
+OV:AttentnW -0.936
+
+#### Tabulated Model Output ####

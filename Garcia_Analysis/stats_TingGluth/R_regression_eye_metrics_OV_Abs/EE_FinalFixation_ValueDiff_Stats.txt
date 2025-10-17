@@ -1,0 +1,223 @@
+### LMM Model (Without OV levels) ###
+Linear mixed model fit by maximum likelihood . t-tests use Satterthwaite's method ['lmerModLmerTest']
+Formula: mean_p_choose_right ~ ValueDifference_bin * FinalFixLocBinary +      (1 | sub_id)
+   Data: agg_data
+
+     AIC      BIC   logLik deviance df.resid 
+   117.4    169.1    -46.7     93.4      537 
+
+Scaled residuals: 
+    Min      1Q  Median      3Q     Max 
+-3.4411 -0.4351 -0.0134  0.4730  3.4154 
+
+Random effects:
+ Groups   Name        Variance Std.Dev.
+ sub_id   (Intercept) 0.00000  0.0000  
+ Residual             0.06941  0.2635  
+Number of obs: 549, groups:  sub_id, 21
+
+Fixed effects:
+                                                  Estimate Std. Error         df t value Pr(>|t|)    
+(Intercept)                                       0.010265   0.033459 549.000000   0.307   0.7591    
+ValueDifference_binL>R                            0.104606   0.047710 549.000000   2.193   0.0288 *  
+ValueDifference_binL ~ R                          0.326598   0.052284 549.000000   6.247 8.41e-10 ***
+ValueDifference_binR>L                            0.592614   0.048800 549.000000  12.144  < 2e-16 ***
+ValueDifference_binR>>L                           0.896300   0.051932 549.000000  17.259  < 2e-16 ***
+FinalFixLocBinaryRight                            0.089948   0.049540 549.000000   1.816   0.0700 .  
+ValueDifference_binL>R:FinalFixLocBinaryRight     0.173327   0.068912 549.000000   2.515   0.0122 *  
+ValueDifference_binL ~ R:FinalFixLocBinaryRight   0.386323   0.074259 549.000000   5.202 2.78e-07 ***
+ValueDifference_binR>L:FinalFixLocBinaryRight     0.182559   0.069539 549.000000   2.625   0.0089 ** 
+ValueDifference_binR>>L:FinalFixLocBinaryRight   -0.009955   0.071772 549.000000  -0.139   0.8897    
+---
+Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
+
+Correlation of Fixed Effects:
+            (Intr) VlD_L>R VlD_L~R VlD_R>L VlD_R>>L FnFLBR VD_L>R: VD_L~R: VD_R>L:
+VlDffrn_L>R -0.701                                                                
+VlDffrn_L~R -0.640  0.449                                                         
+VlDffrn_R>L -0.686  0.481   0.439                                                 
+VlDffr_R>>L -0.644  0.452   0.412   0.442                                         
+FnlFxLcBnrR -0.675  0.474   0.432   0.463   0.435                                 
+VD_L>R:FFLB  0.486 -0.692  -0.311  -0.333  -0.313   -0.719                        
+VD_L~R:FFLB  0.451 -0.316  -0.704  -0.309  -0.290   -0.667  0.480                 
+VD_R>L:FFLB  0.481 -0.337  -0.308  -0.702  -0.310   -0.712  0.512   0.475         
+VD_R>>L:FFL  0.466 -0.327  -0.298  -0.320  -0.724   -0.690  0.496   0.460   0.492 
+optimizer (nloptwrap) convergence code: 0 (OK)
+boundary (singular) fit: see help('isSingular')
+
+
+### LMM Model (With OV levels) ###
+Linear mixed model fit by maximum likelihood . t-tests use Satterthwaite's method ['lmerModLmerTest']
+Formula: mean_p_choose_right ~ ValueDifference_bin * FinalFixLocBinary *      OVcate_2 + (1 | sub_id)
+   Data: agg_data
+
+     AIC      BIC   logLik deviance df.resid 
+   134.1    271.9    -35.0     70.1      517 
+
+Scaled residuals: 
+    Min      1Q  Median      3Q     Max 
+-3.5541 -0.4267  0.0000  0.4191  3.4657 
+
+Random effects:
+ Groups   Name        Variance  Std.Dev. 
+ sub_id   (Intercept) 9.947e-22 3.154e-11
+ Residual             6.652e-02 2.579e-01
+Number of obs: 549, groups:  sub_id, 21
+
+Fixed effects:
+                                                                 Estimate Std. Error         df t value Pr(>|t|)    
+(Intercept)                                                      0.014739   0.056282 549.000000   0.262 0.793513    
+ValueDifference_binL>R                                           0.100690   0.079595 549.000000   1.265 0.206398    
+ValueDifference_binL ~ R                                         0.279262   0.079595 549.000000   3.509 0.000488 ***
+ValueDifference_binR>L                                           0.512344   0.080584 549.000000   6.358 4.31e-10 ***
+ValueDifference_binR>>L                                          0.818594   0.087192 549.000000   9.388  < 2e-16 ***
+FinalFixLocBinaryRight                                           0.091401   0.081663 549.000000   1.119 0.263525    
+OVcate_2medium                                                  -0.011076   0.079595 549.000000  -0.139 0.889378    
+OVcate_2high                                                    -0.002239   0.080584 549.000000  -0.028 0.977842    
+ValueDifference_binL>R:FinalFixLocBinaryRight                    0.229349   0.114036 549.000000   2.011 0.044794 *  
+ValueDifference_binL ~ R:FinalFixLocBinaryRight                  0.462326   0.114036 549.000000   4.054 5.76e-05 ***
+ValueDifference_binR>L:FinalFixLocBinaryRight                    0.273421   0.114729 549.000000   2.383 0.017502 *  
+ValueDifference_binR>>L:FinalFixLocBinaryRight                   0.067329   0.119463 549.000000   0.564 0.573258    
+ValueDifference_binL>R:OVcate_2medium                           -0.021020   0.114886 549.000000  -0.183 0.854893    
+ValueDifference_binL ~ R:OVcate_2medium                         -0.282925   0.275727 549.000000  -1.026 0.305293    
+ValueDifference_binR>L:OVcate_2medium                            0.155868   0.117555 549.000000   1.326 0.185419    
+ValueDifference_binR>>L:OVcate_2medium                           0.141795   0.121175 549.000000   1.170 0.242440    
+ValueDifference_binL>R:OVcate_2high                              0.028155   0.113266 549.000000   0.249 0.803784    
+ValueDifference_binL ~ R:OVcate_2high                            0.104005   0.113266 549.000000   0.918 0.358899    
+ValueDifference_binR>L:OVcate_2high                              0.099717   0.115417 549.000000   0.864 0.387980    
+ValueDifference_binR>>L:OVcate_2high                             0.085573   0.128344 549.000000   0.667 0.505215    
+FinalFixLocBinaryRight:OVcate_2medium                           -0.032199   0.115489 549.000000  -0.279 0.780502    
+FinalFixLocBinaryRight:OVcate_2high                              0.038956   0.121435 549.000000   0.321 0.748487    
+ValueDifference_binL>R:FinalFixLocBinaryRight:OVcate_2medium    -0.133313   0.163386 549.000000  -0.816 0.414887    
+ValueDifference_binL ~ R:FinalFixLocBinaryRight:OVcate_2medium   0.436805   0.311901 549.000000   1.400 0.161940    
+ValueDifference_binR>L:FinalFixLocBinaryRight:OVcate_2medium    -0.101324   0.164794 549.000000  -0.615 0.538906    
+ValueDifference_binR>>L:FinalFixLocBinaryRight:OVcate_2medium   -0.090584   0.167395 549.000000  -0.541 0.588632    
+ValueDifference_binL>R:FinalFixLocBinaryRight:OVcate_2high      -0.044266   0.166060 549.000000  -0.267 0.789903    
+ValueDifference_binL ~ R:FinalFixLocBinaryRight:OVcate_2high    -0.251394   0.165582 549.000000  -1.518 0.129528    
+ValueDifference_binR>L:FinalFixLocBinaryRight:OVcate_2high      -0.199476   0.167534 549.000000  -1.191 0.234302    
+ValueDifference_binR>>L:FinalFixLocBinaryRight:OVcate_2high     -0.147686   0.176688 549.000000  -0.836 0.403598    
+---
+Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
+optimizer (nloptwrap) convergence code: 0 (OK)
+boundary (singular) fit: see help('isSingular')
+
+
+### Model Comparison: Does OV Influence Fixation Effects? ###
+Data: agg_data
+Models:
+lmm_model: mean_p_choose_right ~ ValueDifference_bin * FinalFixLocBinary + (1 | sub_id)
+lmm_model_OV: mean_p_choose_right ~ ValueDifference_bin * FinalFixLocBinary * OVcate_2 + (1 | sub_id)
+             npar    AIC    BIC  logLik deviance  Chisq Df Pr(>Chisq)
+lmm_model      12 117.40 169.09 -46.698   93.396                     
+lmm_model_OV   32 134.08 271.94 -35.042   70.083 23.313 20     0.2737
+
+### LMM for L ~ R Bin: Fixation Effect ###
+Linear mixed model fit by maximum likelihood . t-tests use Satterthwaite's method ['lmerModLmerTest']
+Formula: mean_p_choose_right ~ FinalFixLocBinary + (1 | sub_id)
+   Data: agg_data_LR
+
+     AIC      BIC   logLik deviance df.resid 
+    43.1     53.1    -17.5     35.1       87 
+
+Scaled residuals: 
+     Min       1Q   Median       3Q      Max 
+-2.74851 -0.78225 -0.01141  0.62343  2.27328 
+
+Random effects:
+ Groups   Name        Variance Std.Dev.
+ sub_id   (Intercept) 0.001658 0.04072 
+ Residual             0.084487 0.29067 
+Number of obs: 91, groups:  sub_id, 21
+
+Fixed effects:
+                       Estimate Std. Error       df t value Pr(>|t|)    
+(Intercept)             0.33623    0.04522 66.96928   7.436 2.50e-10 ***
+FinalFixLocBinaryRight  0.47613    0.06105 72.79411   7.799 3.42e-11 ***
+---
+Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
+
+Correlation of Fixed Effects:
+            (Intr)
+FnlFxLcBnrR -0.712
+
+### LMM for L ~ R Bin: Fixation * OV Interaction ###
+Linear mixed model fit by maximum likelihood . t-tests use Satterthwaite's method ['lmerModLmerTest']
+Formula: mean_p_choose_right ~ FinalFixLocBinary * OVcate_2 + (1 | sub_id)
+   Data: agg_data_LR
+
+     AIC      BIC   logLik deviance df.resid 
+    44.5     64.6    -14.3     28.5       83 
+
+Scaled residuals: 
+    Min      1Q  Median      3Q     Max 
+-2.5397 -0.9081  0.1323  0.5575  2.5629 
+
+Random effects:
+ Groups   Name        Variance Std.Dev.
+ sub_id   (Intercept) 0.005517 0.07428 
+ Residual             0.075181 0.27419 
+Number of obs: 91, groups:  sub_id, 21
+
+Fixed effects:
+                                      Estimate Std. Error       df t value Pr(>|t|)    
+(Intercept)                            0.29400    0.06199 89.53592   4.743 7.92e-06 ***
+FinalFixLocBinaryRight                 0.55373    0.08462 69.72986   6.544 8.50e-09 ***
+OVcate_2medium                        -0.38973    0.28746 87.19916  -1.356   0.1787    
+OVcate_2high                           0.10177    0.08462 69.72986   1.203   0.2332    
+FinalFixLocBinaryRight:OVcate_2medium  0.48432    0.31342 83.34357   1.545   0.1261    
+FinalFixLocBinaryRight:OVcate_2high   -0.21244    0.11967 69.72986  -1.775   0.0802 .  
+---
+Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
+
+Correlation of Fixed Effects:
+                        (Intr) FnFLBR OVct_2m OVct_2h FnlFxLcBnryRght:OVct_2m
+FnlFxLcBnrR             -0.683                                               
+OVcate_2mdm             -0.201  0.147                                        
+OVcate_2hgh             -0.683  0.500  0.147                                 
+FnlFxLcBnryRght:OVct_2m  0.184 -0.270 -0.912  -0.135                         
+FnlFxLcBnryRght:OVct_2h  0.483 -0.707 -0.104  -0.707   0.191                 
+
+### Model Comparison for L ~ R Bin: OV Effects on Fixation ###
+Data: agg_data_LR
+Models:
+lmm_LR: mean_p_choose_right ~ FinalFixLocBinary + (1 | sub_id)
+lmm_LR_OV: mean_p_choose_right ~ FinalFixLocBinary * OVcate_2 + (1 | sub_id)
+          npar    AIC    BIC  logLik deviance Chisq Df Pr(>Chisq)
+lmm_LR       4 43.084 53.127 -17.542   35.084                    
+lmm_LR_OV    8 44.540 64.627 -14.270   28.540 6.544  4      0.162
+
+### Post-hoc Pairwise Comparisons (Bonferroni Adjusted) ###
+$emmeans
+OVcate_2 = low:
+ FinalFixLocBinary  emmean     SE   df lower.CL upper.CL
+ Left               0.2940 0.0641 95.8    0.167    0.421
+ Right              0.8477 0.0641 95.8    0.720    0.975
+
+OVcate_2 = medium:
+ FinalFixLocBinary  emmean     SE   df lower.CL upper.CL
+ Left              -0.0957 0.2978 95.1   -0.687    0.496
+ Right              0.9423 0.1212 97.1    0.702    1.183
+
+OVcate_2 = high:
+ FinalFixLocBinary  emmean     SE   df lower.CL upper.CL
+ Left               0.3958 0.0641 95.8    0.268    0.523
+ Right              0.7371 0.0641 95.8    0.610    0.864
+
+Degrees-of-freedom method: kenward-roger 
+Confidence level used: 0.95 
+
+$contrasts
+OVcate_2 = low:
+ contrast     estimate     SE   df t.ratio p.value
+ Left - Right   -0.554 0.0876 74.9  -6.319  <.0001
+
+OVcate_2 = medium:
+ contrast     estimate     SE   df t.ratio p.value
+ Left - Right   -1.038 0.3176 90.4  -3.268  0.0015
+
+OVcate_2 = high:
+ contrast     estimate     SE   df t.ratio p.value
+ Left - Right   -0.341 0.0876 74.9  -3.895  0.0002
+
+Degrees-of-freedom method: kenward-roger 
+

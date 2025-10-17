@@ -1,0 +1,1054 @@
+---
+title: "OV_Behavioural_R"
+output:
+  pdf_document: default
+  html_document: default
+date: "2025-04-16"
+---
+
+# Behavioural Data Analysis - Experiment 2 (OV quasi replication)
+```{r}
+# libraries
+library(tidyverse)
+library(rstatix)
+library(ggpubr)
+library(lme4)
+library(lmerTest)
+library(ggplot2)
+library(dplyr)
+library(effsize)  # for Cohen's d
+library(tidyr)
+library(dplyr)
+library(rstatix) # also for cohen's d
+library(effectsize)
+library(purrr)
+library(dplyr)
+library(afex)
+library(dplyr)
+library(emmeans)
+library(ez)
+
+
+file <- "D:/Aberdeen_Uni_June24/cap/THESIS/OV_Analysis/data/data_sets/OVParticipants_Eye_Response_Feed_Allfix_addm_OV_Abs_CCT.csv"
+
+data <- read.csv(file)
+
+excluded_subs <- c(6, 14)   #6 and 14 have insuffiecient data... exclusion of participants from behavioral data
+
+```
+
+```{r}
+str(data$cond)
+
+```
+# Filter phases, get mean, remove outliers, check normality
+```{r}
+# phases
+phases<- c("LE", "ES", "EE")
+
+data_filt <- data %>%
+  filter(phase %in% phases & !sub_id %in% excluded_subs)
+
+# mean accuracy per participant and phase
+accuracy_df <- data_filt %>%
+  group_by(sub_id, phase) %>%
+  summarise(Mean_Accuracy = mean(corr), .groups = "drop")
+
+# remove outliers
+outliers <- accuracy_df %>%
+  group_by(phase) %>%
+  identify_outliers(Mean_Accuracy)
+accuracy_df <- accuracy_df %>%
+  filter(!(sub_id %in% outliers$sub_id[outliers$is.extreme]))
+
+# normality assumption test
+shapiro_results_corr <- accuracy_df %>%
+  group_by(phase) %>%
+  summarise(Shapiro_p = shapiro.test(Mean_Accuracy)$p.value)
+
+outliers
+
+```
+
+
+# Shapiro results
+```{r}
+# print shapiro test results
+shapiro_results_corr
+
+```
+
+# Accuracy per block in LE
+```{r}
+# get the accuracy for each difficulty level in the LE phase (10/30, 20/60, 40/80, 70/90)
+
+fig_out <- "D:/Aberdeen_Uni_June24/cap/THESIS/OV_Analysis/Figures/OV_EXP_Mean_Acc_LE_cond.pdf"    
+
+
+learning_cond <- c(3, 2, 1, 0)
+
+# Prepare data
+learning_acc_df <- data %>%
+  filter(phase == "LE", cond %in% learning_cond, !sub_id %in% excluded_subs) %>%
+  group_by(sub_id, cond) %>%
+  summarise(mean_acc_LE = mean(corr), .groups = "drop") %>%
+  mutate(cond = factor(cond, levels = c(3, 2, 1, 0),
+                       labels = c("30/10", "60/20", "80/40", "90/70")),
+         cond_num = as.numeric(cond),
+         jittered_x = cond_num + runif(n(), -0.10, 0.10))
+
+# Group means for asterisks
+mean_points_LE <- learning_acc_df %>%
+  group_by(cond) %>%
+  summarise(mean_val = mean(mean_acc_LE), .groups = "drop")
+
+# Define color palette
+cond_colors <- c(
+  "30/10" = "rosybrown1",
+  "60/20" = "rosybrown2",
+  "80/40" = "rosybrown3",
+  "90/70" = "rosybrown4"
+)
+
+# Create plot
+learning_acc_plot <- ggplot() +
+  geom_boxplot(data = learning_acc_df, aes(x = cond, y = mean_acc_LE, fill = cond),
+               width = 0.55, outlier.shape = NA, alpha = 0.7) +
+  geom_line(data = learning_acc_df, aes(x = jittered_x, y = mean_acc_LE, group = sub_id),
+            color = "black", alpha = 0.05) +
+  geom_point(data = learning_acc_df, aes(x = jittered_x, y = mean_acc_LE),
+             color = "black", size = 2, alpha = 0.3) +
+  geom_text(data = mean_points_LE, aes(x = cond, y = mean_val, label = "*"),
+            color = "red", size = 10, fontface = "bold") +
+  scale_fill_manual(values = cond_colors, guide = "none") +
+  labs(
+    title = "Mean Accuracy Across Blocks in the LE Phase",
+    x = "Condition",
+    y = "Mean Accuracy (%)"
+  ) +
+  theme_minimal(base_size = 14) +
+  theme(
+    panel.grid.major.y = element_line(color = "gray80", size = 0.3),
+    panel.grid.major.x = element_blank(),
+    panel.grid.minor   = element_blank(),
+    axis.ticks.x = element_line(color = "black"),
+    axis.ticks.y = element_blank(),
+    axis.ticks.length = unit(4, "pt"),
+    axis.line = element_blank(),
+    plot.title = element_text(size = 18),
+    axis.title.x = element_text(size = 18),
+    axis.title.y = element_text(size = 18),
+    axis.text.x = element_text(size = 18, color = "black"),
+    axis.text.y = element_text(size = 18, color = "black") 
+)
+
+ggsave(filename = fig_out, plot = learning_acc_plot, width = 8, height = 6, dpi = 300)
+learning_acc_plot
+
+```
+
+# Accuracy per Block in LE Stats
+```{r}
+
+# cond is a factor
+learning_acc_df <- learning_acc_df %>%
+  mutate(cond = factor(cond, levels = c("30/10","60/20","80/40","90/70")))
+
+ez_out <- ezANOVA(
+  data        = learning_acc_df,
+  dv          = .(mean_acc_LE),
+  wid         = .(sub_id),
+  within      = .(cond),
+  type        = 3,
+  detailed    = TRUE     
+)
+
+print(ez_out)
+
+#####################################################################
+posthoc <- learning_acc_df %>%
+  pairwise_t_test(
+    mean_acc_LE ~ cond,
+    paired         = TRUE,
+    p.adjust.method = "bonferroni",
+    conf.level      = 0.95,        
+    detailed        = TRUE        
+  )
+
+posthoc
+
+learning_acc_df %>%
+  group_by(cond) %>%
+  summarise(
+    n         = n(),
+    mean_acc  = mean(mean_acc_LE),
+    sd_acc    = sd(mean_acc_LE),
+    sem_acc   = sd_acc / sqrt(n),
+    .groups   = "drop"
+  )
+
+
+# posthoc table
+posthoc_tbl <- posthoc %>%
+  mutate(
+    contrast  = paste(group1, "–", group2),
+    estimate  = round(estimate, 2),
+    statistic = round(statistic, 2),
+    conf.low  = round(conf.low, 2),
+    conf.high = round(conf.high, 2),
+    p.adj     = round(p.adj, 2)
+  ) %>%
+  select(contrast, estimate, conf.low, conf.high, statistic, df, p.adj)
+
+write.csv(
+  posthoc_tbl,
+  "D:/Aberdeen_Uni_June24/cap/THESIS/OV_Analysis/OV_table_LE.csv",
+  row.names = FALSE
+)
+
+# Descriptive stats table: mean and SE per condition
+desc_tbl <- learning_acc_df %>%
+  group_by(cond) %>%
+  summarise(
+    n        = n(),
+    mean_acc = mean(mean_acc_LE),
+    sd_acc   = sd(mean_acc_LE),
+    sem_acc  = sd_acc / sqrt(n),
+    .groups  = "drop"
+  ) %>%
+  mutate(
+    mean_acc = round(mean_acc, 2),
+    sd_acc   = round(sd_acc, 2),
+    sem_acc  = round(sem_acc, 2)
+  )
+
+# Save descriptive table as CSV
+write.csv(
+  desc_tbl,
+  "D:/Aberdeen_Uni_June24/cap/THESIS/Pilot_Analysis/OV_table_LE_descriptives.csv",
+  row.names = FALSE
+)
+
+```
+
+# RT per Block in LE
+
+```{r}
+learning_rt_df <- data %>%
+  filter(phase == "LE",
+         cond %in% learning_cond,
+         !sub_id %in% excluded_subs) %>%
+  group_by(sub_id, cond) %>%
+  summarise(mean_rt_LE = mean(rtime) * 1000,   
+            .groups = "drop") %>%
+  mutate(cond = factor(cond, levels = c(3, 2, 1, 0),
+                       labels = c("30/10", "60/20", "80/40", "90/70")),
+         cond_num  = as.numeric(cond),
+         jittered_x = cond_num + runif(n(), -0.10, 0.10))
+
+# Group means for asterisks
+mean_points_rt <- learning_rt_df %>%
+  group_by(cond) %>%
+  summarise(mean_val = mean(mean_rt_LE), .groups = "drop")
+
+# Plot
+learning_rt_plot <- ggplot() +
+  geom_boxplot(data = learning_rt_df,aes(x = cond, y = mean_rt_LE, fill = cond),width = 0.55, outlier.shape = NA, alpha = 0.7) +
+  geom_line(data = learning_rt_df,aes(x = jittered_x, y = mean_rt_LE, group = sub_id),color = "black", alpha = 0.3) +
+  geom_point(data = learning_rt_df,aes(x = jittered_x, y = mean_rt_LE),color = "black", size = 2, alpha = 0.7) +
+  geom_text(data = mean_points_rt,aes(x = cond, y = mean_val, label = "*"),color = "red", size = 10, fontface = "bold") +
+  scale_fill_manual(values = cond_colors, guide = "none") +
+  labs(
+    title = "Mean Reaction Time Across Blocks in the LE Phase",
+    x = "Condition",
+    y = "Mean Reaction Time (ms)"
+  ) +
+  theme_minimal(base_size = 14) +
+  theme(
+    panel.grid.major.y = element_line(color = "gray80", size = 0.4),
+    panel.grid.major.x = element_blank(),
+    panel.grid.minor   = element_blank(),
+    axis.ticks.x = element_line(color = "black"),
+    axis.ticks.y = element_blank(),
+    axis.ticks.length = unit(4, "pt"),
+    axis.line = element_blank(),
+    plot.title = element_text(size = 18, face = "bold"),
+    axis.title.x = element_text(size = 16, face = "bold"),
+    axis.title.y = element_text(size = 16, face = "bold"),
+    axis.text.x  = element_text(size = 14, color = "black"),
+    axis.text.y  = element_text(size = 14, color = "black")
+  )
+
+fig_out_rt <- "D:/Aberdeen_Uni_June24/cap/THESIS/OV_Analysis/Figures/OV_EXP_Mean_RT_LE_cond.pdf"
+ggsave(filename = fig_out_rt, plot = learning_rt_plot,
+       width = 8, height = 6, dpi = 300)
+learning_rt_plot
+```
+
+# Mean RT per block in LE stats
+```{r}
+learning_rt_df <- data %>% 
+  filter(phase == "LE",
+         cond %in% learning_cond,
+         !sub_id %in% excluded_subs) %>% 
+  mutate(
+    logRT = log(rtime)  
+  ) %>% 
+  group_by(sub_id, cond) %>% 
+  summarise(
+    mean_logRT = mean(logRT),   
+    .groups = "drop"
+  ) %>% 
+  mutate(
+    cond = factor(cond,
+                  levels = c(3, 2, 1, 0),
+                  labels = c("30/10", "60/20", "80/40", "90/70"))
+  )
+
+ez_rt <- ezANOVA(
+  data     = learning_rt_df,
+  dv       = .(mean_logRT),
+  wid      = .(sub_id),
+  within   = .(cond),
+  type     = 3,
+  detailed = TRUE
+)
+
+print(ez_rt)
+
+posthoc_rt <- learning_rt_df %>% 
+  pairwise_t_test(
+    mean_logRT ~ cond,
+    paired          = TRUE,
+    p.adjust.method = "bonferroni",
+    conf.level      = 0.95,
+    detailed        = TRUE
+  )
+
+posthoc_rt
+
+exp(posthoc_rt$estimate)
+
+learning_rt_df %>% 
+  group_by(cond) %>% 
+  summarise(
+    n          = n(),
+    geo_meanRT = exp(mean(mean_logRT)),        
+    sd_logRT   = sd(mean_logRT),
+    sem_logRT  = sd_logRT / sqrt(n),
+    .groups    = "drop"
+  )
+```
+
+
+# Accuracy (LE, ES) + repeated measures ANOVA
+```{r}
+anova_results <- accuracy_df %>%
+  anova_test(dv = Mean_Accuracy, wid = sub_id, within = phase)
+anova_table <- get_anova_table(anova_results)
+
+fig_out <- "D:/Aberdeen_Uni_June24/cap/THESIS/OV_Analysis/Figures/OV_EXP_Mean_Acc_LE_ES_EE.pdf"     
+
+# phase 
+accuracy_df <- accuracy_df %>%
+  mutate(phase = factor(phase, levels = c("LE", "ES", "EE")))
+
+phase_colors <- c( "EE" = "deepskyblue"  ,"ES" = "darkorchid", "LE" = "rosybrown")
+
+plot_df <- accuracy_df %>%
+  group_by(sub_id, phase) %>%
+  summarise(Mean_Accuracy = mean(Mean_Accuracy), .groups = "drop") %>%
+  mutate(
+    phase_num = as.numeric(factor(phase, levels = c("LE", "ES", "EE"))),
+    jittered_x = phase_num + runif(n(), -0.1, 0.1)
+  )
+
+# Phase means for asterisks
+accuracy_summary <- plot_df %>%
+  group_by(phase) %>%
+  summarise(mean_accuracy = mean(Mean_Accuracy), .groups = "drop")
+
+accuracy_plot <- ggplot() +
+  geom_boxplot(data = plot_df,aes(x = phase, y = Mean_Accuracy, fill = phase),width = 0.5, alpha = 0.7) +
+  geom_line(data = plot_df,aes(x = jittered_x, y = Mean_Accuracy, group = sub_id),color = "black", alpha = 0.05) +
+  geom_point(data = plot_df,aes(x = jittered_x, y = Mean_Accuracy),color = "black", size = 2, alpha = 0.3) +
+  geom_text(data = accuracy_summary,aes(x = phase, y = mean_accuracy, label = "*"),color = "red", size = 10, fontface = "bold") +
+  scale_fill_manual(values = phase_colors) +
+  labs(
+    title = "Mean Accuracy Across Phases",
+    x     = "Phase",
+    y     = "Mean Accuracy (%)"
+  ) +
+  theme_minimal(base_size = 14) +
+  scale_y_continuous(
+    breaks = seq(0.4, 1, by = 0.2),
+    limits = c(0.4, 1),# 0, 0.5, 1.0, 1.5, 2.0
+  ) +
+  theme(
+    panel.grid.major.y = element_line(color = "gray80", size = 0.2),
+    panel.grid.major.x = element_blank(),
+    panel.grid.minor   = element_blank(),
+    axis.ticks.x       = element_line(color = "black"),
+    axis.ticks.y       = element_blank(),
+    axis.ticks.length  = unit(4, "pt"),
+    axis.line          = element_blank(),
+    plot.title         = element_text(size = 18),
+    axis.title.x       = element_text(size = 18),
+    axis.title.y       = element_text(size = 18),
+    axis.text.x        = element_text(size = 18,  color = "black"),
+    axis.text.y        = element_text(size = 18, color = "black")
+  )
+ggsave(filename = fig_out, plot = accuracy_plot, width = 4, height = 4, dpi = 300)
+accuracy_plot
+
+anova_results %>% get_anova_table()
+
+anova_afex <- aov_ez(id = "sub_id", dv = "Mean_Accuracy", within = "phase", data = accuracy_df)
+summary(anova_afex)
+
+# mean and SEM
+accuracy_summary <- accuracy_df %>%
+  group_by(phase) %>%
+  summarise(
+    mean_accuracy = mean(Mean_Accuracy),
+    sd_accuracy = sd(Mean_Accuracy),
+    n = n(),
+    sem_accuracy = sd_accuracy / sqrt(n)
+  )
+
+print(accuracy_summary)
+anova_table
+```
+
+
+# Bonferroni Post Hoc Comparisons
+```{r}
+# post hoc tests
+posthoc_results <- accuracy_df %>%
+  pairwise_t_test(Mean_Accuracy ~ phase, paired = TRUE, p.adjust.method = "bonferroni", detailed = TRUE)
+
+posthoc_results
+names(posthoc_results)
+
+posthoc_results %>% select(group1, group2, p.adj)
+
+#accuracy_df %>%
+#  cohens_d(Mean_Accuracy ~ phase, paired = TRUE) 
+
+
+wide_df <- accuracy_df %>%
+  pivot_wider(
+    id_cols     = sub_id,       
+    names_from  = phase,
+    values_from = Mean_Accuracy
+  )
+
+cohen.d(wide_df$LE, wide_df$ES, paired = TRUE) 
+```
+
+# Median Accuracy 
+```{r}
+accuracy_median_summary <- accuracy_df %>%
+  dplyr::group_by(phase) %>%
+  dplyr::summarise(
+    median_accuracy = median(Mean_Accuracy),
+    n = dplyr::n()
+  )
+print(accuracy_median_summary)
+
+```
+
+# Accuracy just between ES & EE
+
+```{r}
+es_ee_data <- accuracy_df %>%
+  filter(phase %in% c("ES", "EE") & !sub_id %in% excluded_subs)
+
+shapiro_es <- shapiro.test(es_ee_data %>% filter(phase == "ES") %>% pull(Mean_Accuracy))
+shapiro_ee <- shapiro.test(es_ee_data %>% filter(phase == "EE") %>% pull(Mean_Accuracy))
+shapiro_es
+shapiro_ee
+
+#  if normal ttest, else wilcox. signed rank test
+if (shapiro_es$p.value > 0.05 & shapiro_ee$p.value > 0.05) {
+  test_res <- es_ee_data %>%
+    pairwise_t_test(Mean_Accuracy ~ phase, paired = TRUE, p.adjust.method = "bonferroni")
+} else {
+  test_res <- es_ee_data %>%
+    wilcox_test(Mean_Accuracy ~ phase, paired = TRUE, p.adjust.method = "bonferroni")
+}
+
+test_res
+```
+
+
+# Above chance performance ? 
+
+```{r}
+phases<- c("LE", "ES", "EE")
+
+data_filt <- data %>%
+  filter(phase %in% phases & !sub_id %in% excluded_subs)
+
+# mean accuracy per participant and phase
+accuracy_df <- data_filt %>%
+  group_by(sub_id, phase) %>%
+  summarise(Mean_Accuracy = mean(corr), .groups = "drop")
+accuracy_df <- accuracy_df %>%
+  mutate(phase = factor(phase, levels = c("LE", "ES")))
+
+# One-sample t-tests for each phase against chance level
+t_test_results <- accuracy_df %>%
+  group_by(phase) %>%
+  summarise(
+    mean_accuracy = mean(Mean_Accuracy),
+    se = sd(Mean_Accuracy) / sqrt(n()),
+    t_statistic = t.test(Mean_Accuracy, mu = 0.5)$statistic,
+    df = t.test(Mean_Accuracy, mu = 0.5)$parameter,
+    p_value = t.test(Mean_Accuracy, mu = 0.5)$p.value
+  ) %>%
+  mutate(
+    significance = case_when(
+      p_value < 0.001 ~ "***",
+      p_value < 0.01 ~ "**",
+      p_value < 0.05 ~ "*",
+      TRUE ~ "n.s."
+    )
+  )
+print(t_test_results)
+
+```
+# Reaction Time (LE, ES, EE)
+
+```{r}
+#  mean rt per participant and phase
+rt_df <- data_filt %>%
+  group_by(sub_id, phase) %>%
+  summarise(Mean_RT = mean(rtime), .groups = "drop")
+
+# outliers chekc
+outliers <- rt_df %>%
+  group_by(phase) %>%
+  identify_outliers(Mean_RT)
+rt_df <- rt_df %>%
+  filter(!(sub_id %in% outliers$sub_id[outliers$is.extreme]))
+
+# normality assumption? - unnecessary we log trans anyways
+shapiro_results_rt <- rt_df %>%
+  group_by(phase) %>%
+  summarise(Shapiro_p = shapiro.test(Mean_RT)$p.value)
+shapiro_results_rt
+
+# mean, sd, sem
+rt_summary <- rt_df %>%
+  group_by(phase) %>%
+  summarise(
+    mean_rt = round(mean(Mean_RT), 3),
+    sd_rt = round(sd(Mean_RT), 3),
+    n = n(),
+    sem_rt = round(sd_rt / sqrt(n), 3),
+    .groups = "drop"
+  )
+
+print(rt_summary)
+
+```
+
+```{r}
+library(afex)
+
+aov_rt <- aov_ez(id = "sub_id", dv = "Mean_RT", within = "phase", data = rt_df)
+
+summary(aov_rt) 
+
+```
+
+```{r}
+rt_df$log_rt <- log(rt_df$Mean_RT)
+aov_log_rt <- aov_ez(id = "sub_id", dv = "log_rt", within = "phase", data = rt_df)
+summary(aov_log_rt)
+
+emm <- emmeans(aov_log_rt, ~ phase)
+pairs(emm, adjust = "bonferroni")
+eta_squared(aov_log_rt, partial = TRUE) 
+
+
+safe_t_to_d <- possibly(
+  function(t, df) {
+    d_obj <- t_to_d(t = t, df = df, paired = TRUE)
+    as.numeric(d_obj[[1]])
+  }
+)
+
+```
+
+# Additional lmer with log transformed RT
+
+```{r}
+
+rt_df$log_rt <- log(rt_df$Mean_RT)
+lme_model <- lmer(log_rt ~ phase + (1 | sub_id), data = rt_df)
+summary(lme_model)
+# post hoc compa
+emmeans(lme_model, pairwise ~ phase, adjust = "bonferroni")
+
+```
+
+# RT plot between phases
+
+```{r}
+rt_df <- rt_df %>%
+  mutate(phase = factor(phase, levels = c("LE", "ES", "EE")))
+
+phase_colors <- c("EE" = "steelblue1", "ES" = "darkorchid", "LE" = "rosybrown")
+
+# summary means for asterisks
+rt_summary <- rt_df %>%
+  group_by(phase) %>%
+  summarise(
+    mean_rt = mean(Mean_RT),
+    .groups = "drop"
+  )
+
+set.seed(123)
+rt_df <- rt_df %>%
+  mutate(
+    phase_num  = as.numeric(phase),
+    jittered_x = phase_num + runif(n(), -0.1, 0.1)
+  )
+
+rt_plot <- ggplot() +
+  geom_boxplot(data = rt_df,aes(x = phase, y = Mean_RT, fill = phase),width = 0.5, alpha = 0.7) +
+  geom_line(data = rt_df,aes(x = jittered_x, y = Mean_RT, group = sub_id),color = "black", alpha = 0.05) +
+  geom_point(data = rt_df,aes(x = jittered_x, y = Mean_RT),color = "black", size = 2, alpha = 0.3) +
+  geom_text(data = rt_summary,aes(x = phase, y = mean_rt, label = "*"),color = "red", size = 13, fontface = "bold") +
+  scale_fill_manual(values = phase_colors) +
+  scale_y_continuous(breaks = seq(0, ceiling(max(rt_df$Mean_RT)*2)/2, by = 0.5)) +
+  labs(
+    title = "Mean Reaction Time Across Phases",
+    x     = "Phase",
+    y     = "Mean RT (seconds)"
+  ) +
+  theme_minimal(base_size = 14) +
+  theme(
+    panel.grid.major.y  = element_line(color = "gray80", size = 0.2),
+    panel.grid.major.x  = element_blank(),
+    panel.grid.minor    = element_blank(),
+    axis.ticks.x        = element_line(color = "black"),
+    axis.ticks.y        = element_blank(),
+    axis.ticks.length   = unit(4, "pt"),
+    axis.line           = element_blank(),
+    plot.title          = element_text(size = 18, face = "bold"),
+    axis.title.x        = element_text(size = 18, face = "bold"),
+    axis.title.y        = element_text(size = 18, ),
+    axis.text.x         = element_text(size = 18, color = "black"),
+    axis.text.y         = element_text(size = 18, color = "black")
+  )
+
+
+fig_out <- "D:/Aberdeen_Uni_June24/cap/THESIS/OV_Analysis/Figures/OV_EXP_Mean_RT_LE_ES_EE.pdf"
+ggsave(filename = fig_out, plot = rt_plot, width = 4, height = 4, dpi = 300)
+rt_plot
+
+
+```
+
+```{r}
+# same filter for ES
+es_data <- data_filt %>%
+  filter(phase == "ES") %>%
+  mutate(choice_type = ifelse(stim_chosen == "E", "E", "S"))
+
+rtime_es <- es_data %>%
+  group_by(sub_id, choice_type) %>%
+  summarise(Mean_rtime = mean(rtime), .groups = "drop")
+
+#log rt
+rtime_log <- es_data %>%
+  group_by(sub_id, choice_type) %>%
+  summarise(logRT = mean(log(rtime)), .groups = "drop")
+
+# Paired t-test
+test_rtime <- t.test(
+  x = rtime_log %>% filter(choice_type == "E") %>% pull(logRT),
+  y = rtime_log %>% filter(choice_type == "S") %>% pull(logRT),
+  paired = TRUE
+)
+test_rtime
+
+# additional lmer
+es_data_log <- es_data %>%
+  mutate(logRT = log(rtime))
+
+lmer_model <- lmer(logRT ~ choice_type + (1 | sub_id), data = es_data_log)
+summary(lmer_model)
+
+colours <- c("S" = "#C2185B", 
+             "E" = "#0077B6")
+
+mean_points <- rtime_es %>%
+  group_by(choice_type) %>%
+  summarise(mean_val = mean(Mean_rtime), .groups = "drop")
+
+
+
+set.seed(123)  # for reproducibility
+# Jitter by numerical x-position
+rtime_es <- rtime_es %>%
+  mutate(jittered_x = as.numeric(factor(choice_type)) + runif(n(), -0.1, 0.1))
+
+rt_es_plot <- ggplot() +
+  geom_boxplot(data = rtime_es, aes(x = choice_type, y = Mean_rtime, fill = choice_type),width = 0.5, alpha = 0.7) +
+  geom_line(data = rtime_es, aes(x = jittered_x, y = Mean_rtime, group = sub_id),color = "black", alpha = 0.05) +
+  geom_point(data = rtime_es, aes(x = jittered_x, y = Mean_rtime),color = "black", size = 2, alpha = 0.3) +
+  geom_text(data = mean_points,aes(x = choice_type, y = mean_val, label = "*"),size = 13, color = "red", inherit.aes = FALSE) +
+  scale_fill_manual(values = colours) +
+  labs(title = "Reaction Time for E and S Choices",
+       x = "Choice Type", y = "Mean RT (seconds)", fill = "Choice Type") +
+  theme_minimal(base_size = 14) +
+  theme(
+    panel.grid.major.y = element_line(color = "gray80", size = 0.2),
+    panel.grid.major.x = element_blank(),
+    panel.grid.minor   = element_blank(),
+    axis.ticks.x      = element_line(color = "black"),
+    axis.ticks.y      = element_blank(),
+    axis.ticks.length = unit(4, "pt"),
+    axis.line         = element_blank(),
+    plot.title        = element_text(size = 18),
+    axis.title.x      = element_text(size = 18),
+    axis.title.y      = element_text(size = 18, color = "black"),
+    axis.text.x       = element_text(size = 18, color = "black"),
+    axis.text.y       = element_text(size = 18, color = "black"),
+    legend.text       = element_text(size = 18),
+    legend.title      = element_text(size = 18)
+  )
+
+fig_out <- "D:/Aberdeen_Uni_June24/cap/THESIS/OV_Analysis/Figures/OV_EXP_Mean_rt_E_S_options.pdf"
+ggsave(filename = fig_out, plot = rt_es_plot, width = 4, height = 4, dpi = 300)
+
+rt_es_plot
+
+```
+
+
+# Median RT per choice
+
+```{r}
+
+median_rt_by_choice <- es_data %>%
+  group_by(stim_chosen) %>%
+  summarise(Median_RT = median(rtime, na.rm = TRUE), .groups = "drop")
+
+median_rt_by_choice
+
+mean_rt_by_choice <- es_data %>%
+  group_by(stim_chosen) %>%
+  summarise(Mean_RT = mean(rtime, na.rm = TRUE),
+            sd_rt = sd(rtime),
+            sem_rt = sd(rtime) / sqrt(n()),
+            .groups = "drop")
+
+mean_rt_by_choice
+```
+
+```{r}
+outliers %>% filter(is.extreme) %>% distinct(sub_id)
+rtime_summary <- rtime_es %>%
+  group_by(choice_type) %>%
+  summarise(
+    Mean = round(mean(Mean_RT), 3),
+    SD = round(sd(Mean_RT), 3),
+    .groups = "drop"
+  )
+
+rtime_summary
+
+```
+
+# Accuracy E vs S choices (ES phase) + Boxplot
+
+```{r}
+
+phases<- c("LE", "ES", "EE")
+
+data_filt <- data %>%
+  filter(phase %in% phases & !sub_id %in% excluded_subs)
+es_data <- data_filt %>%
+  filter(phase == "ES") %>%
+  mutate(choice_type = ifelse(stim_chosen == "E", "E", "S"))  
+
+#mean accuracy
+accuracy_es <- es_data %>%
+  group_by(sub_id, choice_type) %>%
+  summarise(Mean_Accuracy = mean(corr), .groups = "drop")
+
+# group
+mean_points <- accuracy_es %>%
+  group_by(choice_type) %>%
+  summarise(
+    mean_val = mean(Mean_Accuracy),
+    .groups = "drop"
+  )
+
+# Normality check
+shapiro_e <- shapiro.test(accuracy_es %>% filter(choice_type == "E") %>% pull(Mean_Accuracy))
+shapiro_s <- shapiro.test(accuracy_es %>% filter(choice_type == "S") %>% pull(Mean_Accuracy))
+
+shapiro_e
+shapiro_s
+
+# normality assumption hold
+if (shapiro_e$p.value > 0.05 & shapiro_s$p.value > 0.05) {
+  test_accuracy <- accuracy_es %>%
+    pairwise_t_test(Mean_Accuracy ~ choice_type, paired = TRUE, p.adjust.method = "bonferroni")
+} else {
+  test_accuracy <- accuracy_es %>%
+    wilcox_test(Mean_Accuracy ~ choice_type, paired = TRUE, p.adjust.method = "bonferroni")
+}
+
+test_accuracy
+
+#plot
+custom_colors <- c("S" = "#C2185B", "E" = "#0077B6")
+
+set.seed(123)  # for reproducible jitter
+accuracy_es <- accuracy_es %>%
+  mutate(jittered_x = as.numeric(factor(choice_type)) + runif(n(), min = -0.1, max = 0.1))
+
+acc_es_plot <- ggplot() +
+  geom_boxplot(data = accuracy_es,aes(x = choice_type, y = Mean_Accuracy, fill = choice_type),width = 0.5, alpha = 0.7) +
+  geom_line(data = accuracy_es,aes(x = jittered_x, y = Mean_Accuracy, group = sub_id),color = "black", alpha = 0.05) +
+  geom_point(data = accuracy_es,aes(x = jittered_x, y = Mean_Accuracy),color = "black", size = 2, alpha = 0.3) +
+  geom_text(data = mean_points,aes(x = choice_type, y = mean_val, label = "*"),color = "red", size = 10, fontface = "bold") +
+  scale_fill_manual(values = custom_colors) +
+  labs(
+    title = "Accuracy for E and S Choices",
+    x     = "Choice Type",
+    y     = "Mean Accuracy",
+    fill  = "Choice Type"
+  ) +
+ scale_y_continuous(breaks = seq(0.7, 1, by = 0.1),limits = c(0.7, 1),) +
+  theme_minimal(base_size = 14) +
+  theme(
+    panel.grid.major.y = element_line(color = "gray80", size = 0.2),
+    panel.grid.major.x = element_blank(),
+    panel.grid.minor   = element_blank(),
+    axis.ticks = element_line(color = "black"),
+    axis.line  = element_blank(),
+    plot.title = element_text(size = 18),
+    axis.title.x = element_text(size = 18),
+    axis.title.y = element_text(size = 18, color = "black"),
+    axis.text.x  = element_text(size = 18, color = "black"),
+    axis.text.y  = element_text(size = 18, color = "black"),
+    legend.text  = element_text(size = 18),
+    legend.title = element_text(size = 18)
+  )
+
+fig_out <- "D:/Aberdeen_Uni_June24/cap/THESIS/OV_Analysis/Figures/OV_EXP_Mean_Acc_E_S_options.pdf"
+ggsave(filename = fig_out, plot = acc_es_plot, width = 4, height = 4, dpi = 300)
+
+acc_es_plot
+
+accuracy_es %>%
+  group_by(choice_type) %>%
+  summarise(mean_acc = mean(Mean_Accuracy),sem_acc = sd(Mean_Accuracy) / sqrt(n()))
+
+t.test(
+  x = accuracy_es %>% filter(choice_type == "E") %>% pull(Mean_Accuracy),
+  y = accuracy_es %>% filter(choice_type == "S") %>% pull(Mean_Accuracy),
+  paired = TRUE)
+
+e_values <- accuracy_es %>% filter(choice_type == "E") %>% pull(Mean_Accuracy)
+s_values <- accuracy_es %>% filter(choice_type == "S") %>% pull(Mean_Accuracy)
+
+effect_size <- cohen.d(e_values, s_values, paired = TRUE)
+print(effect_size)
+```
+
+# Mean accuracy per choice 
+
+```{r}
+accuracy_summary <- accuracy_es %>%
+  group_by(choice_type) %>%
+  summarise(
+    Mean = round(mean(Mean_Accuracy), 3),
+    SD = round(sd(Mean_Accuracy), 3),
+    .groups = "drop"
+  )
+accuracy_summary
+
+```
+# glmer for choice accuracy E vs S
+
+```{r}
+
+es_data_glm <- es_data %>%
+  filter(!is.na(corr)) %>%
+  mutate(choice_type = factor(choice_type, levels = c("S", "E")))
+
+m1 <- glmer(corr ~ choice_type + (1 | sub_id),data = es_data_glm,family = binomial(link = "logit"),control = glmerControl(optimizer = "bobyqa"))
+
+summary(m1)
+emmeans(m1, pairwise ~ choice_type, type = "response")
+```
+
+
+# Mean RT cohen's d
+```{r}
+e_vals <- rtime_es %>% filter(choice_type == "E") %>% arrange(sub_id) %>% pull(Mean_rtime)
+s_vals <- rtime_es %>% filter(choice_type == "S") %>% arrange(sub_id) %>% pull(Mean_rtime)
+
+# paired cohen's d
+cohens_d_result <- cohens_d(x = e_vals, y = s_vals, paired = TRUE)
+print(cohens_d_result)
+```
+
+
+# Slope Comparisons from Behavioural MATLAB data
+```{r}
+#slope data from B. Garcia's code
+slope_data <- read.csv("D:/Aberdeen_Uni_June24/cap/THESIS/Basile_Garcia/RetrieveAndCompareAnalysis-cleaning_VW/RetrieveAndCompareAnalysis-cleaning/data/stats/Fig2D_OV.csv")
+
+# phases
+slope_data <- slope_data %>%
+  mutate(
+    subject = as.factor(subject),
+    modality = factor(modality, levels = c("ES", "EE", "SP"))  
+  )
+
+# outliers ? 
+slope_data %>%
+  group_by(modality) %>%
+  identify_outliers(slope)
+
+# normality assumption?
+slope_data %>%
+  group_by(modality) %>%
+  summarise(p_value = shapiro.test(slope)$p.value)
+
+# anova
+anova_result <- slope_data %>%
+  anova_test(dv = slope, wid = subject, within = modality)
+anova_table <- get_anova_table(anova_result)
+print(anova_table)
+
+# check sphericity
+anova_result$`Sphericity Corrections`
+
+posthoc <- slope_data %>%
+  pairwise_t_test(
+    slope ~ modality,
+    paired = TRUE,
+    p.adjust.method = "bonferroni"
+  )
+
+print(posthoc)
+
+slope_data %>%
+  group_by(modality) %>%
+  summarise(
+    M = round(mean(slope), 2),
+    SD = round(sd(slope), 2)
+  )
+
+```
+
+# Slope Comparisons (WITH PIE) from Behavioural MATLAB data
+```{r}
+#slope data from B. Garcia's code
+slope_data <- read.csv("D:/Aberdeen_Uni_June24/cap/THESIS/Basile_Garcia/RetrieveAndCompareAnalysis-cleaning_VW/RetrieveAndCompareAnalysis-cleaning/data/stats/Fig2D_OV_fullSP.csv")
+
+# phases
+slope_data <- slope_data %>%
+  mutate(
+    subject = as.factor(subject),
+    modality = factor(modality, levels = c("ES", "EE", "SP"))  
+  )
+
+# outliers ? 
+slope_data %>%
+  group_by(modality) %>%
+  identify_outliers(slope)
+
+# normality assumption?
+slope_data %>%
+  group_by(modality) %>%
+  summarise(p_value = shapiro.test(slope)$p.value)
+
+# anova
+anova_result <- slope_data %>%
+  anova_test(dv = slope, wid = subject, within = modality)
+anova_table <- get_anova_table(anova_result)
+print(anova_table)
+
+# check sphericity
+anova_result$`Sphericity Corrections`
+
+posthoc <- slope_data %>%
+  pairwise_t_test(
+    slope ~ modality,
+    paired = TRUE,
+    p.adjust.method = "bonferroni"
+  )
+
+print(posthoc)
+
+slope_data %>%
+  group_by(modality) %>%
+  summarise(
+    M = round(mean(slope), 2),
+    SD = round(sd(slope), 2)
+  )
+
+```
+
+# Slope comparisons per objective prob per phase
+
+```{r}
+#slope data from B. Garcia's code
+data <- read.csv("D:/Aberdeen_Uni_June24/cap/THESIS/Basile_Garcia/RetrieveAndCompareAnalysis-cleaning_VW/RetrieveAndCompareAnalysis-cleaning/data/stats/Fig2C_OV.csv") %>%
+  mutate(
+    subject = as.factor(subject),
+    modality = as.factor(modality)
+  )
+
+
+one_sample_tests <- data %>%
+  group_by(modality, p_obj) %>%
+  summarise(
+    mean_estimate = mean(p_est),
+    sem           = sd(p_est) / sqrt(n()),
+    t_test = list(t.test(p_est, mu = as.numeric(as.character(unique(p_obj))))),
+    d_res  = list(effectsize::cohens_d(p_est, mu = unique(p_obj))),
+    .groups = "drop"
+  ) %>%
+  mutate(
+    t_statistic = map_dbl(t_test,  "statistic"),
+    df          = map_dbl(t_test,  "parameter"),
+    p_value     = map_dbl(t_test,  "p.value"),
+    ci_low      = map_dbl(t_test,  ~ .x$conf.int[1]),
+    ci_high     = map_dbl(t_test,  ~ .x$conf.int[2]),
+    cohen_d     = map_dbl(d_res,  "Cohens_d", .default = NA_real_),
+    magnitude   = map_chr(d_res, "magnitude", .default = NA_character_)
+  )%>%
+  select(modality, p_obj, mean_estimate, sem, ci_low, ci_high,
+         t_statistic, df, p_value, cohen_d, magnitude)
+
+
+one_sample_tests <- one_sample_tests %>%
+  mutate(
+    p_value = round(p_value, 3),
+    cohen_d = round(cohen_d, 3),
+    t_statistic = round(t_statistic, 3),
+    ci_low = round(ci_low, 2),
+    ci_high = round(ci_high, 2),
+    mean_estimate = round(mean_estimate, 2),
+    sem = round(sem, 2)
+  )
+
+print(one_sample_tests)
+
+one_sample_tests
+
+```
+

@@ -1,0 +1,75 @@
+### Logistic Mixed Model (Betas) - ES Phase ###
+
+#### Model Summary ####
+Generalized linear mixed
+  model fit by maximum
+  likelihood (Laplace
+  Approximation) [glmerMod]
+ Family: binomial  ( logit )
+Formula: 
+chose_right ~ OV * DwellPropAdvantageCorrect + (1 + OV | sub_id)
+   Data: data
+
+     AIC      BIC   logLik 
+  9621.2   9669.4  -4803.6 
+deviance df.resid 
+  9607.2     7227 
+
+Scaled residuals: 
+    Min      1Q  Median 
+-3.1379 -0.9413 -0.3323 
+     3Q     Max 
+ 0.9866  3.1704 
+
+Random effects:
+ Groups Name        Variance
+ sub_id (Intercept) 2.1802  
+        OV          0.5434  
+ Std.Dev. Corr 
+ 1.4766        
+ 0.7372   -0.99
+Number of obs: 7234, groups:  
+sub_id, 21
+
+Fixed effects:
+                             Estimate
+(Intercept)                   0.25085
+OV                           -0.15642
+DwellPropAdvantageCorrect    -0.18976
+OV:DwellPropAdvantageCorrect  0.03294
+                             Std. Error
+(Intercept)                     0.32922
+OV                              0.16420
+DwellPropAdvantageCorrect       0.06641
+OV:DwellPropAdvantageCorrect    0.03226
+                             z value
+(Intercept)                    0.762
+OV                            -0.953
+DwellPropAdvantageCorrect     -2.858
+OV:DwellPropAdvantageCorrect   1.021
+                             Pr(>|z|)
+(Intercept)                   0.44610
+OV                            0.34078
+DwellPropAdvantageCorrect     0.00427
+OV:DwellPropAdvantageCorrect  0.30707
+                               
+(Intercept)                    
+OV                             
+DwellPropAdvantageCorrect    **
+OV:DwellPropAdvantageCorrect   
+---
+Signif. codes:  
+  0 ‘***’ 0.001 ‘**’ 0.01
+  ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
+
+Correlation of Fixed Effects:
+            (Intr) OV    
+OV          -0.986       
+DwllPrpAdvC  0.000  0.000
+OV:DwllPrAC -0.001  0.000
+            DwlPAC
+OV                
+DwllPrpAdvC       
+OV:DwllPrAC -0.929
+
+#### Tab Model Output ####

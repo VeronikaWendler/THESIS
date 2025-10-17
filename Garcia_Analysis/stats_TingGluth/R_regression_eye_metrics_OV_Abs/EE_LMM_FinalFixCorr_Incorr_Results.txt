@@ -1,0 +1,61 @@
+### Linear Mixed Model: Predicting P(Correct) in 'L ~ R' Bin ###
+Linear mixed model fit by REML. t-tests use Satterthwaite's method ['lmerModLmerTest']
+Formula: mean_p_correct ~ OVcate_2 + (1 | sub_id)
+   Data: agg_L_R_data
+
+REML criterion at convergence: 3
+
+Scaled residuals: 
+     Min       1Q   Median       3Q      Max 
+-2.38093 -0.74322 -0.01562  0.65390  1.43802 
+
+Random effects:
+ Groups   Name        Variance Std.Dev.
+ sub_id   (Intercept) 0.00000  0.0000  
+ Residual             0.05258  0.2293  
+Number of obs: 48, groups:  sub_id, 21
+
+Fixed effects:
+               Estimate Std. Error       df t value Pr(>|t|)    
+(Intercept)     0.67025    0.05004 45.00000  13.394   <2e-16 ***
+OVcate_2medium  0.20475    0.10615 45.00000   1.929   0.0601 .  
+OVcate_2high    0.00072    0.07077 45.00000   0.010   0.9919    
+---
+Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
+
+Correlation of Fixed Effects:
+            (Intr) OVct_2m
+OVcate_2mdm -0.471        
+OVcate_2hgh -0.707  0.333 
+optimizer (nloptwrap) convergence code: 0 (OK)
+boundary (singular) fit: see help('isSingular')
+
+
+### Pairwise Comparisons (Bonferroni-adjusted) - OV Levels Within 'L ~ R' Bin ###
+$emmeans
+ OVcate_2 emmean    SE df lower.CL upper.CL
+ low       0.670 0.050 45    0.569    0.771
+ medium    0.875 0.098 45    0.678    1.072
+ high      0.671 0.050 45    0.570    0.772
+
+Degrees-of-freedom method: kenward-roger 
+Confidence level used: 0.95 
+
+$contrasts
+ contrast      estimate     SE   df t.ratio p.value
+ low - medium  -0.20475 0.1100 39.2  -1.861  0.2107
+ low - high    -0.00072 0.0708 25.7  -0.010  1.0000
+ medium - high  0.20403 0.1100 39.2   1.855  0.2135
+
+Degrees-of-freedom method: kenward-roger 
+P value adjustment: bonferroni method for 3 tests 
+
+
+### Model Comparison: Does OV Level Influence P(Correct)? ###
+Data: agg_L_R_data
+Models:
+lmm_no_OV: mean_p_correct ~ 1 + (1 | sub_id)
+lmm_model: mean_p_correct ~ OVcate_2 + (1 | sub_id)
+          npar    AIC     BIC logLik deviance  Chisq Df Pr(>Chisq)
+lmm_no_OV    3 1.9975  7.6111 2.0013  -4.0025                     
+lmm_model    5 1.7425 11.0985 4.1287  -8.2575 4.2549  2     0.1191

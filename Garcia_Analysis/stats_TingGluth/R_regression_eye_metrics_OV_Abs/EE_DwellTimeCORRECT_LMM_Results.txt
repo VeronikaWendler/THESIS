@@ -1,0 +1,226 @@
+### Linear Mixed Model: Predicting P(Choose Correct) ###
+Linear mixed model fit by REML. t-tests use Satterthwaite's method ['lmerModLmerTest']
+Formula: mean_p_choose_corr ~ DwelltimeAdvantageCorrect_bin * OVcate_2 +      (1 | sub_id)
+   Data: agg_data
+
+REML criterion at convergence: -86
+
+Scaled residuals: 
+    Min      1Q  Median      3Q     Max 
+-3.8384 -0.3747  0.1167  0.5633  2.4291 
+
+Random effects:
+ Groups   Name        Variance Std.Dev.
+ sub_id   (Intercept) 0.006948 0.08336 
+ Residual             0.034089 0.18463 
+Number of obs: 309, groups:  sub_id, 21
+
+Fixed effects:
+                                                Estimate Std. Error         df t value Pr(>|t|)    
+(Intercept)                                     0.534095   0.044206 211.146847  12.082  < 2e-16 ***
+DwelltimeAdvantageCorrect_bin2                  0.233046   0.056979 274.049336   4.090 5.67e-05 ***
+DwelltimeAdvantageCorrect_bin3                  0.351487   0.056979 274.049336   6.169 2.46e-09 ***
+DwelltimeAdvantageCorrect_bin4                  0.389219   0.056979 274.049336   6.831 5.44e-11 ***
+DwelltimeAdvantageCorrect_bin5                  0.404976   0.058543 274.634758   6.918 3.23e-11 ***
+OVcate_2medium                                  0.291146   0.056979 274.049336   5.110 6.06e-07 ***
+OVcate_2high                                   -0.005127   0.056979 274.049336  -0.090  0.92837    
+DwelltimeAdvantageCorrect_bin2:OVcate_2medium  -0.155340   0.080580 274.049336  -1.928  0.05492 .  
+DwelltimeAdvantageCorrect_bin3:OVcate_2medium  -0.237650   0.080580 274.049336  -2.949  0.00346 ** 
+DwelltimeAdvantageCorrect_bin4:OVcate_2medium  -0.240158   0.080580 274.049336  -2.980  0.00314 ** 
+DwelltimeAdvantageCorrect_bin5:OVcate_2medium  -0.240659   0.083306 274.192973  -2.889  0.00418 ** 
+DwelltimeAdvantageCorrect_bin2:OVcate_2high    -0.021598   0.080580 274.049336  -0.268  0.78887    
+DwelltimeAdvantageCorrect_bin3:OVcate_2high    -0.061578   0.080580 274.049336  -0.764  0.44542    
+DwelltimeAdvantageCorrect_bin4:OVcate_2high    -0.007662   0.080580 274.049336  -0.095  0.92432    
+DwelltimeAdvantageCorrect_bin5:OVcate_2high     0.007349   0.082160 274.197494   0.089  0.92879    
+---
+Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
+
+### Pairwise Comparisons (Bonferroni-adjusted) - Dwell Time Bins Within OV Levels ###
+$emmeans
+OVcate_2 = low:
+ DwelltimeAdvantageCorrect_bin emmean     SE  df lower.CL upper.CL
+ 1                              0.534 0.0442 211    0.447    0.621
+ 2                              0.767 0.0442 211    0.680    0.854
+ 3                              0.886 0.0442 211    0.798    0.973
+ 4                              0.923 0.0442 211    0.836    1.010
+ 5                              0.939 0.0462 224    0.848    1.030
+
+OVcate_2 = medium:
+ DwelltimeAdvantageCorrect_bin emmean     SE  df lower.CL upper.CL
+ 1                              0.825 0.0442 211    0.738    0.912
+ 2                              0.903 0.0442 211    0.816    0.990
+ 3                              0.939 0.0442 211    0.852    1.026
+ 4                              0.974 0.0442 211    0.887    1.061
+ 5                              0.990 0.0473 231    0.896    1.083
+
+OVcate_2 = high:
+ DwelltimeAdvantageCorrect_bin emmean     SE  df lower.CL upper.CL
+ 1                              0.529 0.0442 211    0.442    0.616
+ 2                              0.740 0.0442 211    0.653    0.828
+ 3                              0.819 0.0442 211    0.732    0.906
+ 4                              0.911 0.0442 211    0.823    0.998
+ 5                              0.941 0.0452 218    0.852    1.030
+
+Degrees-of-freedom method: kenward-roger 
+Confidence level used: 0.95 
+
+$contrasts
+OVcate_2 = low:
+ contrast                                                        estimate     SE  df t.ratio p.value
+ DwelltimeAdvantageCorrect_bin1 - DwelltimeAdvantageCorrect_bin2  -0.2330 0.0570 274  -4.090  0.0006
+ DwelltimeAdvantageCorrect_bin1 - DwelltimeAdvantageCorrect_bin3  -0.3515 0.0570 274  -6.169  <.0001
+ DwelltimeAdvantageCorrect_bin1 - DwelltimeAdvantageCorrect_bin4  -0.3892 0.0570 274  -6.831  <.0001
+ DwelltimeAdvantageCorrect_bin1 - DwelltimeAdvantageCorrect_bin5  -0.4050 0.0585 275  -6.917  <.0001
+ DwelltimeAdvantageCorrect_bin2 - DwelltimeAdvantageCorrect_bin3  -0.1184 0.0570 274  -2.079  0.3858
+ DwelltimeAdvantageCorrect_bin2 - DwelltimeAdvantageCorrect_bin4  -0.1562 0.0570 274  -2.741  0.0653
+ DwelltimeAdvantageCorrect_bin2 - DwelltimeAdvantageCorrect_bin5  -0.1719 0.0585 275  -2.937  0.0360
+ DwelltimeAdvantageCorrect_bin3 - DwelltimeAdvantageCorrect_bin4  -0.0377 0.0570 274  -0.662  1.0000
+ DwelltimeAdvantageCorrect_bin3 - DwelltimeAdvantageCorrect_bin5  -0.0535 0.0585 275  -0.914  1.0000
+ DwelltimeAdvantageCorrect_bin4 - DwelltimeAdvantageCorrect_bin5  -0.0158 0.0585 275  -0.269  1.0000
+
+OVcate_2 = medium:
+ contrast                                                        estimate     SE  df t.ratio p.value
+ DwelltimeAdvantageCorrect_bin1 - DwelltimeAdvantageCorrect_bin2  -0.0777 0.0570 274  -1.364  1.0000
+ DwelltimeAdvantageCorrect_bin1 - DwelltimeAdvantageCorrect_bin3  -0.1138 0.0570 274  -1.998  0.4672
+ DwelltimeAdvantageCorrect_bin1 - DwelltimeAdvantageCorrect_bin4  -0.1491 0.0570 274  -2.616  0.0939
+ DwelltimeAdvantageCorrect_bin1 - DwelltimeAdvantageCorrect_bin5  -0.1643 0.0594 275  -2.764  0.0609
+ DwelltimeAdvantageCorrect_bin2 - DwelltimeAdvantageCorrect_bin3  -0.0361 0.0570 274  -0.634  1.0000
+ DwelltimeAdvantageCorrect_bin2 - DwelltimeAdvantageCorrect_bin4  -0.0714 0.0570 274  -1.252  1.0000
+ DwelltimeAdvantageCorrect_bin2 - DwelltimeAdvantageCorrect_bin5  -0.0866 0.0594 275  -1.457  1.0000
+ DwelltimeAdvantageCorrect_bin3 - DwelltimeAdvantageCorrect_bin4  -0.0352 0.0570 274  -0.618  1.0000
+ DwelltimeAdvantageCorrect_bin3 - DwelltimeAdvantageCorrect_bin5  -0.0505 0.0594 275  -0.849  1.0000
+ DwelltimeAdvantageCorrect_bin4 - DwelltimeAdvantageCorrect_bin5  -0.0153 0.0594 275  -0.257  1.0000
+
+OVcate_2 = high:
+ contrast                                                        estimate     SE  df t.ratio p.value
+ DwelltimeAdvantageCorrect_bin1 - DwelltimeAdvantageCorrect_bin2  -0.2114 0.0570 274  -3.711  0.0025
+ DwelltimeAdvantageCorrect_bin1 - DwelltimeAdvantageCorrect_bin3  -0.2899 0.0570 274  -5.088  <.0001
+ DwelltimeAdvantageCorrect_bin1 - DwelltimeAdvantageCorrect_bin4  -0.3816 0.0570 274  -6.696  <.0001
+ DwelltimeAdvantageCorrect_bin1 - DwelltimeAdvantageCorrect_bin5  -0.4123 0.0577 274  -7.142  <.0001
+ DwelltimeAdvantageCorrect_bin2 - DwelltimeAdvantageCorrect_bin3  -0.0785 0.0570 274  -1.377  1.0000
+ DwelltimeAdvantageCorrect_bin2 - DwelltimeAdvantageCorrect_bin4  -0.1701 0.0570 274  -2.985  0.0309
+ DwelltimeAdvantageCorrect_bin2 - DwelltimeAdvantageCorrect_bin5  -0.2009 0.0577 274  -3.480  0.0058
+ DwelltimeAdvantageCorrect_bin3 - DwelltimeAdvantageCorrect_bin4  -0.0916 0.0570 274  -1.608  1.0000
+ DwelltimeAdvantageCorrect_bin3 - DwelltimeAdvantageCorrect_bin5  -0.1224 0.0577 274  -2.120  0.3487
+ DwelltimeAdvantageCorrect_bin4 - DwelltimeAdvantageCorrect_bin5  -0.0308 0.0577 274  -0.533  1.0000
+
+Degrees-of-freedom method: kenward-roger 
+P value adjustment: bonferroni method for 10 tests 
+
+
+### Pairwise Comparisons (Bonferroni-adjusted) - OV Levels Within Each Bin ###
+$emmeans
+DwelltimeAdvantageCorrect_bin = 1:
+ OVcate_2 emmean     SE  df lower.CL upper.CL
+ low       0.534 0.0442 211    0.447    0.621
+ medium    0.825 0.0442 211    0.738    0.912
+ high      0.529 0.0442 211    0.442    0.616
+
+DwelltimeAdvantageCorrect_bin = 2:
+ OVcate_2 emmean     SE  df lower.CL upper.CL
+ low       0.767 0.0442 211    0.680    0.854
+ medium    0.903 0.0442 211    0.816    0.990
+ high      0.740 0.0442 211    0.653    0.828
+
+DwelltimeAdvantageCorrect_bin = 3:
+ OVcate_2 emmean     SE  df lower.CL upper.CL
+ low       0.886 0.0442 211    0.798    0.973
+ medium    0.939 0.0442 211    0.852    1.026
+ high      0.819 0.0442 211    0.732    0.906
+
+DwelltimeAdvantageCorrect_bin = 4:
+ OVcate_2 emmean     SE  df lower.CL upper.CL
+ low       0.923 0.0442 211    0.836    1.010
+ medium    0.974 0.0442 211    0.887    1.061
+ high      0.911 0.0442 211    0.823    0.998
+
+DwelltimeAdvantageCorrect_bin = 5:
+ OVcate_2 emmean     SE  df lower.CL upper.CL
+ low       0.939 0.0462 224    0.848    1.030
+ medium    0.990 0.0473 231    0.896    1.083
+ high      0.941 0.0452 218    0.852    1.030
+
+Degrees-of-freedom method: kenward-roger 
+Confidence level used: 0.95 
+
+$contrasts
+DwelltimeAdvantageCorrect_bin = 1:
+ contrast      estimate     SE  df t.ratio p.value
+ low - medium  -0.29115 0.0570 274  -5.110  <.0001
+ low - high     0.00513 0.0570 274   0.090  1.0000
+ medium - high  0.29627 0.0570 274   5.200  <.0001
+
+DwelltimeAdvantageCorrect_bin = 2:
+ contrast      estimate     SE  df t.ratio p.value
+ low - medium  -0.13581 0.0570 274  -2.383  0.0535
+ low - high     0.02672 0.0570 274   0.469  1.0000
+ medium - high  0.16253 0.0570 274   2.852  0.0140
+
+DwelltimeAdvantageCorrect_bin = 3:
+ contrast      estimate     SE  df t.ratio p.value
+ low - medium  -0.05350 0.0570 274  -0.939  1.0000
+ low - high     0.06670 0.0570 274   1.171  0.7282
+ medium - high  0.12020 0.0570 274   2.110  0.1074
+
+DwelltimeAdvantageCorrect_bin = 4:
+ contrast      estimate     SE  df t.ratio p.value
+ low - medium  -0.05099 0.0570 274  -0.895  1.0000
+ low - high     0.01279 0.0570 274   0.224  1.0000
+ medium - high  0.06378 0.0570 274   1.119  0.7920
+
+DwelltimeAdvantageCorrect_bin = 5:
+ contrast      estimate     SE  df t.ratio p.value
+ low - medium  -0.05049 0.0608 274  -0.831  1.0000
+ low - high    -0.00222 0.0592 274  -0.038  1.0000
+ medium - high  0.04826 0.0601 275   0.803  1.0000
+
+Degrees-of-freedom method: kenward-roger 
+P value adjustment: bonferroni method for 3 tests 
+
+
+### Model Comparison: Does OV Level Influence Dwell Time Effects? ###
+Data: agg_data
+Models:
+lmm_no_OV: mean_p_choose_corr ~ DwelltimeAdvantageCorrect_bin + (1 | sub_id)
+lmm_model: mean_p_choose_corr ~ DwelltimeAdvantageCorrect_bin * OVcate_2 + (1 | sub_id)
+          npar      AIC     BIC logLik deviance  Chisq Df Pr(>Chisq)    
+lmm_no_OV    7  -89.782 -63.649 51.891  -103.78                         
+lmm_model   17 -119.424 -55.957 76.712  -153.42 49.641 10  3.106e-07 ***
+---
+Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
+
+### Linear Mixed Model (Continuous Dwell Time) ###
+Linear mixed model fit by REML. t-tests use Satterthwaite's method ['lmerModLmerTest']
+Formula: corr ~ DwelltimeAdvantageCorrect * OVcate_2 + (1 | sub_id)
+   Data: data
+
+REML criterion at convergence: 2098.8
+
+Scaled residuals: 
+    Min      1Q  Median      3Q     Max 
+-7.8153 -0.0868  0.3106  0.5931  2.1451 
+
+Random effects:
+ Groups   Name        Variance Std.Dev.
+ sub_id   (Intercept) 0.007275 0.08529 
+ Residual             0.114753 0.33875 
+Number of obs: 2940, groups:  sub_id, 21
+
+Fixed effects:
+                                           Estimate Std. Error         df t value Pr(>|t|)    
+(Intercept)                               7.670e-01  2.123e-02  2.734e+01  36.121  < 2e-16 ***
+DwelltimeAdvantageCorrect                 2.008e-04  1.693e-05  2.923e+03  11.859  < 2e-16 ***
+OVcate_2medium                            1.190e-01  1.622e-02  2.920e+03   7.338 2.79e-13 ***
+OVcate_2high                             -3.156e-02  1.553e-02  2.915e+03  -2.032   0.0422 *  
+DwelltimeAdvantageCorrect:OVcate_2medium -1.991e-05  3.091e-05  2.925e+03  -0.644   0.5196    
+DwelltimeAdvantageCorrect:OVcate_2high    1.366e-04  2.794e-05  2.927e+03   4.890 1.06e-06 ***
+---
+Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
+
+Correlation of Fixed Effects:
+                          (Intr) DwllAC OVct_2m OVct_2h DwlltmAdvntgCrrct:OVct_2m
+DwlltmAdvnC               -0.137                                                 
+OVcate_2mdm               -0.304  0.180                                          
+OVcate_2hgh               -0.316  0.188  0.415                                   
+DwlltmAdvntgCrrct:OVct_2m  0.075 -0.545 -0.332  -0.103                           
+DwlltmAdvntgCrrct:OVct_2h  0.083 -0.610 -0.110  -0.271   0.336                   

@@ -1,0 +1,56 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<svg xmlns='http://www.w3.org/2000/svg' xmlns:xlink='http://www.w3.org/1999/xlink' class='svglite' width='576.00pt' height='432.00pt' viewBox='0 0 576.00 432.00'>
+<defs>
+  <style type='text/css'><![CDATA[
+    .svglite line, .svglite polyline, .svglite polygon, .svglite path, .svglite rect, .svglite circle {
+      fill: none;
+      stroke: #000000;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+      stroke-miterlimit: 10.00;
+    }
+    .svglite text {
+      white-space: pre;
+    }
+  ]]></style>
+</defs>
+<rect width='100%' height='100%' style='stroke: none; fill: #FFFFFF;'/>
+<defs>
+  <clipPath id='cpMC4wMHw1NzYuMDB8MC4wMHw0MzIuMDA='>
+    <rect x='0.00' y='0.00' width='576.00' height='432.00' />
+  </clipPath>
+</defs>
+<g clip-path='url(#cpMC4wMHw1NzYuMDB8MC4wMHw0MzIuMDA=)'>
+<rect x='0.00' y='0.000000000000057' width='576.00' height='432.00' style='stroke-width: 1.07; stroke: #FFFFFF; fill: #FFFFFF;' />
+</g>
+<defs>
+  <clipPath id='cpNTIuMDl8NTcwLjUyfDI3LjY0fDM5NS42OQ=='>
+    <rect x='52.09' y='27.64' width='518.43' height='368.05' />
+  </clipPath>
+</defs>
+<g clip-path='url(#cpNTIuMDl8NTcwLjUyfDI3LjY0fDM5NS42OQ==)'>
+<rect x='52.09' y='27.64' width='518.43' height='368.05' style='stroke-width: 1.07; stroke: #FFFFFF; fill: #FFFFFF;' />
+<rect x='134.57' y='84.06' width='117.83' height='158.80' style='stroke-width: 2.13; stroke-linecap: butt; stroke-linejoin: miter; fill: #9932CC; fill-opacity: 0.70;' />
+<rect x='370.22' y='84.06' width='117.83' height='11.49' style='stroke-width: 2.13; stroke-linecap: butt; stroke-linejoin: miter; fill: #9932CC; fill-opacity: 0.70;' />
+<polyline points='187.59,140.48 199.37,140.48 ' style='stroke-width: 2.13; stroke-linecap: butt;' />
+<polyline points='193.48,140.48 193.48,345.24 ' style='stroke-width: 2.13; stroke-linecap: butt;' />
+<polyline points='187.59,345.24 199.37,345.24 ' style='stroke-width: 2.13; stroke-linecap: butt;' />
+<polyline points='423.24,44.37 435.02,44.37 ' style='stroke-width: 2.13; stroke-linecap: butt;' />
+<polyline points='429.13,44.37 429.13,146.73 ' style='stroke-width: 2.13; stroke-linecap: butt;' />
+<polyline points='423.24,146.73 435.02,146.73 ' style='stroke-width: 2.13; stroke-linecap: butt;' />
+<text x='193.48' y='389.14' text-anchor='middle' style='font-size: 28.45px; font-weight: bold; font-family: "Arial";' textLength='22.13px' lengthAdjust='spacingAndGlyphs'>**</text>
+<line x1='52.09' y1='84.06' x2='570.52' y2='84.06' style='stroke-width: 2.13; stroke-linecap: butt;' />
+</g>
+<g clip-path='url(#cpMC4wMHw1NzYuMDB8MC4wMHw0MzIuMDA=)'>
+<polyline points='52.09,395.69 52.09,27.64 ' style='stroke-width: 2.13; stroke-linecap: butt;' />
+<text x='47.16' y='358.84' text-anchor='end' style='font-size: 14.00px; font-family: "Arial";' textLength='24.11px' lengthAdjust='spacingAndGlyphs'>-0.4</text>
+<text x='47.16' y='291.40' text-anchor='end' style='font-size: 14.00px; font-family: "Arial";' textLength='24.11px' lengthAdjust='spacingAndGlyphs'>-0.3</text>
+<text x='47.16' y='223.95' text-anchor='end' style='font-size: 14.00px; font-family: "Arial";' textLength='24.11px' lengthAdjust='spacingAndGlyphs'>-0.2</text>
+<text x='47.16' y='156.51' text-anchor='end' style='font-size: 14.00px; font-family: "Arial";' textLength='24.11px' lengthAdjust='spacingAndGlyphs'>-0.1</text>
+<text x='47.16' y='89.07' text-anchor='end' style='font-size: 14.00px; font-family: "Arial";' textLength='19.45px' lengthAdjust='spacingAndGlyphs'>0.0</text>
+<text x='193.48' y='410.64' text-anchor='middle' style='font-size: 14.00px; font-family: "Arial";' textLength='82.43px' lengthAdjust='spacingAndGlyphs'>MiddleFixDur</text>
+<text x='429.13' y='410.64' text-anchor='middle' style='font-size: 14.00px; font-family: "Arial";' textLength='106.03px' lengthAdjust='spacingAndGlyphs'>OV:MiddleFixDur</text>
+<text transform='translate(16.93,211.66) rotate(-90)' text-anchor='middle' style='font-size: 16.00px; font-family: "Arial";' textLength='120.66px' lengthAdjust='spacingAndGlyphs'>Beta Coefficients</text>
+<text x='311.30' y='18.37' text-anchor='middle' style='font-size: 18.00px; font-family: "Arial";' textLength='456.82px' lengthAdjust='spacingAndGlyphs'>ES - Beta Coefficients for VD, OV &amp; MiddleFixDur on corr</text>
+</g>
+</svg>

@@ -1,0 +1,73 @@
+### Logistic Mixed Model (Betas, NOT Odds Ratios) - EE Phase ###
+
+#### Model Summary ####
+Generalized linear mixed
+  model fit by maximum
+  likelihood (Laplace
+  Approximation) [glmerMod]
+ Family: binomial  ( logit )
+Formula: 
+chose_right ~ OV * FinalFixLoc + (1 + OV | sub_id)
+   Data: data
+
+     AIC      BIC   logLik 
+  3159.3   3200.7  -1572.6 
+deviance df.resid 
+  3145.3     2750 
+
+Scaled residuals: 
+    Min      1Q  Median 
+-2.1640 -0.5781 -0.4089 
+     3Q     Max 
+ 0.6389  3.9459 
+
+Random effects:
+ Groups Name        Variance
+ sub_id (Intercept) 0.000000
+        OV          0.003563
+ Std.Dev. Corr
+ 0.00000      
+ 0.05969   NaN
+Number of obs: 2757, groups:  
+sub_id, 21
+
+Fixed effects:
+               Estimate
+(Intercept)    -0.06598
+OV             -0.01132
+FinalFixLoc     1.29958
+OV:FinalFixLoc -0.11510
+               Std. Error
+(Intercept)       0.10953
+OV                0.05355
+FinalFixLoc       0.11355
+OV:FinalFixLoc    0.05355
+               z value
+(Intercept)     -0.602
+OV              -0.211
+FinalFixLoc     11.445
+OV:FinalFixLoc  -2.149
+               Pr(>|z|)    
+(Intercept)      0.5469    
+OV               0.8325    
+FinalFixLoc      <2e-16 ***
+OV:FinalFixLoc   0.0316 *  
+---
+Signif. codes:  
+  0 ‘***’ 0.001 ‘**’ 0.01
+  ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
+
+Correlation of Fixed Effects:
+            (Intr) OV    
+OV          -0.889       
+FinalFixLoc -0.092  0.075
+OV:FinlFxLc  0.078 -0.073
+            FnlFxL
+OV                
+FinalFixLoc       
+OV:FinlFxLc -0.916
+optimizer (Nelder_Mead) convergence code: 0 (OK)
+boundary (singular) fit: see help('isSingular')
+
+
+#### Tabulated Model Output ####

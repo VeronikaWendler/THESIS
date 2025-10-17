@@ -1,0 +1,571 @@
+### Linear Mixed Model: Predicting P(Correct) Across All Bins ###
+Linear mixed model fit by REML. t-tests use Satterthwaite's method [
+lmerModLmerTest]
+Formula: 
+mean_p_correct ~ ValueDifference_bin * OVcate_2 * FirstFix_Correct +  
+    (1 | sub_id)
+   Data: agg_data
+
+REML criterion at convergence: -160
+
+Scaled residuals: 
+    Min      1Q  Median      3Q     Max 
+-4.8167 -0.1772  0.1353  0.4904  1.6222 
+
+Random effects:
+ Groups   Name        Variance Std.Dev.
+ sub_id   (Intercept) 0.001282 0.0358  
+ Residual             0.037104 0.1926  
+Number of obs: 609, groups:  sub_id, 21
+
+Fixed effects:
+                                                                          Estimate
+(Intercept)                                                               0.903916
+ValueDifference_binL>R                                                   -0.194360
+ValueDifference_binL ~ R                                                 -0.058247
+ValueDifference_binR>L                                                   -0.152400
+ValueDifference_binR>>L                                                   0.067853
+OVcate_2medium                                                            0.066497
+OVcate_2high                                                              0.068257
+FirstFix_CorrectLine: Incorrect                                           0.047235
+ValueDifference_binL>R:OVcate_2medium                                     0.054511
+ValueDifference_binL ~ R:OVcate_2medium                                  -0.083539
+ValueDifference_binR>L:OVcate_2medium                                     0.124902
+ValueDifference_binR>>L:OVcate_2medium                                   -0.044972
+ValueDifference_binL>R:OVcate_2high                                      -0.046619
+ValueDifference_binL ~ R:OVcate_2high                                    -0.051266
+ValueDifference_binR>L:OVcate_2high                                       0.045016
+ValueDifference_binR>>L:OVcate_2high                                     -0.037430
+ValueDifference_binL>R:FirstFix_CorrectLine: Incorrect                   -0.027124
+ValueDifference_binL ~ R:FirstFix_CorrectLine: Incorrect                 -0.069408
+ValueDifference_binR>L:FirstFix_CorrectLine: Incorrect                   -0.005901
+ValueDifference_binR>>L:FirstFix_CorrectLine: Incorrect                  -0.077803
+OVcate_2medium:FirstFix_CorrectLine: Incorrect                           -0.061323
+OVcate_2high:FirstFix_CorrectLine: Incorrect                             -0.036604
+ValueDifference_binL>R:OVcate_2medium:FirstFix_CorrectLine: Incorrect     0.012576
+ValueDifference_binL ~ R:OVcate_2medium:FirstFix_CorrectLine: Incorrect   0.017868
+ValueDifference_binR>L:OVcate_2medium:FirstFix_CorrectLine: Incorrect     0.015554
+ValueDifference_binR>>L:OVcate_2medium:FirstFix_CorrectLine: Incorrect    0.086337
+ValueDifference_binL>R:OVcate_2high:FirstFix_CorrectLine: Incorrect       0.001477
+ValueDifference_binL ~ R:OVcate_2high:FirstFix_CorrectLine: Incorrect     0.017802
+ValueDifference_binR>L:OVcate_2high:FirstFix_CorrectLine: Incorrect      -0.096536
+ValueDifference_binR>>L:OVcate_2high:FirstFix_CorrectLine: Incorrect      0.036004
+                                                                        Std. Error
+(Intercept)                                                               0.042754
+ValueDifference_binL>R                                                    0.059445
+ValueDifference_binL ~ R                                                  0.060199
+ValueDifference_binR>L                                                    0.060199
+ValueDifference_binR>>L                                                   0.059445
+OVcate_2medium                                                            0.059445
+OVcate_2high                                                              0.059445
+FirstFix_CorrectLine: Incorrect                                           0.060199
+ValueDifference_binL>R:OVcate_2medium                                     0.084068
+ValueDifference_binL ~ R:OVcate_2medium                                   0.086336
+ValueDifference_binR>L:OVcate_2medium                                     0.085112
+ValueDifference_binR>>L:OVcate_2medium                                    0.084602
+ValueDifference_binL>R:OVcate_2high                                       0.084068
+ValueDifference_binL ~ R:OVcate_2high                                     0.084602
+ValueDifference_binR>L:OVcate_2high                                       0.085694
+ValueDifference_binR>>L:OVcate_2high                                      0.088243
+ValueDifference_binL>R:FirstFix_CorrectLine: Incorrect                    0.085112
+ValueDifference_binL ~ R:FirstFix_CorrectLine: Incorrect                  0.085155
+ValueDifference_binR>L:FirstFix_CorrectLine: Incorrect                    0.085155
+ValueDifference_binR>>L:FirstFix_CorrectLine: Incorrect                   0.084602
+OVcate_2medium:FirstFix_CorrectLine: Incorrect                            0.084602
+OVcate_2high:FirstFix_CorrectLine: Incorrect                              0.084602
+ValueDifference_binL>R:OVcate_2medium:FirstFix_CorrectLine: Incorrect     0.120420
+ValueDifference_binL ~ R:OVcate_2medium:FirstFix_CorrectLine: Incorrect   0.120878
+ValueDifference_binR>L:OVcate_2medium:FirstFix_CorrectLine: Incorrect     0.120007
+ValueDifference_binR>>L:OVcate_2medium:FirstFix_CorrectLine: Incorrect    0.119631
+ValueDifference_binL>R:OVcate_2high:FirstFix_CorrectLine: Incorrect       0.120420
+ValueDifference_binL ~ R:OVcate_2high:FirstFix_CorrectLine: Incorrect     0.119661
+ValueDifference_binR>L:OVcate_2high:FirstFix_CorrectLine: Incorrect       0.120420
+ValueDifference_binR>>L:OVcate_2high:FirstFix_CorrectLine: Incorrect      0.122232
+                                                                                df
+(Intercept)                                                             559.959037
+ValueDifference_binL>R                                                  557.429326
+ValueDifference_binL ~ R                                                558.163408
+ValueDifference_binR>L                                                  558.163408
+ValueDifference_binR>>L                                                 557.429327
+OVcate_2medium                                                          557.429327
+OVcate_2high                                                            557.429326
+FirstFix_CorrectLine: Incorrect                                         558.163407
+ValueDifference_binL>R:OVcate_2medium                                   557.429327
+ValueDifference_binL ~ R:OVcate_2medium                                 558.030875
+ValueDifference_binR>L:OVcate_2medium                                   557.429327
+ValueDifference_binR>>L:OVcate_2medium                                  557.802399
+ValueDifference_binL>R:OVcate_2high                                     557.429326
+ValueDifference_binL ~ R:OVcate_2high                                   557.802399
+ValueDifference_binR>L:OVcate_2high                                     557.735596
+ValueDifference_binR>>L:OVcate_2high                                    559.412049
+ValueDifference_binL>R:FirstFix_CorrectLine: Incorrect                  557.429326
+ValueDifference_binL ~ R:FirstFix_CorrectLine: Incorrect                558.885452
+ValueDifference_binR>L:FirstFix_CorrectLine: Incorrect                  558.885453
+ValueDifference_binR>>L:FirstFix_CorrectLine: Incorrect                 557.802398
+OVcate_2medium:FirstFix_CorrectLine: Incorrect                          557.802399
+OVcate_2high:FirstFix_CorrectLine: Incorrect                            557.802398
+ValueDifference_binL>R:OVcate_2medium:FirstFix_CorrectLine: Incorrect   557.753129
+ValueDifference_binL ~ R:OVcate_2medium:FirstFix_CorrectLine: Incorrect 557.919090
+ValueDifference_binR>L:OVcate_2medium:FirstFix_CorrectLine: Incorrect   557.615102
+ValueDifference_binR>>L:OVcate_2medium:FirstFix_CorrectLine: Incorrect  557.429326
+ValueDifference_binL>R:OVcate_2high:FirstFix_CorrectLine: Incorrect     557.768580
+ValueDifference_binL ~ R:OVcate_2high:FirstFix_CorrectLine: Incorrect   558.172395
+ValueDifference_binR>L:OVcate_2high:FirstFix_CorrectLine: Incorrect     557.768580
+ValueDifference_binR>>L:OVcate_2high:FirstFix_CorrectLine: Incorrect    558.297442
+                                                                        t value
+(Intercept)                                                              21.142
+ValueDifference_binL>R                                                   -3.270
+ValueDifference_binL ~ R                                                 -0.968
+ValueDifference_binR>L                                                   -2.532
+ValueDifference_binR>>L                                                   1.141
+OVcate_2medium                                                            1.119
+OVcate_2high                                                              1.148
+FirstFix_CorrectLine: Incorrect                                           0.785
+ValueDifference_binL>R:OVcate_2medium                                     0.648
+ValueDifference_binL ~ R:OVcate_2medium                                  -0.968
+ValueDifference_binR>L:OVcate_2medium                                     1.468
+ValueDifference_binR>>L:OVcate_2medium                                   -0.532
+ValueDifference_binL>R:OVcate_2high                                      -0.555
+ValueDifference_binL ~ R:OVcate_2high                                    -0.606
+ValueDifference_binR>L:OVcate_2high                                       0.525
+ValueDifference_binR>>L:OVcate_2high                                     -0.424
+ValueDifference_binL>R:FirstFix_CorrectLine: Incorrect                   -0.319
+ValueDifference_binL ~ R:FirstFix_CorrectLine: Incorrect                 -0.815
+ValueDifference_binR>L:FirstFix_CorrectLine: Incorrect                   -0.069
+ValueDifference_binR>>L:FirstFix_CorrectLine: Incorrect                  -0.920
+OVcate_2medium:FirstFix_CorrectLine: Incorrect                           -0.725
+OVcate_2high:FirstFix_CorrectLine: Incorrect                             -0.433
+ValueDifference_binL>R:OVcate_2medium:FirstFix_CorrectLine: Incorrect     0.104
+ValueDifference_binL ~ R:OVcate_2medium:FirstFix_CorrectLine: Incorrect   0.148
+ValueDifference_binR>L:OVcate_2medium:FirstFix_CorrectLine: Incorrect     0.130
+ValueDifference_binR>>L:OVcate_2medium:FirstFix_CorrectLine: Incorrect    0.722
+ValueDifference_binL>R:OVcate_2high:FirstFix_CorrectLine: Incorrect       0.012
+ValueDifference_binL ~ R:OVcate_2high:FirstFix_CorrectLine: Incorrect     0.149
+ValueDifference_binR>L:OVcate_2high:FirstFix_CorrectLine: Incorrect      -0.802
+ValueDifference_binR>>L:OVcate_2high:FirstFix_CorrectLine: Incorrect      0.295
+                                                                        Pr(>|t|)
+(Intercept)                                                              < 2e-16
+ValueDifference_binL>R                                                   0.00114
+ValueDifference_binL ~ R                                                 0.33367
+ValueDifference_binR>L                                                   0.01163
+ValueDifference_binR>>L                                                  0.25418
+OVcate_2medium                                                           0.26378
+OVcate_2high                                                             0.25136
+FirstFix_CorrectLine: Incorrect                                          0.43299
+ValueDifference_binL>R:OVcate_2medium                                    0.51698
+ValueDifference_binL ~ R:OVcate_2medium                                  0.33366
+ValueDifference_binR>L:OVcate_2medium                                    0.14280
+ValueDifference_binR>>L:OVcate_2medium                                   0.59524
+ValueDifference_binL>R:OVcate_2high                                      0.57944
+ValueDifference_binL ~ R:OVcate_2high                                    0.54479
+ValueDifference_binR>L:OVcate_2high                                      0.59958
+ValueDifference_binR>>L:OVcate_2high                                     0.67161
+ValueDifference_binL>R:FirstFix_CorrectLine: Incorrect                   0.75008
+ValueDifference_binL ~ R:FirstFix_CorrectLine: Incorrect                 0.41538
+ValueDifference_binR>L:FirstFix_CorrectLine: Incorrect                   0.94478
+ValueDifference_binR>>L:FirstFix_CorrectLine: Incorrect                  0.35817
+OVcate_2medium:FirstFix_CorrectLine: Incorrect                           0.46886
+OVcate_2high:FirstFix_CorrectLine: Incorrect                             0.66543
+ValueDifference_binL>R:OVcate_2medium:FirstFix_CorrectLine: Incorrect    0.91686
+ValueDifference_binL ~ R:OVcate_2medium:FirstFix_CorrectLine: Incorrect  0.88254
+ValueDifference_binR>L:OVcate_2medium:FirstFix_CorrectLine: Incorrect    0.89692
+ValueDifference_binR>>L:OVcate_2medium:FirstFix_CorrectLine: Incorrect   0.47078
+ValueDifference_binL>R:OVcate_2high:FirstFix_CorrectLine: Incorrect      0.99022
+ValueDifference_binL ~ R:OVcate_2high:FirstFix_CorrectLine: Incorrect    0.88179
+ValueDifference_binR>L:OVcate_2high:FirstFix_CorrectLine: Incorrect      0.42309
+ValueDifference_binR>>L:OVcate_2high:FirstFix_CorrectLine: Incorrect     0.76844
+                                                                           
+(Intercept)                                                             ***
+ValueDifference_binL>R                                                  ** 
+ValueDifference_binL ~ R                                                   
+ValueDifference_binR>L                                                  *  
+ValueDifference_binR>>L                                                    
+OVcate_2medium                                                             
+OVcate_2high                                                               
+FirstFix_CorrectLine: Incorrect                                            
+ValueDifference_binL>R:OVcate_2medium                                      
+ValueDifference_binL ~ R:OVcate_2medium                                    
+ValueDifference_binR>L:OVcate_2medium                                      
+ValueDifference_binR>>L:OVcate_2medium                                     
+ValueDifference_binL>R:OVcate_2high                                        
+ValueDifference_binL ~ R:OVcate_2high                                      
+ValueDifference_binR>L:OVcate_2high                                        
+ValueDifference_binR>>L:OVcate_2high                                       
+ValueDifference_binL>R:FirstFix_CorrectLine: Incorrect                     
+ValueDifference_binL ~ R:FirstFix_CorrectLine: Incorrect                   
+ValueDifference_binR>L:FirstFix_CorrectLine: Incorrect                     
+ValueDifference_binR>>L:FirstFix_CorrectLine: Incorrect                    
+OVcate_2medium:FirstFix_CorrectLine: Incorrect                             
+OVcate_2high:FirstFix_CorrectLine: Incorrect                               
+ValueDifference_binL>R:OVcate_2medium:FirstFix_CorrectLine: Incorrect      
+ValueDifference_binL ~ R:OVcate_2medium:FirstFix_CorrectLine: Incorrect    
+ValueDifference_binR>L:OVcate_2medium:FirstFix_CorrectLine: Incorrect      
+ValueDifference_binR>>L:OVcate_2medium:FirstFix_CorrectLine: Incorrect     
+ValueDifference_binL>R:OVcate_2high:FirstFix_CorrectLine: Incorrect        
+ValueDifference_binL ~ R:OVcate_2high:FirstFix_CorrectLine: Incorrect      
+ValueDifference_binR>L:OVcate_2high:FirstFix_CorrectLine: Incorrect        
+ValueDifference_binR>>L:OVcate_2high:FirstFix_CorrectLine: Incorrect       
+---
+Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
+
+### Pairwise Comparisons (Bonferroni-adjusted) - OV Levels Within Each Bin ###
+$emmeans
+ValueDifference_bin = L>>R:
+ OVcate_2 emmean     SE  df lower.CL upper.CL
+ low       0.928 0.0311 461    0.866    0.989
+ medium    0.963 0.0307 456    0.903    1.024
+ high      0.977 0.0307 456    0.917    1.038
+
+ValueDifference_bin = L>R:
+ OVcate_2 emmean     SE  df lower.CL upper.CL
+ low       0.720 0.0311 461    0.658    0.781
+ medium    0.816 0.0315 467    0.754    0.878
+ high      0.724 0.0315 466    0.662    0.786
+
+ValueDifference_bin = L ~ R:
+ OVcate_2 emmean     SE  df lower.CL upper.CL
+ low       0.835 0.0311 461    0.773    0.896
+ medium    0.796 0.0319 472    0.733    0.859
+ high      0.842 0.0307 456    0.782    0.903
+
+ValueDifference_bin = R>L:
+ OVcate_2 emmean     SE  df lower.CL upper.CL
+ low       0.772 0.0311 461    0.711    0.833
+ medium    0.941 0.0311 461    0.880    1.002
+ high      0.819 0.0315 466    0.757    0.881
+
+ValueDifference_bin = R>>L:
+ OVcate_2 emmean     SE  df lower.CL upper.CL
+ low       0.956 0.0307 456    0.896    1.017
+ medium    0.991 0.0311 461    0.929    1.052
+ high      0.987 0.0335 491    0.921    1.053
+
+Results are averaged over the levels of: FirstFix_Correct 
+Degrees-of-freedom method: kenward-roger 
+Confidence level used: 0.95 
+
+$contrasts
+ValueDifference_bin = L>>R:
+ contrast      estimate     SE  df t.ratio p.value
+ low - medium  -0.03584 0.0423 559  -0.847  1.0000
+ low - high    -0.04995 0.0423 559  -1.181  0.7144
+ medium - high -0.01412 0.0420 559  -0.336  1.0000
+
+ValueDifference_bin = L>R:
+ contrast      estimate     SE  df t.ratio p.value
+ low - medium  -0.09664 0.0428 559  -2.255  0.0735
+ low - high    -0.00408 0.0428 559  -0.095  1.0000
+ medium - high  0.09256 0.0431 560   2.146  0.0970
+
+ValueDifference_bin = L ~ R:
+ contrast      estimate     SE  df t.ratio p.value
+ low - medium   0.03877 0.0432 560   0.898  1.0000
+ low - high    -0.00759 0.0423 559  -0.179  1.0000
+ medium - high -0.04636 0.0429 560  -1.080  0.8416
+
+ValueDifference_bin = R>L:
+ contrast      estimate     SE  df t.ratio p.value
+ low - medium  -0.16852 0.0426 559  -3.960  0.0003
+ low - high    -0.04670 0.0428 559  -1.090  0.8286
+ medium - high  0.12181 0.0428 559   2.843  0.0139
+
+ValueDifference_bin = R>>L:
+ contrast      estimate     SE  df t.ratio p.value
+ low - medium  -0.03403 0.0423 559  -0.805  1.0000
+ low - high    -0.03053 0.0441 561  -0.692  1.0000
+ medium - high  0.00351 0.0444 561   0.079  1.0000
+
+Results are averaged over the levels of: FirstFix_Correct 
+Degrees-of-freedom method: kenward-roger 
+P value adjustment: bonferroni method for 3 tests 
+
+
+### Pairwise Comparisons (Bonferroni-adjusted) - Fixation Correctness Within Each Bin ###
+$emmeans
+ValueDifference_bin = L>>R:
+ FirstFix_Correct emmean     SE  df lower.CL upper.CL
+ Dotted: Correct   0.949 0.0255 339    0.899    0.999
+ Line: Incorrect   0.963 0.0257 344    0.913    1.014
+
+ValueDifference_bin = L>R:
+ FirstFix_Correct emmean     SE  df lower.CL upper.CL
+ Dotted: Correct   0.757 0.0255 339    0.707    0.807
+ Line: Incorrect   0.749 0.0265 359    0.697    0.801
+
+ValueDifference_bin = L ~ R:
+ FirstFix_Correct emmean     SE  df lower.CL upper.CL
+ Dotted: Correct   0.846 0.0263 358    0.794    0.897
+ Line: Incorrect   0.803 0.0255 339    0.753    0.853
+
+ValueDifference_bin = R>L:
+ FirstFix_Correct emmean     SE  df lower.CL upper.CL
+ Dotted: Correct   0.853 0.0263 354    0.801    0.905
+ Line: Incorrect   0.835 0.0255 339    0.785    0.885
+
+ValueDifference_bin = R>>L:
+ FirstFix_Correct emmean     SE  df lower.CL upper.CL
+ Dotted: Correct   0.989 0.0272 377    0.936    1.043
+ Line: Incorrect   0.967 0.0255 339    0.917    1.017
+
+Results are averaged over the levels of: OVcate_2 
+Degrees-of-freedom method: kenward-roger 
+Confidence level used: 0.95 
+
+$contrasts
+ValueDifference_bin = L>>R:
+ contrast                          estimate     SE  df t.ratio p.value
+ Dotted: Correct - Line: Incorrect -0.01459 0.0345 559  -0.423  0.6722
+
+ValueDifference_bin = L>R:
+ contrast                          estimate     SE  df t.ratio p.value
+ Dotted: Correct - Line: Incorrect  0.00785 0.0351 561   0.224  0.8232
+
+ValueDifference_bin = L ~ R:
+ contrast                          estimate     SE  df t.ratio p.value
+ Dotted: Correct - Line: Incorrect  0.04292 0.0350 560   1.228  0.2200
+
+ValueDifference_bin = R>L:
+ contrast                          estimate     SE  df t.ratio p.value
+ Dotted: Correct - Line: Incorrect  0.01830 0.0349 561   0.524  0.6006
+
+ValueDifference_bin = R>>L:
+ contrast                          estimate     SE  df t.ratio p.value
+ Dotted: Correct - Line: Incorrect  0.02243 0.0356 561   0.630  0.5291
+
+Results are averaged over the levels of: OVcate_2 
+Degrees-of-freedom method: kenward-roger 
+
+
+### Interaction Effect: OV Levels x Fixation Correctness Within Each Bin ###
+$emmeans
+ValueDifference_bin = L>>R:
+ OVcate_2 FirstFix_Correct emmean     SE  df lower.CL upper.CL
+ low      Dotted: Correct   0.904 0.0428 561    0.820    0.988
+ medium   Dotted: Correct   0.970 0.0428 561    0.886    1.054
+ high     Dotted: Correct   0.972 0.0428 561    0.888    1.056
+ low      Line: Incorrect   0.951 0.0438 563    0.865    1.037
+ medium   Line: Incorrect   0.956 0.0428 561    0.872    1.040
+ high     Line: Incorrect   0.983 0.0428 561    0.899    1.067
+
+ValueDifference_bin = L>R:
+ OVcate_2 FirstFix_Correct emmean     SE  df lower.CL upper.CL
+ low      Dotted: Correct   0.710 0.0428 561    0.626    0.794
+ medium   Dotted: Correct   0.831 0.0428 561    0.747    0.915
+ high     Dotted: Correct   0.731 0.0428 561    0.647    0.815
+ low      Line: Incorrect   0.730 0.0438 563    0.644    0.816
+ medium   Line: Incorrect   0.802 0.0449 566    0.714    0.890
+ high     Line: Incorrect   0.716 0.0449 566    0.628    0.804
+
+ValueDifference_bin = L ~ R:
+ OVcate_2 FirstFix_Correct emmean     SE  df lower.CL upper.CL
+ low      Dotted: Correct   0.846 0.0438 563    0.760    0.932
+ medium   Dotted: Correct   0.829 0.0461 568    0.738    0.919
+ high     Dotted: Correct   0.863 0.0428 561    0.779    0.947
+ low      Line: Incorrect   0.823 0.0428 561    0.740    0.907
+ medium   Line: Incorrect   0.763 0.0428 561    0.679    0.847
+ high     Line: Incorrect   0.822 0.0428 561    0.738    0.906
+
+ValueDifference_bin = R>L:
+ OVcate_2 FirstFix_Correct emmean     SE  df lower.CL upper.CL
+ low      Dotted: Correct   0.752 0.0438 563    0.665    0.838
+ medium   Dotted: Correct   0.943 0.0438 563    0.857    1.029
+ high     Dotted: Correct   0.865 0.0449 566    0.777    0.953
+ low      Line: Incorrect   0.793 0.0428 561    0.709    0.877
+ medium   Line: Incorrect   0.938 0.0428 561    0.855    1.022
+ high     Line: Incorrect   0.773 0.0428 561    0.689    0.857
+
+ValueDifference_bin = R>>L:
+ OVcate_2 FirstFix_Correct emmean     SE  df lower.CL upper.CL
+ low      Dotted: Correct   0.972 0.0428 561    0.888    1.056
+ medium   Dotted: Correct   0.993 0.0438 563    0.907    1.079
+ high     Dotted: Correct   1.003 0.0505 573    0.903    1.102
+ low      Line: Incorrect   0.941 0.0428 561    0.857    1.025
+ medium   Line: Incorrect   0.988 0.0428 561    0.904    1.072
+ high     Line: Incorrect   0.971 0.0428 561    0.887    1.055
+
+Degrees-of-freedom method: kenward-roger 
+Confidence level used: 0.95 
+
+$contrasts
+ValueDifference_bin = L>>R:
+ contrast                                        estimate     SE  df t.ratio
+ low Dotted: Correct - medium Dotted: Correct    -0.06650 0.0594 559  -1.119
+ low Dotted: Correct - high Dotted: Correct      -0.06826 0.0594 559  -1.148
+ low Dotted: Correct - low Line: Incorrect       -0.04724 0.0602 560  -0.785
+ low Dotted: Correct - medium Line: Incorrect    -0.05241 0.0594 559  -0.882
+ low Dotted: Correct - high Line: Incorrect      -0.07889 0.0594 559  -1.327
+ medium Dotted: Correct - high Dotted: Correct   -0.00176 0.0594 559  -0.030
+ medium Dotted: Correct - low Line: Incorrect     0.01926 0.0602 560   0.320
+ medium Dotted: Correct - medium Line: Incorrect  0.01409 0.0594 559   0.237
+ medium Dotted: Correct - high Line: Incorrect   -0.01239 0.0594 559  -0.208
+ high Dotted: Correct - low Line: Incorrect       0.02102 0.0602 560   0.349
+ high Dotted: Correct - medium Line: Incorrect    0.01585 0.0594 559   0.267
+ high Dotted: Correct - high Line: Incorrect     -0.01063 0.0594 559  -0.179
+ low Line: Incorrect - medium Line: Incorrect    -0.00517 0.0602 560  -0.086
+ low Line: Incorrect - high Line: Incorrect      -0.03165 0.0602 560  -0.526
+ medium Line: Incorrect - high Line: Incorrect   -0.02648 0.0594 559  -0.445
+ p.value
+  1.0000
+  1.0000
+  1.0000
+  1.0000
+  1.0000
+  1.0000
+  1.0000
+  1.0000
+  1.0000
+  1.0000
+  1.0000
+  1.0000
+  1.0000
+  1.0000
+  1.0000
+
+ValueDifference_bin = L>R:
+ contrast                                        estimate     SE  df t.ratio
+ low Dotted: Correct - medium Dotted: Correct    -0.12101 0.0594 559  -2.036
+ low Dotted: Correct - high Dotted: Correct      -0.02164 0.0594 559  -0.364
+ low Dotted: Correct - low Line: Incorrect       -0.02011 0.0602 560  -0.334
+ low Dotted: Correct - medium Line: Incorrect    -0.09237 0.0610 560  -1.514
+ low Dotted: Correct - high Line: Incorrect      -0.00662 0.0610 560  -0.109
+ medium Dotted: Correct - high Dotted: Correct    0.09937 0.0594 559   1.672
+ medium Dotted: Correct - low Line: Incorrect     0.10090 0.0602 560   1.676
+ medium Dotted: Correct - medium Line: Incorrect  0.02864 0.0610 560   0.469
+ medium Dotted: Correct - high Line: Incorrect    0.11439 0.0610 560   1.874
+ high Dotted: Correct - low Line: Incorrect       0.00153 0.0602 560   0.025
+ high Dotted: Correct - medium Line: Incorrect   -0.07073 0.0610 560  -1.159
+ high Dotted: Correct - high Line: Incorrect      0.01502 0.0610 560   0.246
+ low Line: Incorrect - medium Line: Incorrect    -0.07226 0.0617 560  -1.171
+ low Line: Incorrect - high Line: Incorrect       0.01349 0.0617 560   0.219
+ medium Line: Incorrect - high Line: Incorrect    0.08575 0.0625 560   1.371
+ p.value
+  0.6339
+  1.0000
+  1.0000
+  1.0000
+  1.0000
+  1.0000
+  1.0000
+  1.0000
+  0.9209
+  1.0000
+  1.0000
+  1.0000
+  1.0000
+  1.0000
+  1.0000
+
+ValueDifference_bin = L ~ R:
+ contrast                                        estimate     SE  df t.ratio
+ low Dotted: Correct - medium Dotted: Correct     0.01704 0.0626 560   0.272
+ low Dotted: Correct - high Dotted: Correct      -0.01699 0.0602 560  -0.282
+ low Dotted: Correct - low Line: Incorrect        0.02217 0.0602 560   0.368
+ low Dotted: Correct - medium Line: Incorrect     0.08267 0.0602 560   1.373
+ low Dotted: Correct - high Line: Incorrect       0.02398 0.0602 560   0.398
+ medium Dotted: Correct - high Dotted: Correct   -0.03403 0.0619 561  -0.550
+ medium Dotted: Correct - low Line: Incorrect     0.00513 0.0619 561   0.083
+ medium Dotted: Correct - medium Line: Incorrect  0.06563 0.0619 561   1.060
+ medium Dotted: Correct - high Line: Incorrect    0.00694 0.0619 561   0.112
+ high Dotted: Correct - low Line: Incorrect       0.03916 0.0594 559   0.659
+ high Dotted: Correct - medium Line: Incorrect    0.09966 0.0594 559   1.677
+ high Dotted: Correct - high Line: Incorrect      0.04097 0.0594 559   0.689
+ low Line: Incorrect - medium Line: Incorrect     0.06050 0.0594 559   1.018
+ low Line: Incorrect - high Line: Incorrect       0.00181 0.0594 559   0.030
+ medium Line: Incorrect - high Line: Incorrect   -0.05869 0.0594 559  -0.987
+ p.value
+  1.0000
+  1.0000
+  1.0000
+  1.0000
+  1.0000
+  1.0000
+  1.0000
+  1.0000
+  1.0000
+  1.0000
+  1.0000
+  1.0000
+  1.0000
+  1.0000
+  1.0000
+
+ValueDifference_bin = R>L:
+ contrast                                        estimate     SE  df t.ratio
+ low Dotted: Correct - medium Dotted: Correct    -0.19140 0.0609 559  -3.142
+ low Dotted: Correct - high Dotted: Correct      -0.11327 0.0617 560  -1.835
+ low Dotted: Correct - low Line: Incorrect       -0.04133 0.0602 560  -0.687
+ low Dotted: Correct - medium Line: Incorrect    -0.18697 0.0602 560  -3.106
+ low Dotted: Correct - high Line: Incorrect      -0.02147 0.0602 560  -0.357
+ medium Dotted: Correct - high Dotted: Correct    0.07813 0.0617 560   1.266
+ medium Dotted: Correct - low Line: Incorrect     0.15006 0.0602 560   2.493
+ medium Dotted: Correct - medium Line: Incorrect  0.00443 0.0602 560   0.074
+ medium Dotted: Correct - high Line: Incorrect    0.16993 0.0602 560   2.823
+ high Dotted: Correct - low Line: Incorrect       0.07194 0.0610 560   1.179
+ high Dotted: Correct - medium Line: Incorrect   -0.07369 0.0610 560  -1.208
+ high Dotted: Correct - high Line: Incorrect      0.09181 0.0610 560   1.504
+ low Line: Incorrect - medium Line: Incorrect    -0.14563 0.0594 559  -2.450
+ low Line: Incorrect - high Line: Incorrect       0.01987 0.0594 559   0.334
+ medium Line: Incorrect - high Line: Incorrect    0.16550 0.0594 559   2.784
+ p.value
+  0.0265
+  1.0000
+  1.0000
+  0.0299
+  1.0000
+  1.0000
+  0.1945
+  1.0000
+  0.0740
+  1.0000
+  1.0000
+  1.0000
+  0.2190
+  1.0000
+  0.0832
+
+ValueDifference_bin = R>>L:
+ contrast                                        estimate     SE  df t.ratio
+ low Dotted: Correct - medium Dotted: Correct    -0.02153 0.0602 560  -0.358
+ low Dotted: Correct - high Dotted: Correct      -0.03083 0.0652 562  -0.473
+ low Dotted: Correct - low Line: Incorrect        0.03057 0.0594 559   0.514
+ low Dotted: Correct - medium Line: Incorrect    -0.01597 0.0594 559  -0.269
+ low Dotted: Correct - high Line: Incorrect       0.00034 0.0594 559   0.006
+ medium Dotted: Correct - high Dotted: Correct   -0.00930 0.0659 562  -0.141
+ medium Dotted: Correct - low Line: Incorrect     0.05209 0.0602 560   0.865
+ medium Dotted: Correct - medium Line: Incorrect  0.00555 0.0602 560   0.092
+ medium Dotted: Correct - high Line: Incorrect    0.02187 0.0602 560   0.363
+ high Dotted: Correct - low Line: Incorrect       0.06139 0.0652 562   0.941
+ high Dotted: Correct - medium Line: Incorrect    0.01485 0.0652 562   0.228
+ high Dotted: Correct - high Line: Incorrect      0.03117 0.0652 562   0.478
+ low Line: Incorrect - medium Line: Incorrect    -0.04654 0.0594 559  -0.783
+ low Line: Incorrect - high Line: Incorrect      -0.03023 0.0594 559  -0.508
+ medium Line: Incorrect - high Line: Incorrect    0.01631 0.0594 559   0.274
+ p.value
+  1.0000
+  1.0000
+  1.0000
+  1.0000
+  1.0000
+  1.0000
+  1.0000
+  1.0000
+  1.0000
+  1.0000
+  1.0000
+  1.0000
+  1.0000
+  1.0000
+  1.0000
+
+Degrees-of-freedom method: kenward-roger 
+P value adjustment: bonferroni method for 15 tests 
+
+
+### Model Comparison: Do OV & Fixation Correctness Improve Model Fit? ###
+Data: agg_data
+Models:
+lmm_no_OV_fix: mean_p_correct ~ ValueDifference_bin + (1 | sub_id)
+lmm_model: mean_p_correct ~ ValueDifference_bin * OVcate_2 * FirstFix_Correct + (1 | sub_id)
+              npar     AIC      BIC logLik deviance  Chisq Df Pr(>Chisq)
+lmm_no_OV_fix    7 -246.17 -215.285 130.08  -260.17                     
+lmm_model       32 -230.01  -88.831 147.00  -294.01 33.842 25     0.1113

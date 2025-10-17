@@ -1,0 +1,70 @@
+### Logistic Mixed Model (Betas) - ES Phase ###
+
+#### Model Summary ####
+Generalized linear mixed
+  model fit by maximum
+  likelihood (Laplace
+  Approximation) [glmerMod]
+ Family: binomial  ( logit )
+Formula: 
+chose_right ~ OV * FinalFixDur + (1 + OV | sub_id)
+   Data: data
+
+     AIC      BIC   logLik 
+  9624.9   9673.1  -4805.4 
+deviance df.resid 
+  9610.9     7227 
+
+Scaled residuals: 
+    Min      1Q  Median 
+-3.6814 -0.9393 -0.3308 
+     3Q     Max 
+ 0.9870  3.1488 
+
+Random effects:
+ Groups Name        Variance
+ sub_id (Intercept) 2.1732  
+        OV          0.5411  
+ Std.Dev. Corr 
+ 1.4742        
+ 0.7356   -0.99
+Number of obs: 7234, groups:  
+sub_id, 21
+
+Fixed effects:
+               Estimate
+(Intercept)     0.25177
+OV             -0.15682
+FinalFixDur     0.21289
+OV:FinalFixDur -0.05134
+               Std. Error
+(Intercept)       0.32892
+OV                0.16396
+FinalFixDur       0.06692
+OV:FinalFixDur    0.03220
+               z value
+(Intercept)      0.765
+OV              -0.956
+FinalFixDur      3.181
+OV:FinalFixDur  -1.594
+               Pr(>|z|)   
+(Intercept)     0.44402   
+OV              0.33883   
+FinalFixDur     0.00147 **
+OV:FinalFixDur  0.11084   
+---
+Signif. codes:  
+  0 ‘***’ 0.001 ‘**’ 0.01
+  ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
+
+Correlation of Fixed Effects:
+            (Intr) OV    
+OV          -0.986       
+FinalFixDur  0.001 -0.001
+OV:FinlFxDr -0.001  0.001
+            FnlFxD
+OV                
+FinalFixDur       
+OV:FinlFxDr -0.930
+
+#### Tab Model Output ####

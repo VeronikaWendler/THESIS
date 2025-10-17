@@ -1,0 +1,185 @@
+
+===== ANOVA: Effect of FirstFixLoc_bin on P(Choose Right) =====
+$ANOVA
+                  Effect DFn DFd       SSn       SSd          F            p p<.05       ges
+1            (Intercept)   1  20 26.533658 0.3453798 1536.49156 2.174616e-20     * 0.9216572
+2 DwellTimeAdvantage_bin   4  80  6.486164 1.9100382   67.91659 6.055689e-25     * 0.7419897
+
+$`Mauchly's Test for Sphericity`
+                  Effect         W            p p<.05
+2 DwellTimeAdvantage_bin 0.1916503 0.0003918224     *
+
+$`Sphericity Corrections`
+                  Effect       GGe        p[GG] p[GG]<.05       HFe        p[HF] p[HF]<.05
+2 DwellTimeAdvantage_bin 0.5526838 8.675156e-15         * 0.6243294 2.028998e-16         *
+
+
+===== Post-hoc Tests: Pairwise Comparisons for FirstFixLoc_bin =====
+$emmeans
+ ValueDifference_bin emmean     SE  df lower.CL upper.CL
+ L>>R                0.0513 0.0278 544  -0.0033    0.106
+ L>R                 0.2476 0.0270 544   0.1946    0.301
+ L ~ R               0.5881 0.0311 544   0.5270    0.649
+ R>L                 0.7473 0.0274 544   0.6934    0.801
+ R>>L                0.9534 0.0288 544   0.8967    1.010
+
+Confidence level used: 0.95 
+
+$contrasts
+ contrast     estimate     SE  df t.ratio p.value
+ L>>R - L>R     -0.196 0.0387 544  -5.068  <.0001
+ L>>R - L ~ R   -0.537 0.0417 544 -12.868  <.0001
+ L>>R - R>L     -0.696 0.0391 544 -17.822  <.0001
+ L>>R - R>>L    -0.902 0.0400 544 -22.529  <.0001
+ L>R - L ~ R    -0.340 0.0412 544  -8.269  <.0001
+ L>R - R>L      -0.500 0.0385 544 -12.987  <.0001
+ L>R - R>>L     -0.706 0.0395 544 -17.877  <.0001
+ L ~ R - R>L    -0.159 0.0415 544  -3.838  0.0014
+ L ~ R - R>>L   -0.365 0.0424 544  -8.613  <.0001
+ R>L - R>>L     -0.206 0.0398 544  -5.179  <.0001
+
+P value adjustment: bonferroni method for 10 tests 
+
+
+===== Linear Mixed Model: OVcate_2 * FirstFixLoc_bin Effect =====
+Type III Analysis of Variance Table with Satterthwaite's method
+                                               Sum Sq Mean Sq NumDF DenDF  F value    Pr(>F)    
+OVcate_2                                        0.175  0.0874     2   474   1.4943   0.22546    
+ValueDifference_bin                            61.289 15.3224     4   474 261.9475 < 2.2e-16 ***
+FirstFixLocBinary                               0.916  0.9156     1   474  15.6529 8.774e-05 ***
+OVcate_2:ValueDifference_bin                    1.558  0.1947     8   474   3.3292   0.00102 ** 
+OVcate_2:FirstFixLocBinary                      0.158  0.0789     2   474   1.3492   0.26045    
+ValueDifference_bin:FirstFixLocBinary           0.591  0.1477     4   474   2.5254   0.04015 *  
+OVcate_2:ValueDifference_bin:FirstFixLocBinary  0.245  0.0306     8   474   0.5236   0.83893    
+---
+Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
+
+===== Post-hoc Comparisons for OV Levels within Each Bin (LMM) =====
+$emmeans
+ValueDifference_bin = L>>R, FirstFixLocBinary = Left:
+ OVcate_2 emmean     SE  df lower.CL upper.CL
+ low      0.0543 0.0528 474  -0.0494    0.158
+ medium   0.0286 0.0528 474  -0.0752    0.132
+ high     0.0333 0.0528 474  -0.0704    0.137
+
+ValueDifference_bin = L>R, FirstFixLocBinary = Left:
+ OVcate_2 emmean     SE  df lower.CL upper.CL
+ low      0.2813 0.0528 474   0.1776    0.385
+ medium   0.1574 0.0528 474   0.0537    0.261
+ high     0.1956 0.0528 474   0.0919    0.299
+
+ValueDifference_bin = L ~ R, FirstFixLocBinary = Left:
+ OVcate_2 emmean     SE  df lower.CL upper.CL
+ low      0.5866 0.0528 474   0.4829    0.690
+ medium   0.7778 0.0990 474   0.5832    0.972
+ high     0.4343 0.0528 474   0.3306    0.538
+
+ValueDifference_bin = R>L, FirstFixLocBinary = Left:
+ OVcate_2 emmean     SE  df lower.CL upper.CL
+ low      0.7096 0.0528 474   0.6059    0.813
+ medium   0.7782 0.0587 474   0.6629    0.894
+ high     0.6769 0.0541 474   0.5707    0.783
+
+ValueDifference_bin = R>>L, FirstFixLocBinary = Left:
+ OVcate_2 emmean     SE  df lower.CL upper.CL
+ low      0.9372 0.0528 474   0.8335    1.041
+ medium   0.9767 0.0587 474   0.8613    1.092
+ high     0.9222 0.0570 474   0.8101    1.034
+
+ValueDifference_bin = L>>R, FirstFixLocBinary = Right:
+ OVcate_2 emmean     SE  df lower.CL upper.CL
+ low      0.0590 0.0672 474  -0.0730    0.191
+ medium   0.0157 0.0625 474  -0.1071    0.139
+ high     0.0200 0.0766 474  -0.1306    0.171
+
+ValueDifference_bin = L>R, FirstFixLocBinary = Right:
+ OVcate_2 emmean     SE  df lower.CL upper.CL
+ low      0.3523 0.0570 474   0.2402    0.464
+ medium   0.0727 0.0731 474  -0.0708    0.216
+ high     0.3594 0.0672 474   0.2274    0.491
+
+ValueDifference_bin = L ~ R, FirstFixLocBinary = Right:
+ OVcate_2 emmean     SE  df lower.CL upper.CL
+ low      0.6971 0.0587 474   0.5817    0.812
+ medium   1.0000 0.1085 474   0.7867    1.213
+ high     0.6769 0.0605 474   0.5580    0.796
+
+ValueDifference_bin = R>L, FirstFixLocBinary = Right:
+ OVcate_2 emmean     SE  df lower.CL upper.CL
+ low      0.9241 0.0625 474   0.8012    1.047
+ medium   0.8389 0.0625 474   0.7161    0.962
+ high     0.8951 0.0587 474   0.7798    1.010
+
+ValueDifference_bin = R>>L, FirstFixLocBinary = Right:
+ OVcate_2 emmean     SE  df lower.CL upper.CL
+ low      1.0000 0.0587 474   0.8847    1.115
+ medium   1.0000 0.0570 474   0.8879    1.112
+ high     1.0000 0.0605 474   0.8811    1.119
+
+Degrees-of-freedom method: kenward-roger 
+Confidence level used: 0.95 
+
+$contrasts
+ValueDifference_bin = L>>R, FirstFixLocBinary = Left:
+ contrast      estimate     SE  df t.ratio p.value
+ low - medium   0.02578 0.0746 455   0.345  1.0000
+ low - high     0.02100 0.0746 455   0.281  1.0000
+ medium - high -0.00478 0.0746 455  -0.064  1.0000
+
+ValueDifference_bin = L>R, FirstFixLocBinary = Left:
+ contrast      estimate     SE  df t.ratio p.value
+ low - medium   0.12386 0.0746 455   1.659  0.2931
+ low - high     0.08565 0.0746 455   1.148  0.7553
+ medium - high -0.03821 0.0746 455  -0.512  1.0000
+
+ValueDifference_bin = L ~ R, FirstFixLocBinary = Left:
+ contrast      estimate     SE  df t.ratio p.value
+ low - medium  -0.19122 0.1122 470  -1.704  0.2672
+ low - high     0.15227 0.0746 455   2.040  0.1258
+ medium - high  0.34348 0.1122 470   3.061  0.0070
+
+ValueDifference_bin = R>L, FirstFixLocBinary = Left:
+ contrast      estimate     SE  df t.ratio p.value
+ low - medium  -0.06860 0.0789 458  -0.869  1.0000
+ low - high     0.03270 0.0756 456   0.433  1.0000
+ medium - high  0.10130 0.0798 459   1.269  0.6154
+
+ValueDifference_bin = R>>L, FirstFixLocBinary = Left:
+ contrast      estimate     SE  df t.ratio p.value
+ low - medium  -0.03947 0.0789 458  -0.500  1.0000
+ low - high     0.01497 0.0777 457   0.193  1.0000
+ medium - high  0.05444 0.0818 458   0.665  1.0000
+
+ValueDifference_bin = L>>R, FirstFixLocBinary = Right:
+ contrast      estimate     SE  df t.ratio p.value
+ low - medium   0.04323 0.0917 462   0.471  1.0000
+ low - high     0.03897 0.1019 464   0.383  1.0000
+ medium - high -0.00426 0.0988 461  -0.043  1.0000
+
+ValueDifference_bin = L>R, FirstFixLocBinary = Right:
+ contrast      estimate     SE  df t.ratio p.value
+ low - medium   0.27957 0.0927 463   3.017  0.0081
+ low - high    -0.00714 0.0881 460  -0.081  1.0000
+ medium - high -0.28671 0.0992 463  -2.890  0.0121
+
+ValueDifference_bin = L ~ R, FirstFixLocBinary = Right:
+ contrast      estimate     SE  df t.ratio p.value
+ low - medium  -0.30294 0.1233 470  -2.456  0.0432
+ low - high     0.02020 0.0843 456   0.240  1.0000
+ medium - high  0.32314 0.1242 469   2.602  0.0287
+
+ValueDifference_bin = R>L, FirstFixLocBinary = Right:
+ contrast      estimate     SE  df t.ratio p.value
+ low - medium   0.08519 0.0884 461   0.964  1.0000
+ low - high     0.02898 0.0857 461   0.338  1.0000
+ medium - high -0.05621 0.0857 459  -0.656  1.0000
+
+ValueDifference_bin = R>>L, FirstFixLocBinary = Right:
+ contrast      estimate     SE  df t.ratio p.value
+ low - medium   0.00000 0.0818 456   0.000  1.0000
+ low - high     0.00000 0.0843 458   0.000  1.0000
+ medium - high  0.00000 0.0831 459   0.000  1.0000
+
+Degrees-of-freedom method: kenward-roger 
+P value adjustment: bonferroni method for 3 tests 
+

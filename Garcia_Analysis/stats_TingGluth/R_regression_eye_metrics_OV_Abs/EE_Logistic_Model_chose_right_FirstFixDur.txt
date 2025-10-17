@@ -1,0 +1,69 @@
+### Logistic Mixed Model (Betas, NOT Odds Ratios) - EE Phase ###
+
+#### Model Summary ####
+Generalized linear mixed
+  model fit by maximum
+  likelihood (Laplace
+  Approximation) [glmerMod]
+ Family: binomial  ( logit )
+Formula: 
+chose_right ~ OV * FirstFixDur + (1 + OV | sub_id)
+   Data: data
+
+     AIC      BIC   logLik 
+  3831.2   3872.6  -1908.6 
+deviance df.resid 
+  3817.2     2750 
+
+Scaled residuals: 
+    Min      1Q  Median 
+-1.1370 -0.9751 -0.8909 
+     3Q     Max 
+ 1.0207  1.2944 
+
+Random effects:
+ Groups Name        Variance
+ sub_id (Intercept) 0.000000
+        OV          0.003069
+ Std.Dev. Corr
+ 0.0000       
+ 0.0554    NaN
+Number of obs: 2757, groups:  
+sub_id, 21
+
+Fixed effects:
+                Estimate
+(Intercept)    -0.003059
+OV             -0.025565
+FirstFixDur     0.011559
+OV:FirstFixDur -0.026124
+               Std. Error
+(Intercept)      0.094251
+OV               0.047072
+FirstFixDur      0.092991
+OV:FirstFixDur   0.045338
+               z value
+(Intercept)     -0.032
+OV              -0.543
+FirstFixDur      0.124
+OV:FirstFixDur  -0.576
+               Pr(>|z|)
+(Intercept)       0.974
+OV                0.587
+FirstFixDur       0.901
+OV:FirstFixDur    0.564
+
+Correlation of Fixed Effects:
+            (Intr) OV    
+OV          -0.883       
+FirstFixDur -0.001  0.001
+OV:FrstFxDr  0.001 -0.001
+            FrstFD
+OV                
+FirstFixDur       
+OV:FrstFxDr -0.911
+optimizer (Nelder_Mead) convergence code: 0 (OK)
+boundary (singular) fit: see help('isSingular')
+
+
+#### Tabulated Model Output ####

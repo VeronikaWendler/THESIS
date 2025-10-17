@@ -1,0 +1,57 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<svg xmlns='http://www.w3.org/2000/svg' xmlns:xlink='http://www.w3.org/1999/xlink' class='svglite' width='576.00pt' height='432.00pt' viewBox='0 0 576.00 432.00'>
+<defs>
+  <style type='text/css'><![CDATA[
+    .svglite line, .svglite polyline, .svglite polygon, .svglite path, .svglite rect, .svglite circle {
+      fill: none;
+      stroke: #000000;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+      stroke-miterlimit: 10.00;
+    }
+    .svglite text {
+      white-space: pre;
+    }
+  ]]></style>
+</defs>
+<rect width='100%' height='100%' style='stroke: none; fill: #FFFFFF;'/>
+<defs>
+  <clipPath id='cpMC4wMHw1NzYuMDB8MC4wMHw0MzIuMDA='>
+    <rect x='0.00' y='0.00' width='576.00' height='432.00' />
+  </clipPath>
+</defs>
+<g clip-path='url(#cpMC4wMHw1NzYuMDB8MC4wMHw0MzIuMDA=)'>
+<rect x='0.00' y='0.000000000000057' width='576.00' height='432.00' style='stroke-width: 1.07; stroke: #FFFFFF; fill: #FFFFFF;' />
+</g>
+<defs>
+  <clipPath id='cpNjkuNjF8NTcwLjUyfDI3LjY0fDM3OS45Mw=='>
+    <rect x='69.61' y='27.64' width='500.91' height='352.28' />
+  </clipPath>
+</defs>
+<g clip-path='url(#cpNjkuNjF8NTcwLjUyfDI3LjY0fDM3OS45Mw==)'>
+<rect x='69.61' y='27.64' width='500.91' height='352.28' style='stroke-width: 1.07; stroke: #FFFFFF; fill: #FFFFFF;' />
+<rect x='149.30' y='132.86' width='113.84' height='132.24' style='stroke-width: 2.13; stroke-linecap: butt; stroke-linejoin: miter; fill: #9932CC; fill-opacity: 0.70;' />
+<rect x='376.99' y='265.10' width='113.84' height='37.13' style='stroke-width: 2.13; stroke-linecap: butt; stroke-linejoin: miter; fill: #9932CC; fill-opacity: 0.70;' />
+<polyline points='200.53,79.03 211.91,79.03 ' style='stroke-width: 2.13; stroke-linecap: butt;' />
+<polyline points='206.22,79.03 206.22,186.69 ' style='stroke-width: 2.13; stroke-linecap: butt;' />
+<polyline points='200.53,186.69 211.91,186.69 ' style='stroke-width: 2.13; stroke-linecap: butt;' />
+<polyline points='428.22,275.93 439.60,275.93 ' style='stroke-width: 2.13; stroke-linecap: butt;' />
+<polyline points='433.91,275.93 433.91,328.53 ' style='stroke-width: 2.13; stroke-linecap: butt;' />
+<polyline points='428.22,328.53 439.60,328.53 ' style='stroke-width: 2.13; stroke-linecap: butt;' />
+<text x='206.22' y='53.84' text-anchor='middle' style='font-size: 28.45px; font-weight: bold; font-family: "Arial";' textLength='33.20px' lengthAdjust='spacingAndGlyphs'>***</text>
+<text x='433.91' y='374.09' text-anchor='middle' style='font-size: 28.45px; font-weight: bold; font-family: "Arial";' textLength='22.13px' lengthAdjust='spacingAndGlyphs'>**</text>
+<line x1='69.61' y1='265.10' x2='570.52' y2='265.10' style='stroke-width: 2.13; stroke-linecap: butt;' />
+</g>
+<g clip-path='url(#cpMC4wMHw1NzYuMDB8MC4wMHw0MzIuMDA=)'>
+<polyline points='69.61,379.93 69.61,27.64 ' style='stroke-width: 2.13; stroke-linecap: butt;' />
+<text x='64.67' y='351.60' text-anchor='end' style='font-size: 22.00px; font-family: "Arial";' textLength='37.92px' lengthAdjust='spacingAndGlyphs'>-0.2</text>
+<text x='64.67' y='272.98' text-anchor='end' style='font-size: 22.00px; font-family: "Arial";' textLength='30.59px' lengthAdjust='spacingAndGlyphs'>0.0</text>
+<text x='64.67' y='194.36' text-anchor='end' style='font-size: 22.00px; font-family: "Arial";' textLength='30.59px' lengthAdjust='spacingAndGlyphs'>0.2</text>
+<text x='64.67' y='115.74' text-anchor='end' style='font-size: 22.00px; font-family: "Arial";' textLength='30.59px' lengthAdjust='spacingAndGlyphs'>0.4</text>
+<text x='64.67' y='37.12' text-anchor='end' style='font-size: 22.00px; font-family: "Arial";' textLength='30.59px' lengthAdjust='spacingAndGlyphs'>0.6</text>
+<text x='206.22' y='400.61' text-anchor='middle' style='font-size: 22.00px; font-family: "Arial";' textLength='90.50px' lengthAdjust='spacingAndGlyphs'>DwellLeft</text>
+<text x='433.91' y='400.61' text-anchor='middle' style='font-size: 22.00px; font-family: "Arial";' textLength='127.59px' lengthAdjust='spacingAndGlyphs'>OV:DwellLeft</text>
+<text transform='translate(19.80,203.78) rotate(-90)' text-anchor='middle' style='font-size: 20.00px; font-family: "Arial";' textLength='150.85px' lengthAdjust='spacingAndGlyphs'>Beta Coefficients</text>
+<text x='320.06' y='18.37' text-anchor='middle' style='font-size: 18.00px; font-family: "Arial";' textLength='445.84px' lengthAdjust='spacingAndGlyphs'>Beta Coefficients for OV &amp; DwellLeft on symbolic choice</text>
+</g>
+</svg>

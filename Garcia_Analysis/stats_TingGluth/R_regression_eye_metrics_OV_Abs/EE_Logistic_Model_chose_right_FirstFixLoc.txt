@@ -1,0 +1,73 @@
+### Logistic Mixed Model (Betas, NOT Odds Ratios) - EE Phase ###
+
+#### Model Summary ####
+Generalized linear mixed
+  model fit by maximum
+  likelihood (Laplace
+  Approximation) [glmerMod]
+ Family: binomial  ( logit )
+Formula: 
+chose_right ~ OV * FirstFixLoc + (1 + OV | sub_id)
+   Data: data
+
+     AIC      BIC   logLik 
+  3767.2   3808.6  -1876.6 
+deviance df.resid 
+  3753.2     2750 
+
+Scaled residuals: 
+    Min      1Q  Median 
+-3.0001 -0.9325 -0.7245 
+     3Q     Max 
+ 1.0171  1.4678 
+
+Random effects:
+ Groups Name        Variance
+ sub_id (Intercept) 0.13024 
+        OV          0.05243 
+ Std.Dev. Corr 
+ 0.3609        
+ 0.2290   -1.00
+Number of obs: 2757, groups:  
+sub_id, 21
+
+Fixed effects:
+               Estimate
+(Intercept)     0.03129
+OV             -0.04561
+FirstFixLoc     0.21224
+OV:FirstFixLoc  0.05065
+               Std. Error
+(Intercept)       0.12397
+OV                0.06824
+FirstFixLoc       0.10103
+OV:FirstFixLoc    0.04895
+               z value
+(Intercept)      0.252
+OV              -0.668
+FirstFixLoc      2.101
+OV:FirstFixLoc   1.035
+               Pr(>|z|)  
+(Intercept)      0.8007  
+OV               0.5039  
+FirstFixLoc      0.0357 *
+OV:FirstFixLoc   0.3008  
+---
+Signif. codes:  
+  0 ‘***’ 0.001 ‘**’ 0.01
+  ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
+
+Correlation of Fixed Effects:
+            (Intr) OV    
+OV          -0.946       
+FirstFixLoc  0.004  0.014
+OV:FrstFxLc  0.015 -0.032
+            FrstFL
+OV                
+FirstFixLoc       
+OV:FrstFxLc -0.914
+optimizer (Nelder_Mead) convergence code: 0 (OK)
+boundary (singular) fit: see help('isSingular')
+
+
+#### Tabulated Model Output ####

@@ -1,0 +1,78 @@
+### Logistic Mixed Model (Betas) - ES Phase ###
+
+#### Model Summary ####
+Generalized linear mixed
+  model fit by maximum
+  likelihood (Laplace
+  Approximation) [glmerMod]
+ Family: binomial  ( logit )
+Formula: 
+chose_right ~ OV * PropDwell_Right + (1 + OV | sub_id)
+   Data: data
+
+     AIC      BIC   logLik 
+  9616.7   9664.9  -4801.3 
+deviance df.resid 
+  9602.7     7227 
+
+Scaled residuals: 
+    Min      1Q  Median 
+-3.1745 -0.9424 -0.3344 
+     3Q     Max 
+ 0.9847  3.1742 
+
+Random effects:
+ Groups Name        Variance
+ sub_id (Intercept) 2.1819  
+        OV          0.5437  
+ Std.Dev. Corr 
+ 1.4771        
+ 0.7374   -0.99
+Number of obs: 7234, groups:  
+sub_id, 21
+
+Fixed effects:
+                   Estimate
+(Intercept)         0.25238
+OV                 -0.15717
+PropDwell_Right    -0.22291
+OV:PropDwell_Right  0.04595
+                   Std. Error
+(Intercept)           0.32954
+OV                    0.16433
+PropDwell_Right       0.06635
+OV:PropDwell_Right    0.03214
+                   z value
+(Intercept)          0.766
+OV                  -0.956
+PropDwell_Right     -3.359
+OV:PropDwell_Right   1.430
+                   Pr(>|z|)
+(Intercept)        0.443761
+OV                 0.338866
+PropDwell_Right    0.000781
+OV:PropDwell_Right 0.152717
+                      
+(Intercept)           
+OV                    
+PropDwell_Right    ***
+OV:PropDwell_Right    
+---
+Signif. codes:  
+  0 ‘***’ 0.001 ‘**’ 0.01
+  ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
+
+Correlation of Fixed Effects:
+            (Intr) OV    
+OV          -0.986       
+PrpDwll_Rgh -0.001  0.001
+OV:PrpDwl_R  0.000  0.000
+            PrpD_R
+OV                
+PrpDwll_Rgh       
+OV:PrpDwl_R -0.929
+optimizer (Nelder_Mead) convergence code: 0 (OK)
+Model failed to converge with max|grad| = 0.00230304 (tol = 0.002, component 1)
+
+
+#### Tab Model Output ####

@@ -1,0 +1,164 @@
+
+===== ANOVA: Effect of FixationAdvantage_bin on P(Choose Right) =====
+$ANOVA
+                  Effect DFn DFd       SSn       SSd          F            p p<.05       ges
+1            (Intercept)   1  20 26.533658 0.3453798 1536.49156 2.174616e-20     * 0.9216572
+2 DwellTimeAdvantage_bin   4  80  6.486164 1.9100382   67.91659 6.055689e-25     * 0.7419897
+
+$`Mauchly's Test for Sphericity`
+                  Effect         W            p p<.05
+2 DwellTimeAdvantage_bin 0.1916503 0.0003918224     *
+
+$`Sphericity Corrections`
+                  Effect       GGe        p[GG] p[GG]<.05       HFe        p[HF] p[HF]<.05
+2 DwellTimeAdvantage_bin 0.5526838 8.675156e-15         * 0.6243294 2.028998e-16         *
+
+
+===== Post-hoc Tests: Pairwise Comparisons for FixationAdvantage_bin =====
+$emmeans
+FixationAdvantage_bin = 1:
+ OVcate_2    prob         SE  df asymp.LCL asymp.UCL
+ low      0.69874 0.04617267 Inf   0.60142   0.78095
+ medium   0.91159 0.02155683 Inf   0.85923   0.94570
+ high     0.68974 0.04800621 Inf   0.58886   0.77532
+
+FixationAdvantage_bin = 2:
+ OVcate_2    prob         SE  df asymp.LCL asymp.UCL
+ low      0.87235 0.02813323 Inf   0.80639   0.91812
+ medium   0.93716 0.01747904 Inf   0.89288   0.96387
+ high     0.85058 0.03235961 Inf   0.77558   0.90362
+
+FixationAdvantage_bin = 3:
+ OVcate_2    prob         SE  df asymp.LCL asymp.UCL
+ low      0.90035 0.02504400 Inf   0.83944   0.93982
+ medium   0.93974 0.01818042 Inf   0.89261   0.96696
+ high     0.84942 0.03696841 Inf   0.76198   0.90859
+
+FixationAdvantage_bin = 4:
+ OVcate_2    prob         SE  df asymp.LCL asymp.UCL
+ low      0.87942 0.03574448 Inf   0.79022   0.93386
+ medium   0.98591 0.01049392 Inf   0.94089   0.99676
+ high     0.96141 0.01660835 Inf   0.91198   0.98358
+
+FixationAdvantage_bin = 5:
+ OVcate_2    prob         SE  df asymp.LCL asymp.UCL
+ low      0.93259 0.03611287 Inf   0.81777   0.97709
+ medium   1.00000 0.00007615 Inf   0.00000   1.00000
+ high     0.92370 0.03528485 Inf   0.81942   0.96996
+
+Confidence level used: 0.95 
+Intervals are back-transformed from the logit scale 
+
+$contrasts
+FixationAdvantage_bin = 1:
+ contrast      odds.ratio       SE  df null z.ratio p.value
+ low / medium         0.2 0.00e+00 Inf    1  -6.782  <.0001
+ low / high           1.0 0.00e+00 Inf    1   0.257  1.0000
+ medium / high        4.6 1.00e+00 Inf    1   6.815  <.0001
+
+FixationAdvantage_bin = 2:
+ contrast      odds.ratio       SE  df null z.ratio p.value
+ low / medium         0.5 0.00e+00 Inf    1  -2.757  0.0175
+ low / high           1.2 0.00e+00 Inf    1   0.766  1.0000
+ medium / high        2.6 1.00e+00 Inf    1   3.381  0.0022
+
+FixationAdvantage_bin = 3:
+ contrast      odds.ratio       SE  df null z.ratio p.value
+ low / medium         0.6 0.00e+00 Inf    1  -1.659  0.2913
+ low / high           1.6 0.00e+00 Inf    1   1.586  0.3381
+ medium / high        2.8 1.00e+00 Inf    1   3.016  0.0077
+
+FixationAdvantage_bin = 4:
+ contrast      odds.ratio       SE  df null z.ratio p.value
+ low / medium         0.1 0.00e+00 Inf    1  -2.895  0.0114
+ low / high           0.3 0.00e+00 Inf    1  -2.511  0.0361
+ medium / high        2.8 2.00e+00 Inf    1   1.242  0.6432
+
+FixationAdvantage_bin = 5:
+ contrast      odds.ratio       SE  df null z.ratio p.value
+ low / medium         0.0 0.00e+00 Inf    1  -0.023  1.0000
+ low / high           1.1 1.00e+00 Inf    1   0.188  1.0000
+ medium / high   614531.4 3.48e+08 Inf    1   0.024  1.0000
+
+P value adjustment: bonferroni method for 3 tests 
+Tests are performed on the log odds ratio scale 
+
+
+===== Linear Mixed Model: OVcate_2 * FixationAdvantage_bin Effect =====
+Type III Analysis of Variance Table with Satterthwaite's method
+                                Sum Sq  Mean Sq NumDF  DenDF F value    Pr(>F)    
+OVcate_2                       0.44631 0.223156     2 212.98 18.2511 4.831e-08 ***
+FixationAdvantage_bin          0.23738 0.059344     4 213.71  4.8536  0.000913 ***
+OVcate_2:FixationAdvantage_bin 0.17000 0.021250     8 211.62  1.7379  0.091215 .  
+---
+Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
+
+===== Post-hoc Comparisons for OV Levels within Each Bin (LMM) =====
+$emmeans
+FixationAdvantage_bin = 1:
+ OVcate_2 emmean     SE  df lower.CL upper.CL
+ low       0.814 0.0268 166    0.761    0.867
+ medium    0.949 0.0268 166    0.896    1.002
+ high      0.776 0.0268 166    0.723    0.829
+
+FixationAdvantage_bin = 2:
+ OVcate_2 emmean     SE  df lower.CL upper.CL
+ low       0.869 0.0268 166    0.816    0.922
+ medium    0.939 0.0268 166    0.886    0.992
+ high      0.893 0.0268 166    0.840    0.946
+
+FixationAdvantage_bin = 3:
+ OVcate_2 emmean     SE  df lower.CL upper.CL
+ low       0.801 0.0268 166    0.748    0.854
+ medium    0.939 0.0280 177    0.884    0.995
+ high      0.795 0.0287 182    0.738    0.852
+
+FixationAdvantage_bin = 4:
+ OVcate_2 emmean     SE  df lower.CL upper.CL
+ low       0.742 0.0280 177    0.686    0.797
+ medium    0.938 0.0280 177    0.883    0.994
+ high      0.765 0.0302 193    0.706    0.825
+
+FixationAdvantage_bin = 5:
+ OVcate_2 emmean     SE  df lower.CL upper.CL
+ low       0.670 0.1146 222    0.444    0.896
+ medium    0.883 0.0668 228    0.751    1.014
+ high      0.842 0.0668 228    0.711    0.974
+
+Degrees-of-freedom method: kenward-roger 
+Confidence level used: 0.95 
+
+$contrasts
+FixationAdvantage_bin = 1:
+ contrast      estimate     SE  df t.ratio p.value
+ low - medium  -0.13470 0.0341 210  -3.947  0.0003
+ low - high     0.03789 0.0341 210   1.110  0.8044
+ medium - high  0.17259 0.0341 210   5.058  <.0001
+
+FixationAdvantage_bin = 2:
+ contrast      estimate     SE  df t.ratio p.value
+ low - medium  -0.06968 0.0341 210  -2.042  0.1272
+ low - high    -0.02357 0.0341 210  -0.691  1.0000
+ medium - high  0.04611 0.0341 210   1.351  0.5343
+
+FixationAdvantage_bin = 3:
+ contrast      estimate     SE  df t.ratio p.value
+ low - medium  -0.13776 0.0351 211  -3.928  0.0003
+ low - high     0.00653 0.0356 211   0.183  1.0000
+ medium - high  0.14430 0.0365 211   3.949  0.0003
+
+FixationAdvantage_bin = 4:
+ contrast      estimate     SE  df t.ratio p.value
+ low - medium  -0.19642 0.0359 211  -5.465  <.0001
+ low - high    -0.02358 0.0377 211  -0.625  1.0000
+ medium - high  0.17284 0.0377 211   4.584  <.0001
+
+FixationAdvantage_bin = 5:
+ contrast      estimate     SE  df t.ratio p.value
+ low - medium  -0.21289 0.1297 214  -1.641  0.3069
+ low - high    -0.17220 0.1297 214  -1.327  0.5575
+ medium - high  0.04069 0.0924 216   0.441  1.0000
+
+Degrees-of-freedom method: kenward-roger 
+P value adjustment: bonferroni method for 3 tests 
+

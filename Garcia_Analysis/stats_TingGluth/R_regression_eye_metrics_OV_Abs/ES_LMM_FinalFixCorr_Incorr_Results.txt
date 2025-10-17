@@ -1,0 +1,61 @@
+### Linear Mixed Model: Predicting P(Correct) in 'L ~ R' Bin ###
+Linear mixed model fit by REML. t-tests use Satterthwaite's method ['lmerModLmerTest']
+Formula: mean_p_correct ~ OVcate_2 + (1 | sub_id)
+   Data: agg_L_R_data
+
+REML criterion at convergence: -39.7
+
+Scaled residuals: 
+     Min       1Q   Median       3Q      Max 
+-2.46542 -0.45869  0.04745  0.84578  1.20177 
+
+Random effects:
+ Groups   Name        Variance Std.Dev.
+ sub_id   (Intercept) 0.00000  0.0000  
+ Residual             0.02595  0.1611  
+Number of obs: 63, groups:  sub_id, 21
+
+Fixed effects:
+                Estimate Std. Error        df t value Pr(>|t|)    
+(Intercept)     0.826839   0.035150 60.000000  23.523   <2e-16 ***
+OVcate_2medium -0.020414   0.049709 60.000000  -0.411    0.683    
+OVcate_2high   -0.001149   0.049709 60.000000  -0.023    0.982    
+---
+Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
+
+Correlation of Fixed Effects:
+            (Intr) OVct_2m
+OVcate_2mdm -0.707        
+OVcate_2hgh -0.707  0.500 
+optimizer (nloptwrap) convergence code: 0 (OK)
+boundary (singular) fit: see help('isSingular')
+
+
+### Pairwise Comparisons (Bonferroni-adjusted) - OV Levels Within 'L ~ R' Bin ###
+$emmeans
+ OVcate_2 emmean     SE df lower.CL upper.CL
+ low       0.827 0.0351 60    0.757    0.897
+ medium    0.806 0.0351 60    0.736    0.877
+ high      0.826 0.0351 60    0.755    0.896
+
+Degrees-of-freedom method: kenward-roger 
+Confidence level used: 0.95 
+
+$contrasts
+ contrast      estimate     SE df t.ratio p.value
+ low - medium   0.02041 0.0497 40   0.411  1.0000
+ low - high     0.00115 0.0497 40   0.023  1.0000
+ medium - high -0.01927 0.0497 40  -0.388  1.0000
+
+Degrees-of-freedom method: kenward-roger 
+P value adjustment: bonferroni method for 3 tests 
+
+
+### Model Comparison: Does OV Level Influence P(Correct)? ###
+Data: agg_L_R_data
+Models:
+lmm_no_OV: mean_p_correct ~ 1 + (1 | sub_id)
+lmm_model: mean_p_correct ~ OVcate_2 + (1 | sub_id)
+          npar     AIC     BIC logLik deviance  Chisq Df Pr(>Chisq)
+lmm_no_OV    3 -48.125 -41.696 27.063  -54.125                     
+lmm_model    5 -44.349 -33.633 27.174  -54.349 0.2232  2     0.8944

@@ -1,0 +1,75 @@
+### Logistic Mixed Model (Betas) - ES Phase ###
+
+#### Model Summary ####
+Generalized linear mixed
+  model fit by maximum
+  likelihood (Laplace
+  Approximation) [glmerMod]
+ Family: binomial  ( logit )
+Formula: 
+chose_right ~ OV * FixationAdvantage + (1 + OV | sub_id)
+   Data: data
+
+     AIC      BIC   logLik 
+ 10032.9  10081.4  -5009.5 
+deviance df.resid 
+ 10018.9     7553 
+
+Scaled residuals: 
+    Min      1Q  Median 
+-3.4533 -0.9335 -0.3407 
+     3Q     Max 
+ 0.9818  3.0629 
+
+Random effects:
+ Groups Name        Variance
+ sub_id (Intercept) 2.1043  
+        OV          0.5206  
+ Std.Dev. Corr 
+ 1.4506        
+ 0.7216   -0.99
+Number of obs: 7560, groups:  
+sub_id, 21
+
+Fixed effects:
+                     Estimate
+(Intercept)           0.25855
+OV                   -0.16607
+FixationAdvantage    -0.19678
+OV:FixationAdvantage  0.05143
+                     Std. Error
+(Intercept)             0.32355
+OV                      0.16078
+FixationAdvantage       0.06499
+OV:FixationAdvantage    0.03130
+                     z value
+(Intercept)            0.799
+OV                    -1.033
+FixationAdvantage     -3.028
+OV:FixationAdvantage   1.643
+                     Pr(>|z|)
+(Intercept)           0.42423
+OV                    0.30164
+FixationAdvantage     0.00246
+OV:FixationAdvantage  0.10040
+                       
+(Intercept)            
+OV                     
+FixationAdvantage    **
+OV:FixationAdvantage   
+---
+Signif. codes:  
+  0 ‘***’ 0.001 ‘**’ 0.01
+  ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
+
+Correlation of Fixed Effects:
+            (Intr) OV    
+OV          -0.985       
+FixtnAdvntg  0.000  0.000
+OV:FxtnAdvn  0.000  0.000
+            FxtnAd
+OV                
+FixtnAdvntg       
+OV:FxtnAdvn -0.929
+
+#### Tab Model Output ####

@@ -1,0 +1,30 @@
+### Linear Mixed Model for Accuracy (ES Phase) ###
+
+Linear mixed model fit by REML. t-tests use Satterthwaite's method ['lmerModLmerTest']
+Formula: corr ~ OV_num_2 + AbsValueDiff_2 + (1 | sub_id)
+   Data: es_data
+
+REML criterion at convergence: 4459.5
+
+Scaled residuals: 
+    Min      1Q  Median      3Q     Max 
+-3.2061  0.0553  0.3184  0.5235  1.2093 
+
+Random effects:
+ Groups   Name        Variance Std.Dev.
+ sub_id   (Intercept) 0.002725 0.0522  
+ Residual             0.101676 0.3189  
+Number of obs: 7920, groups:  sub_id, 22
+
+Fixed effects:
+                Estimate Std. Error        df t value Pr(>|t|)    
+(Intercept)    7.375e-01  1.588e-02 7.131e+01   46.45  < 2e-16 ***
+OV_num_2       3.770e-04  9.519e-05 7.896e+03    3.96 7.55e-05 ***
+AbsValueDiff_2 3.257e-03  1.630e-04 7.896e+03   19.98  < 2e-16 ***
+---
+Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
+
+Correlation of Fixed Effects:
+            (Intr) OV_n_2
+OV_num_2    -0.600       
+AbsValDff_2 -0.314  0.000

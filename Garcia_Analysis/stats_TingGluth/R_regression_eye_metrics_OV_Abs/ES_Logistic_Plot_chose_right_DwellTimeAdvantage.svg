@@ -1,0 +1,55 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<svg xmlns='http://www.w3.org/2000/svg' xmlns:xlink='http://www.w3.org/1999/xlink' class='svglite' width='576.00pt' height='432.00pt' viewBox='0 0 576.00 432.00'>
+<defs>
+  <style type='text/css'><![CDATA[
+    .svglite line, .svglite polyline, .svglite polygon, .svglite path, .svglite rect, .svglite circle {
+      fill: none;
+      stroke: #000000;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+      stroke-miterlimit: 10.00;
+    }
+    .svglite text {
+      white-space: pre;
+    }
+  ]]></style>
+</defs>
+<rect width='100%' height='100%' style='stroke: none; fill: #FFFFFF;'/>
+<defs>
+  <clipPath id='cpMC4wMHw1NzYuMDB8MC4wMHw0MzIuMDA='>
+    <rect x='0.00' y='0.00' width='576.00' height='432.00' />
+  </clipPath>
+</defs>
+<g clip-path='url(#cpMC4wMHw1NzYuMDB8MC4wMHw0MzIuMDA=)'>
+<rect x='0.00' y='0.000000000000057' width='576.00' height='432.00' style='stroke-width: 1.07; stroke: #FFFFFF; fill: #FFFFFF;' />
+</g>
+<defs>
+  <clipPath id='cpNjkuNjF8NTcwLjUyfDI3LjY0fDM3OS45Mw=='>
+    <rect x='69.61' y='27.64' width='500.91' height='352.28' />
+  </clipPath>
+</defs>
+<g clip-path='url(#cpNjkuNjF8NTcwLjUyfDI3LjY0fDM3OS45Mw==)'>
+<rect x='69.61' y='27.64' width='500.91' height='352.28' style='stroke-width: 1.07; stroke: #FFFFFF; fill: #FFFFFF;' />
+<rect x='149.30' y='142.46' width='113.84' height='98.79' style='stroke-width: 2.13; stroke-linecap: butt; stroke-linejoin: miter; fill: #9932CC; fill-opacity: 0.70;' />
+<rect x='376.99' y='129.14' width='113.84' height='13.32' style='stroke-width: 2.13; stroke-linecap: butt; stroke-linejoin: miter; fill: #9932CC; fill-opacity: 0.70;' />
+<polyline points='200.53,168.77 211.91,168.77 ' style='stroke-width: 2.13; stroke-linecap: butt;' />
+<polyline points='206.22,168.77 206.22,313.74 ' style='stroke-width: 2.13; stroke-linecap: butt;' />
+<polyline points='200.53,313.74 211.91,313.74 ' style='stroke-width: 2.13; stroke-linecap: butt;' />
+<polyline points='428.22,93.83 439.60,93.83 ' style='stroke-width: 2.13; stroke-linecap: butt;' />
+<polyline points='433.91,93.83 433.91,164.44 ' style='stroke-width: 2.13; stroke-linecap: butt;' />
+<polyline points='428.22,164.44 439.60,164.44 ' style='stroke-width: 2.13; stroke-linecap: butt;' />
+<text x='206.22' y='374.09' text-anchor='middle' style='font-size: 28.45px; font-weight: bold; font-family: "Arial";' textLength='22.13px' lengthAdjust='spacingAndGlyphs'>**</text>
+<line x1='69.61' y1='142.46' x2='570.52' y2='142.46' style='stroke-width: 2.13; stroke-linecap: butt;' />
+</g>
+<g clip-path='url(#cpMC4wMHw1NzYuMDB8MC4wMHw0MzIuMDA=)'>
+<polyline points='69.61,379.93 69.61,27.64 ' style='stroke-width: 2.13; stroke-linecap: butt;' />
+<text x='64.67' y='373.35' text-anchor='end' style='font-size: 22.00px; font-family: "Arial";' textLength='37.92px' lengthAdjust='spacingAndGlyphs'>-0.4</text>
+<text x='64.67' y='261.84' text-anchor='end' style='font-size: 22.00px; font-family: "Arial";' textLength='37.92px' lengthAdjust='spacingAndGlyphs'>-0.2</text>
+<text x='64.67' y='150.34' text-anchor='end' style='font-size: 22.00px; font-family: "Arial";' textLength='30.59px' lengthAdjust='spacingAndGlyphs'>0.0</text>
+<text x='64.67' y='38.83' text-anchor='end' style='font-size: 22.00px; font-family: "Arial";' textLength='30.59px' lengthAdjust='spacingAndGlyphs'>0.2</text>
+<text x='206.22' y='400.61' text-anchor='middle' style='font-size: 22.00px; font-family: "Arial";' textLength='207.12px' lengthAdjust='spacingAndGlyphs'>DwellTimeAdvantage</text>
+<text x='433.91' y='400.61' text-anchor='middle' style='font-size: 22.00px; font-family: "Arial";' textLength='244.20px' lengthAdjust='spacingAndGlyphs'>OV:DwellTimeAdvantage</text>
+<text transform='translate(19.80,203.78) rotate(-90)' text-anchor='middle' style='font-size: 20.00px; font-family: "Arial";' textLength='150.85px' lengthAdjust='spacingAndGlyphs'>Beta Coefficients</text>
+<text x='320.06' y='18.37' text-anchor='middle' style='font-size: 18.00px; font-family: "Arial";' textLength='541.20px' lengthAdjust='spacingAndGlyphs'>Beta Coefficients for OV &amp; DwellTimeAdvantage on symbolic choice</text>
+</g>
+</svg>

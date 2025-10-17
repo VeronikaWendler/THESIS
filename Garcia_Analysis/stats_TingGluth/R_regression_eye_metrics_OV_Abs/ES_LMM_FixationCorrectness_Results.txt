@@ -1,0 +1,90 @@
+### Linear Mixed Model: Predicting P(Correct) in 'L ~ R' Bin ###
+Linear mixed model fit by REML. t-tests use Satterthwaite's method ['lmerModLmerTest']
+Formula: mean_p_correct ~ OVcate_2 * FirstFix_Correct + (1 | sub_id)
+   Data: agg_L_R_data
+
+REML criterion at convergence: -21.7
+
+Scaled residuals: 
+    Min      1Q  Median      3Q     Max 
+-3.7433 -0.4359  0.2027  0.7349  1.1627 
+
+Random effects:
+ Groups   Name        Variance  Std.Dev. 
+ sub_id   (Intercept) 2.479e-21 4.979e-11
+ Residual             4.155e-02 2.038e-01
+Number of obs: 122, groups:  sub_id, 21
+
+Fixed effects:
+                                                Estimate Std. Error        df t value
+(Intercept)                                      0.84821    0.04558 116.00000  18.610
+OVcate_2medium                                  -0.01587    0.06622 116.00000  -0.240
+OVcate_2high                                     0.01445    0.06369 116.00000   0.227
+FirstFix_CorrectLine: Incorrect                 -0.02471    0.06369 116.00000  -0.388
+OVcate_2medium:FirstFix_CorrectLine: Incorrect  -0.04463    0.09134 116.00000  -0.489
+OVcate_2high:FirstFix_CorrectLine: Incorrect    -0.01626    0.08951 116.00000  -0.182
+                                               Pr(>|t|)    
+(Intercept)                                      <2e-16 ***
+OVcate_2medium                                    0.811    
+OVcate_2high                                      0.821    
+FirstFix_CorrectLine: Incorrect                   0.699    
+OVcate_2medium:FirstFix_CorrectLine: Incorrect    0.626    
+OVcate_2high:FirstFix_CorrectLine: Incorrect      0.856    
+---
+Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
+
+Correlation of Fixed Effects:
+                (Intr) OVct_2m OVct_2h FF_CLI OVct_2m:FF_CL:I
+OVcate_2mdm     -0.688                                       
+OVcate_2hgh     -0.716  0.493                                
+FrstFx_CL:I     -0.716  0.493   0.512                        
+OVct_2m:FF_CL:I  0.499 -0.725  -0.357  -0.697                
+OVct_2h:FF_CL:I  0.509 -0.350  -0.711  -0.711  0.496         
+optimizer (nloptwrap) convergence code: 0 (OK)
+boundary (singular) fit: see help('isSingular')
+
+
+### Pairwise Comparisons (Bonferroni-adjusted) - Fixation Correctness Within 'L ~ R' Bin ###
+$emmeans
+OVcate_2 = low:
+ FirstFix_Correct emmean     SE  df lower.CL upper.CL
+ Dotted: Correct   0.848 0.0456 116    0.758    0.939
+ Line: Incorrect   0.823 0.0445 116    0.735    0.912
+
+OVcate_2 = medium:
+ FirstFix_Correct emmean     SE  df lower.CL upper.CL
+ Dotted: Correct   0.832 0.0482 116    0.737    0.928
+ Line: Incorrect   0.763 0.0445 116    0.675    0.851
+
+OVcate_2 = high:
+ FirstFix_Correct emmean     SE  df lower.CL upper.CL
+ Dotted: Correct   0.863 0.0445 116    0.775    0.951
+ Line: Incorrect   0.822 0.0445 116    0.734    0.910
+
+Degrees-of-freedom method: kenward-roger 
+Confidence level used: 0.95 
+
+$contrasts
+OVcate_2 = low:
+ contrast                          estimate     SE   df t.ratio p.value
+ Dotted: Correct - Line: Incorrect   0.0247 0.0637 97.0   0.388  0.6989
+
+OVcate_2 = medium:
+ contrast                          estimate     SE   df t.ratio p.value
+ Dotted: Correct - Line: Incorrect   0.0693 0.0656 98.7   1.058  0.2928
+
+OVcate_2 = high:
+ contrast                          estimate     SE   df t.ratio p.value
+ Dotted: Correct - Line: Incorrect   0.0410 0.0629 96.2   0.651  0.5164
+
+Degrees-of-freedom method: kenward-roger 
+
+
+### Model Comparison: Does Fixation Correctness Influence P(Correct)? ###
+Data: agg_L_R_data
+Models:
+lmm_no_fix: mean_p_correct ~ OVcate_2 + (1 | sub_id)
+lmm_model: mean_p_correct ~ OVcate_2 * FirstFix_Correct + (1 | sub_id)
+           npar     AIC      BIC logLik deviance  Chisq Df Pr(>Chisq)
+lmm_no_fix    5 -36.231 -22.2109 23.116  -46.231                     
+lmm_model     8 -32.002  -9.5702 24.001  -48.002 1.7713  3     0.6212

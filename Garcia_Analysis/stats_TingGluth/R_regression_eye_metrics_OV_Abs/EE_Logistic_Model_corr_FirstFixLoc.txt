@@ -1,0 +1,70 @@
+### Logistic Mixed Model (Betas, NOT Odds Ratios) - EE Phase ###
+
+#### Model Summary ####
+Generalized linear mixed
+  model fit by maximum
+  likelihood (Laplace
+  Approximation) [glmerMod]
+ Family: binomial  ( logit )
+Formula: 
+corr ~ OV * FirstFixLoc + (1 + OV | sub_id)
+   Data: data
+
+     AIC      BIC   logLik 
+  2367.9   2409.3  -1176.9 
+deviance df.resid 
+  2353.9     2750 
+
+Scaled residuals: 
+    Min      1Q  Median 
+-6.8117  0.1916  0.3589 
+     3Q     Max 
+ 0.4731  1.0456 
+
+Random effects:
+ Groups Name        Variance
+ sub_id (Intercept) 2.8180  
+        OV          0.6156  
+ Std.Dev. Corr 
+ 1.6787        
+ 0.7846   -0.89
+Number of obs: 2757, groups:  
+sub_id, 21
+
+Fixed effects:
+               Estimate
+(Intercept)     1.87188
+OV             -0.01479
+FirstFixLoc    -0.08250
+OV:FirstFixLoc  0.08204
+               Std. Error
+(Intercept)       0.40097
+OV                0.18840
+FirstFixLoc       0.13440
+OV:FirstFixLoc    0.06578
+               z value
+(Intercept)      4.668
+OV              -0.079
+FirstFixLoc     -0.614
+OV:FirstFixLoc   1.247
+               Pr(>|z|)    
+(Intercept)    3.04e-06 ***
+OV                0.937    
+FirstFixLoc       0.539    
+OV:FirstFixLoc    0.212    
+---
+Signif. codes:  
+  0 ‘***’ 0.001 ‘**’ 0.01
+  ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
+
+Correlation of Fixed Effects:
+            (Intr) OV    
+OV          -0.890       
+FirstFixLoc  0.000  0.002
+OV:FrstFxLc  0.008 -0.006
+            FrstFL
+OV                
+FirstFixLoc       
+OV:FrstFxLc -0.912
+
+#### Tabulated Model Output ####

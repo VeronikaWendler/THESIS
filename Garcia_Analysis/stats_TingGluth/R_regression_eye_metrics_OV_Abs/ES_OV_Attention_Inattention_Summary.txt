@@ -1,0 +1,31 @@
+### Logistic Mixed Model Summary - ES Phase ###
+
+Generalized linear mixed model fit by maximum likelihood (Laplace Approximation) ['glmerMod']
+ Family: binomial  ( logit )
+Formula: corr ~ InattentionW + OV:AttentionW + (1 | sub_id)
+   Data: data
+
+     AIC      BIC   logLik deviance df.resid 
+  5315.9   5343.4  -2653.9   5307.9     7230 
+
+Scaled residuals: 
+    Min      1Q  Median      3Q     Max 
+-5.2459  0.2520  0.3360  0.4164  0.8781 
+
+Random effects:
+ Groups Name        Variance Std.Dev.
+ sub_id (Intercept) 0.2257   0.4751  
+Number of obs: 7234, groups:  sub_id, 21
+
+Fixed effects:
+              Estimate Std. Error z value Pr(>|z|)    
+(Intercept)    2.05810    0.11104  18.534  < 2e-16 ***
+InattentionW   0.43958    0.04478   9.816  < 2e-16 ***
+OV:AttentionW  0.31742    0.04118   7.709 1.27e-14 ***
+---
+Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
+
+Correlation of Fixed Effects:
+            (Intr) InttnW
+InattentinW 0.099        
+OV:AttentnW 0.080  0.542 

@@ -1,0 +1,78 @@
+### Logistic Mixed Model (Betas, NOT Odds Ratios) - EE Phase ###
+
+#### Model Summary ####
+Generalized linear mixed
+  model fit by maximum
+  likelihood (Laplace
+  Approximation) [glmerMod]
+ Family: binomial  ( logit )
+Formula: 
+chose_right ~ OV * DwellTimeAdvantage + (1 + OV | sub_id)
+   Data: data
+
+     AIC      BIC   logLik 
+  3255.3   3297.2  -1620.7 
+deviance df.resid 
+  3241.3     2933 
+
+Scaled residuals: 
+   Min     1Q Median     3Q 
+ -6.08  -0.69  -0.21   0.71 
+   Max 
+509.05 
+
+Random effects:
+ Groups Name        Variance
+ sub_id (Intercept) 0.000000
+        OV          0.004614
+ Std.Dev. Corr
+ 0.00000      
+ 0.06793   NaN
+Number of obs: 2940, groups:  
+sub_id, 21
+
+Fixed effects:
+                      Estimate
+(Intercept)           -0.04491
+OV                    -0.01275
+DwellTimeAdvantage     1.46342
+OV:DwellTimeAdvantage -0.05282
+                      Std. Error
+(Intercept)              0.10523
+OV                       0.05305
+DwellTimeAdvantage       0.14651
+OV:DwellTimeAdvantage    0.06870
+                      z value
+(Intercept)            -0.427
+OV                     -0.240
+DwellTimeAdvantage      9.989
+OV:DwellTimeAdvantage  -0.769
+                      Pr(>|z|)
+(Intercept)              0.670
+OV                       0.810
+DwellTimeAdvantage      <2e-16
+OV:DwellTimeAdvantage    0.442
+                         
+(Intercept)              
+OV                       
+DwellTimeAdvantage    ***
+OV:DwellTimeAdvantage    
+---
+Signif. codes:  
+  0 ‘***’ 0.001 ‘**’ 0.01
+  ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
+
+Correlation of Fixed Effects:
+            (Intr) OV    
+OV          -0.877       
+DwllTmAdvnt -0.054  0.044
+OV:DwllTmAd  0.048 -0.047
+            DwllTA
+OV                
+DwllTmAdvnt       
+OV:DwllTmAd -0.920
+optimizer (Nelder_Mead) convergence code: 0 (OK)
+boundary (singular) fit: see help('isSingular')
+
+
+#### Tabulated Model Output ####

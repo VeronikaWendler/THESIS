@@ -1,0 +1,35 @@
+### Linear Mixed Model Summary - ES Phase RT ###
+
+Linear mixed model fit by REML. t-tests use Satterthwaite's method ['lmerModLmerTest']
+Formula: model_formula
+   Data: data
+
+REML criterion at convergence: 20530.2
+
+Scaled residuals: 
+    Min      1Q  Median      3Q     Max 
+-2.4807 -0.7263 -0.1927  0.5236  5.7887 
+
+Random effects:
+ Groups   Name        Variance Std.Dev.
+ sub_id   (Intercept) 0.000    0.0000  
+ Residual             0.997    0.9985  
+Number of obs: 7234, groups:  sub_id, 21
+
+Fixed effects:
+                  Estimate Std. Error         df t value Pr(>|t|)    
+(Intercept)        0.02307    0.01175 7230.00000   1.964   0.0496 *  
+OV                -0.10759    0.01325 7230.00000  -8.121 5.41e-16 ***
+OV:AttentionW      0.01562    0.02210 7230.00000   0.707   0.4797    
+OV:InattentionW    0.01412    0.02202 7230.00000   0.641   0.5214    
+---
+Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
+
+Correlation of Fixed Effects:
+            (Intr) OV    OV:AtW
+OV          0.020              
+OV:AttentnW 0.038  0.440       
+OV:InttntnW 0.030  0.444 0.842 
+optimizer (nloptwrap) convergence code: 0 (OK)
+boundary (singular) fit: see help('isSingular')
+

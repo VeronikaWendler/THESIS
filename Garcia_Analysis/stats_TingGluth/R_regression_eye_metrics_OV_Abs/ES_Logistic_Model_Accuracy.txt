@@ -1,0 +1,35 @@
+### Logistic Mixed Model for Accuracy (ES Phase) ###
+
+#### Model Summary ####
+Generalized linear mixed model fit by maximum likelihood (Laplace
+  Approximation) [glmerMod]
+ Family: binomial  ( logit )
+Formula: corr ~ OV_num_2 + AbsValueDiff_2 + (1 | sub_id)
+   Data: ee_data
+
+     AIC      BIC   logLik deviance df.resid 
+  5411.5   5439.4  -2701.8   5403.5     7916 
+
+Scaled residuals: 
+    Min      1Q  Median      3Q     Max 
+-6.9118  0.1784  0.2867  0.4151  1.0812 
+
+Random effects:
+ Groups Name        Variance Std.Dev.
+ sub_id (Intercept) 0.2368   0.4866  
+Number of obs: 7920, groups:  sub_id, 22
+
+Fixed effects:
+               Estimate Std. Error z value Pr(>|z|)    
+(Intercept)     2.25895    0.11272  20.041  < 2e-16 ***
+OV_num_2        0.10513    0.03062   3.433 0.000597 ***
+AbsValueDiff_2  0.83399    0.04504  18.518  < 2e-16 ***
+---
+Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
+
+Correlation of Fixed Effects:
+            (Intr) OV_n_2
+OV_num_2     0.020       
+AbsValDff_2  0.206 -0.020
+
+#### Tabulated Model Output ####

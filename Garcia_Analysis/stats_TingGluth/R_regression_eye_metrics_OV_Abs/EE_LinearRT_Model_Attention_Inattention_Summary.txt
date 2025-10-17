@@ -1,0 +1,39 @@
+### Linear Mixed Model Summary - EE Phase RT ###
+
+Linear mixed model fit by REML. t-tests use Satterthwaite's method ['lmerModLmerTest']
+Formula: model_formula
+   Data: data
+
+REML criterion at convergence: 3452.9
+
+Scaled residuals: 
+    Min      1Q  Median      3Q     Max 
+-2.4587 -0.9024 -0.0262  0.9087  3.2681 
+
+Random effects:
+ Groups   Name               Variance  Std.Dev.  Corr       
+ sub_id   (Intercept)        6.060e-03 0.0778457            
+          OV                 6.518e-04 0.0255296 -0.51      
+          DwellTimeAdvantage 5.586e-08 0.0002363 -0.03  0.18
+ Residual                    1.806e-01 0.4249183            
+Number of obs: 2940, groups:  sub_id, 21
+
+Fixed effects:
+                       Estimate Std. Error        df t value Pr(>|t|)    
+(Intercept)           5.109e-01  1.893e-02 2.238e+01  26.983  < 2e-16 ***
+OV                    8.871e-03  9.725e-03 1.042e+01   0.912    0.382    
+DwellTimeAdvantage    5.204e-04  5.435e-05 1.931e+01   9.575 9.09e-09 ***
+OV:DwellTimeAdvantage 1.026e-05  1.498e-05 1.211e+03   0.685    0.494    
+---
+Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
+
+Correlation of Fixed Effects:
+            (Intr) OV     DwllTA
+OV          -0.259              
+DwllTmAdvnt -0.020  0.109       
+OV:DwllTmAd  0.022  0.088  0.004
+optimizer (nloptwrap) convergence code: 0 (OK)
+Model failed to converge with max|grad| = 1.89446 (tol = 0.002, component 1)
+Model is nearly unidentifiable: very large eigenvalue
+ - Rescale variables?
+

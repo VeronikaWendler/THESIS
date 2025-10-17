@@ -1,0 +1,114 @@
+# -*- coding: utf-8 -*-
+# Fixation durations with SE bars (E blue, S red)
+
+import os
+import numpy as np
+import pandas as pd
+import matplotlib.pyplot as plt
+
+file = r"C:\Cluster_Github\HDDM_Vero\data_sets\data_sets_Garcia\GarciaParticipants_Eye_Response_Feed_Allfix_addm_OV_Abs_CCT.csv"
+excluded_subs = {1, 4, 5, 6, 14, 99}
+output_csv  = "FixDur_ES.csv"  # same as before
+output_plot = "fixation_duration_ES_bars_SE.png"              # NEW filename
+
+def to_numeric(x):
+    try:
+        if pd.isna(x):
+            return np.nan
+        return float(str(x).strip())
+    except Exception:
+        return np.nan
+
+def loc_to_opt(loc_val):
+    if pd.isna(loc_val):
+        return np.nan
+    v = int(round(loc_val))
+    return "E" if v == 1 else ("S" if v == 2 else np.nan)
+
+df = pd.read_csv(file)
+
+required = ["sub_id","phase","FirstFixLoc","FirstFixDur",
+            "FinalFixLoc","FinalFixDur","MiddleDominantLoc","MiddleDominantDur"]
+missing = [c for c in required if c not in df.columns]
+if missing:
+    raise ValueError(f"Missing required columns: {missing}")
+
+df["sub_id"] = pd.to_numeric(df["sub_id"], errors="coerce").astype("Int64")
+df["phase"]  = df["phase"].astype(str).str.upper()
+for col in ["FirstFixLoc","FinalFixLoc","MiddleDominantLoc","FirstFixDur","FinalFixDur","MiddleDominantDur"]:
+    df[col] = df[col].map(to_numeric)
+
+df = df[(df["phase"]=="ES") & (~df["sub_id"].isin(excluded_subs))].copy()
+
+first  = pd.DataFrame({"sub_id": df["sub_id"], "role":"First",
+                       "opt_type": df["FirstFixLoc"].map(loc_to_opt),
+                       "dur_ms": df["FirstFixDur"]})
+middle = pd.DataFrame({"sub_id": df["sub_id"], "role":"Middle",
+                       "opt_type": df["MiddleDominantLoc"].map(loc_to_opt),
+                       "dur_ms": df["MiddleDominantDur"]})
+final  = pd.DataFrame({"sub_id": df["sub_id"], "role":"Final",
+                       "opt_type": df["FinalFixLoc"].map(loc_to_opt),
+                       "dur_ms": df["FinalFixDur"]})
+
+fix_long = pd.concat([first, middle, final], ignore_index=True)
+fix_long = fix_long[fix_long["opt_type"].isin(["E","S"]) & (~fix_long["dur_ms"].isna())].copy()
+fix_long["role"] = pd.Categorical(fix_long["role"], ["First","Middle","Final"], ordered=True)
+fix_long["opt_type"] = pd.Categorical(fix_long["opt_type"], ["E","S"], ordered=True)
+
+subj_summary = (fix_long
+    .groupby(["sub_id","role","opt_type"], observed=True, as_index=False)
+    .agg(mean_ms=("dur_ms","mean"),
+         median_ms=("dur_ms","median"),
+         n_trials=("dur_ms","size"))
+)
+
+def sd1(x):
+    return float(np.std(x, ddof=1)) if len(x)>1 else np.nan
+
+group_subject_agg = (subj_summary
+    .groupby(["role","opt_type"], observed=True, as_index=False)
+    .agg(n_subjects=("sub_id","nunique"),
+         n_trials_total=("n_trials","sum"),
+         mean_ms=("mean_ms","mean"),
+         sd_ms=("mean_ms", sd1),
+         median_ms=("median_ms","median"))
+    .sort_values(["role","opt_type"])
+)
+
+# Standard error across subjects
+group_subject_agg["se_ms"] = group_subject_agg["sd_ms"] / np.sqrt(group_subject_agg["n_subjects"].clip(lower=1))
+group_subject_agg.to_csv(output_csv, index=False)
+print(f"Saved: {os.path.abspath(output_csv)}")
+
+# --- Plot with SE bars ---
+roles     = ["First","Middle","Final"]
+opt_types = ["E","S"]
+role_idx  = {r:i for i,r in enumerate(roles)}
+
+mean_grid = np.full((len(roles), len(opt_types)), np.nan)
+se_grid   = np.full_like(mean_grid, np.nan, dtype=float)
+
+for _, row in group_subject_agg.iterrows():
+    i = role_idx[row["role"]]
+    j = opt_types.index(row["opt_type"])
+    mean_grid[i, j] = row["mean_ms"]
+    se_grid[i, j]   = row["se_ms"]
+
+x = np.arange(len(roles))
+width = 0.35
+
+fig, ax = plt.subplots(figsize=(8,5), dpi=150)
+ax.bar(x - width/2, mean_grid[:,0], width, label="E", color="deepskyblue",
+       yerr=np.nan_to_num(se_grid[:,0]), capsize=4)
+ax.bar(x + width/2, mean_grid[:,1], width, label="S", color="darkorchid",
+       yerr=np.nan_to_num(se_grid[:,1]), capsize=4)
+
+ax.set_ylabel("Fixation Duration (ms)")
+ax.set_xticks(x, roles)
+ax.set_title("Fixation Durations (mean ± SE)")
+ax.legend(loc="upper left", ncols=2)
+ax.spines["top"].set_visible(False); ax.spines["right"].set_visible(False)
+fig.tight_layout()
+fig.savefig(output_plot)
+print(f"Saved: {os.path.abspath(output_plot)}")
+plt.show()

@@ -1,0 +1,227 @@
+### Linear Mixed Model: Predicting P(Choose Correct) ###
+Linear mixed model fit by REML. t-tests use Satterthwaite's method ['lmerModLmerTest']
+Formula: mean_p_choose_corr ~ AttentionW_bin * OVcate_2 + (1 | sub_id)
+   Data: agg_data
+
+REML criterion at convergence: -52.4
+
+Scaled residuals: 
+    Min      1Q  Median      3Q     Max 
+-3.6039 -0.4039  0.1307  0.5158  2.2428 
+
+Random effects:
+ Groups   Name        Variance Std.Dev.
+ sub_id   (Intercept) 0.006865 0.08286 
+ Residual             0.038425 0.19602 
+Number of obs: 308, groups:  sub_id, 21
+
+Fixed effects:
+                                Estimate Std. Error        df t value Pr(>|t|)    
+(Intercept)                      0.49103    0.04644 222.52346  10.573  < 2e-16 ***
+AttentionW_bin2                  0.23805    0.06049 272.83506   3.935 0.000106 ***
+AttentionW_bin3                  0.37658    0.06049 272.83506   6.225 1.81e-09 ***
+AttentionW_bin4                  0.45178    0.06049 272.83506   7.468 1.10e-12 ***
+AttentionW_bin5                  0.50421    0.06049 272.83506   8.335 3.85e-15 ***
+OVcate_2medium                   0.30797    0.06049 272.83506   5.091 6.65e-07 ***
+OVcate_2high                     0.04331    0.06049 272.83506   0.716 0.474669    
+AttentionW_bin2:OVcate_2medium  -0.13195    0.08555 272.83506  -1.542 0.124141    
+AttentionW_bin3:OVcate_2medium  -0.22849    0.08555 272.83506  -2.671 0.008022 ** 
+AttentionW_bin4:OVcate_2medium  -0.27240    0.08555 272.83506  -3.184 0.001620 ** 
+AttentionW_bin5:OVcate_2medium  -0.30862    0.08611 272.98670  -3.584 0.000401 ***
+AttentionW_bin2:OVcate_2high    -0.10147    0.08555 272.83506  -1.186 0.236631    
+AttentionW_bin3:OVcate_2high    -0.07484    0.08555 272.83506  -0.875 0.382473    
+AttentionW_bin4:OVcate_2high    -0.05589    0.08555 272.83506  -0.653 0.514108    
+AttentionW_bin5:OVcate_2high    -0.11180    0.08994 273.84189  -1.243 0.214907    
+---
+Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
+
+### Pairwise Comparisons (Bonferroni-adjusted) - Attentional Weight Bins Within OV Levels ###
+$emmeans
+OVcate_2 = low:
+ AttentionW_bin emmean     SE  df lower.CL upper.CL
+ 1               0.491 0.0464 223    0.400    0.583
+ 2               0.729 0.0464 223    0.638    0.821
+ 3               0.868 0.0464 223    0.776    0.959
+ 4               0.943 0.0464 223    0.851    1.034
+ 5               0.995 0.0464 223    0.904    1.087
+
+OVcate_2 = medium:
+ AttentionW_bin emmean     SE  df lower.CL upper.CL
+ 1               0.799 0.0464 223    0.707    0.891
+ 2               0.905 0.0464 223    0.814    0.997
+ 3               0.947 0.0464 223    0.856    1.039
+ 4               0.978 0.0464 223    0.887    1.070
+ 5               0.995 0.0475 229    0.901    1.088
+
+OVcate_2 = high:
+ AttentionW_bin emmean     SE  df lower.CL upper.CL
+ 1               0.534 0.0464 223    0.443    0.626
+ 2               0.671 0.0464 223    0.579    0.762
+ 3               0.836 0.0464 223    0.745    0.928
+ 4               0.930 0.0464 223    0.839    1.022
+ 5               0.927 0.0541 259    0.820    1.033
+
+Degrees-of-freedom method: kenward-roger 
+Confidence level used: 0.95 
+
+$contrasts
+OVcate_2 = low:
+ contrast                          estimate     SE  df t.ratio p.value
+ AttentionW_bin1 - AttentionW_bin2 -0.23805 0.0605 273  -3.935  0.0011
+ AttentionW_bin1 - AttentionW_bin3 -0.37658 0.0605 273  -6.225  <.0001
+ AttentionW_bin1 - AttentionW_bin4 -0.45178 0.0605 273  -7.468  <.0001
+ AttentionW_bin1 - AttentionW_bin5 -0.50421 0.0605 273  -8.335  <.0001
+ AttentionW_bin2 - AttentionW_bin3 -0.13852 0.0605 273  -2.290  0.2279
+ AttentionW_bin2 - AttentionW_bin4 -0.21373 0.0605 273  -3.533  0.0048
+ AttentionW_bin2 - AttentionW_bin5 -0.26616 0.0605 273  -4.400  0.0002
+ AttentionW_bin3 - AttentionW_bin4 -0.07521 0.0605 273  -1.243  1.0000
+ AttentionW_bin3 - AttentionW_bin5 -0.12763 0.0605 273  -2.110  0.3578
+ AttentionW_bin4 - AttentionW_bin5 -0.05243 0.0605 273  -0.867  1.0000
+
+OVcate_2 = medium:
+ contrast                          estimate     SE  df t.ratio p.value
+ AttentionW_bin1 - AttentionW_bin2 -0.10610 0.0605 273  -1.754  0.8057
+ AttentionW_bin1 - AttentionW_bin3 -0.14809 0.0605 273  -2.448  0.1500
+ AttentionW_bin1 - AttentionW_bin4 -0.17938 0.0605 273  -2.965  0.0329
+ AttentionW_bin1 - AttentionW_bin5 -0.19559 0.0613 273  -3.191  0.0158
+ AttentionW_bin2 - AttentionW_bin3 -0.04199 0.0605 273  -0.694  1.0000
+ AttentionW_bin2 - AttentionW_bin4 -0.07328 0.0605 273  -1.211  1.0000
+ AttentionW_bin2 - AttentionW_bin5 -0.08949 0.0613 273  -1.460  1.0000
+ AttentionW_bin3 - AttentionW_bin4 -0.03129 0.0605 273  -0.517  1.0000
+ AttentionW_bin3 - AttentionW_bin5 -0.04750 0.0613 273  -0.775  1.0000
+ AttentionW_bin4 - AttentionW_bin5 -0.01621 0.0613 273  -0.264  1.0000
+
+OVcate_2 = high:
+ contrast                          estimate     SE  df t.ratio p.value
+ AttentionW_bin1 - AttentionW_bin2 -0.13658 0.0605 273  -2.258  0.2475
+ AttentionW_bin1 - AttentionW_bin3 -0.30174 0.0605 273  -4.988  <.0001
+ AttentionW_bin1 - AttentionW_bin4 -0.39589 0.0605 273  -6.544  <.0001
+ AttentionW_bin1 - AttentionW_bin5 -0.39241 0.0666 275  -5.894  <.0001
+ AttentionW_bin2 - AttentionW_bin3 -0.16515 0.0605 273  -2.730  0.0674
+ AttentionW_bin2 - AttentionW_bin4 -0.25931 0.0605 273  -4.287  0.0003
+ AttentionW_bin2 - AttentionW_bin5 -0.25583 0.0666 275  -3.843  0.0015
+ AttentionW_bin3 - AttentionW_bin4 -0.09416 0.0605 273  -1.556  1.0000
+ AttentionW_bin3 - AttentionW_bin5 -0.09068 0.0666 275  -1.362  1.0000
+ AttentionW_bin4 - AttentionW_bin5  0.00348 0.0666 275   0.052  1.0000
+
+Degrees-of-freedom method: kenward-roger 
+P value adjustment: bonferroni method for 10 tests 
+
+
+### Pairwise Comparisons (Bonferroni-adjusted) - OV Levels Within Each Bin ###
+$emmeans
+AttentionW_bin = 1:
+ OVcate_2 emmean     SE  df lower.CL upper.CL
+ low       0.491 0.0464 223    0.400    0.583
+ medium    0.799 0.0464 223    0.707    0.891
+ high      0.534 0.0464 223    0.443    0.626
+
+AttentionW_bin = 2:
+ OVcate_2 emmean     SE  df lower.CL upper.CL
+ low       0.729 0.0464 223    0.638    0.821
+ medium    0.905 0.0464 223    0.814    0.997
+ high      0.671 0.0464 223    0.579    0.762
+
+AttentionW_bin = 3:
+ OVcate_2 emmean     SE  df lower.CL upper.CL
+ low       0.868 0.0464 223    0.776    0.959
+ medium    0.947 0.0464 223    0.856    1.039
+ high      0.836 0.0464 223    0.745    0.928
+
+AttentionW_bin = 4:
+ OVcate_2 emmean     SE  df lower.CL upper.CL
+ low       0.943 0.0464 223    0.851    1.034
+ medium    0.978 0.0464 223    0.887    1.070
+ high      0.930 0.0464 223    0.839    1.022
+
+AttentionW_bin = 5:
+ OVcate_2 emmean     SE  df lower.CL upper.CL
+ low       0.995 0.0464 223    0.904    1.087
+ medium    0.995 0.0475 229    0.901    1.088
+ high      0.927 0.0541 259    0.820    1.033
+
+Degrees-of-freedom method: kenward-roger 
+Confidence level used: 0.95 
+
+$contrasts
+AttentionW_bin = 1:
+ contrast       estimate     SE  df t.ratio p.value
+ low - medium  -0.307974 0.0605 273  -5.091  <.0001
+ low - high    -0.043307 0.0605 273  -0.716  1.0000
+ medium - high  0.264667 0.0605 273   4.375  0.0001
+
+AttentionW_bin = 2:
+ contrast       estimate     SE  df t.ratio p.value
+ low - medium  -0.176022 0.0605 273  -2.910  0.0117
+ low - high     0.058162 0.0605 273   0.961  1.0000
+ medium - high  0.234184 0.0605 273   3.871  0.0004
+
+AttentionW_bin = 3:
+ contrast       estimate     SE  df t.ratio p.value
+ low - medium  -0.079487 0.0605 273  -1.314  0.5699
+ low - high     0.031530 0.0605 273   0.521  1.0000
+ medium - high  0.111017 0.0605 273   1.835  0.2027
+
+AttentionW_bin = 4:
+ contrast       estimate     SE  df t.ratio p.value
+ low - medium  -0.035570 0.0605 273  -0.588  1.0000
+ low - high     0.012584 0.0605 273   0.208  1.0000
+ medium - high  0.048154 0.0605 273   0.796  1.0000
+
+AttentionW_bin = 5:
+ contrast       estimate     SE  df t.ratio p.value
+ low - medium   0.000649 0.0613 273   0.011  1.0000
+ low - high     0.068489 0.0666 275   1.029  0.9135
+ medium - high  0.067840 0.0672 275   1.009  0.9412
+
+Degrees-of-freedom method: kenward-roger 
+P value adjustment: bonferroni method for 3 tests 
+
+
+### Model Comparison: Does OV Level Influence Attentional Weight Effects? ###
+Data: agg_data
+Models:
+lmm_no_OV: mean_p_choose_corr ~ AttentionW_bin + (1 | sub_id)
+lmm_model: mean_p_choose_corr ~ AttentionW_bin * OVcate_2 + (1 | sub_id)
+          npar     AIC     BIC logLik deviance  Chisq Df Pr(>Chisq)    
+lmm_no_OV    7 -53.908 -27.797 33.954  -67.908                         
+lmm_model   17 -84.087 -20.676 59.044 -118.087 50.179 10  2.474e-07 ***
+---
+Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
+
+### Linear Mixed Model (Continuous Attentional Weight) ###
+Linear mixed model fit by REML. t-tests use Satterthwaite's method ['lmerModLmerTest']
+Formula: corr ~ AttentionW_bin * OVcate_2 + (1 | sub_id)
+   Data: data
+
+REML criterion at convergence: 1846.6
+
+Scaled residuals: 
+    Min      1Q  Median      3Q     Max 
+-3.2667 -0.1370  0.1904  0.5541  2.1773 
+
+Random effects:
+ Groups   Name        Variance Std.Dev.
+ sub_id   (Intercept) 0.008376 0.09152 
+ Residual             0.109670 0.33116 
+Number of obs: 2757, groups:  sub_id, 21
+
+Fixed effects:
+                                 Estimate Std. Error         df t value Pr(>|t|)    
+(Intercept)                       0.49090    0.02929   76.11586  16.758  < 2e-16 ***
+AttentionW_bin2                   0.23507    0.03088 2722.64098   7.611 3.71e-14 ***
+AttentionW_bin3                   0.37491    0.03087 2722.24666  12.144  < 2e-16 ***
+AttentionW_bin4                   0.45104    0.03057 2722.51756  14.755  < 2e-16 ***
+AttentionW_bin5                   0.50776    0.03120 2723.16807  16.276  < 2e-16 ***
+OVcate_2medium                    0.28315    0.03349 2723.23248   8.454  < 2e-16 ***
+OVcate_2high                      0.03442    0.03259 2722.26198   1.056   0.2909    
+AttentionW_bin2:OVcate_2medium   -0.10557    0.04810 2722.35581  -2.195   0.0283 *  
+AttentionW_bin3:OVcate_2medium   -0.20520    0.04838 2722.26213  -4.241 2.30e-05 ***
+AttentionW_bin4:OVcate_2medium   -0.24381    0.04692 2722.32525  -5.197 2.18e-07 ***
+AttentionW_bin5:OVcate_2medium   -0.29274    0.04997 2722.58338  -5.858 5.25e-09 ***
+AttentionW_bin2:OVcate_2high     -0.08221    0.04730 2722.34343  -1.738   0.0823 .  
+AttentionW_bin3:OVcate_2high     -0.05407    0.04665 2722.46341  -1.159   0.2466    
+AttentionW_bin4:OVcate_2high     -0.03152    0.04552 2722.95571  -0.693   0.4886    
+AttentionW_bin5:OVcate_2high     -0.11527    0.04999 2726.15936  -2.306   0.0212 *  
+---
+Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1

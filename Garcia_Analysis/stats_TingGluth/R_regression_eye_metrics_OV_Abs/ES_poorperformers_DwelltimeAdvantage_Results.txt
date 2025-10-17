@@ -1,0 +1,121 @@
+
+===== ANOVA: Effect of DwellTimeAdvantage_bin on P(Choose Right) =====
+$ANOVA
+                  Effect DFn DFd       SSn       SSd          F            p p<.05       ges
+1            (Intercept)   1  20 26.533658 0.3453798 1536.49156 2.174616e-20     * 0.9216572
+2 DwellTimeAdvantage_bin   4  80  6.486164 1.9100382   67.91659 6.055689e-25     * 0.7419897
+
+$`Mauchly's Test for Sphericity`
+                  Effect         W            p p<.05
+2 DwellTimeAdvantage_bin 0.1916503 0.0003918224     *
+
+$`Sphericity Corrections`
+                  Effect       GGe        p[GG] p[GG]<.05       HFe        p[HF] p[HF]<.05
+2 DwellTimeAdvantage_bin 0.5526838 8.675156e-15         * 0.6243294 2.028998e-16         *
+
+
+===== Post-hoc Tests: Pairwise Comparisons for DwellTimeAdvantage_bin =====
+$emmeans
+ DwellTimeAdvantage_bin emmean     SE  df lower.CL upper.CL
+ 1                       0.159 0.0328 100   0.0935    0.224
+ 2                       0.301 0.0328 100   0.2363    0.366
+ 3                       0.515 0.0328 100   0.4503    0.580
+ 4                       0.707 0.0328 100   0.6421    0.772
+ 5                       0.831 0.0328 100   0.7662    0.896
+
+Confidence level used: 0.95 
+
+$contrasts
+ contrast                                          estimate     SE  df t.ratio p.value
+ DwellTimeAdvantage_bin1 - DwellTimeAdvantage_bin2   -0.143 0.0463 100  -3.080  0.0267
+ DwellTimeAdvantage_bin1 - DwellTimeAdvantage_bin3   -0.357 0.0463 100  -7.698  <.0001
+ DwellTimeAdvantage_bin1 - DwellTimeAdvantage_bin4   -0.549 0.0463 100 -11.836  <.0001
+ DwellTimeAdvantage_bin1 - DwellTimeAdvantage_bin5   -0.673 0.0463 100 -14.514  <.0001
+ DwellTimeAdvantage_bin2 - DwellTimeAdvantage_bin3   -0.214 0.0463 100  -4.618  0.0001
+ DwellTimeAdvantage_bin2 - DwellTimeAdvantage_bin4   -0.406 0.0463 100  -8.756  <.0001
+ DwellTimeAdvantage_bin2 - DwellTimeAdvantage_bin5   -0.530 0.0463 100 -11.433  <.0001
+ DwellTimeAdvantage_bin3 - DwellTimeAdvantage_bin4   -0.192 0.0463 100  -4.138  0.0007
+ DwellTimeAdvantage_bin3 - DwellTimeAdvantage_bin5   -0.316 0.0463 100  -6.816  <.0001
+ DwellTimeAdvantage_bin4 - DwellTimeAdvantage_bin5   -0.124 0.0463 100  -2.678  0.0867
+
+P value adjustment: bonferroni method for 10 tests 
+
+
+===== Linear Mixed Model: OVcate_2 * DwellTimeAdvantage_bin Effect =====
+Type III Analysis of Variance Table with Satterthwaite's method
+                                 Sum Sq  Mean Sq NumDF  DenDF F value   Pr(>F)   
+OVcate_2                        0.60334 0.301672     2 125.14  6.6250 0.001841 **
+DwellTimeAdvantage_bin          0.22217 0.055543     4 125.14  1.2198 0.305796   
+OVcate_2:DwellTimeAdvantage_bin 0.08228 0.010286     8 125.14  0.2259 0.985613   
+---
+Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
+
+===== Post-hoc Comparisons for OV Levels within Each Bin (LMM) =====
+$emmeans
+DwellTimeAdvantage_bin = 1:
+ OVcate_2 emmean     SE  df lower.CL upper.CL
+ low       0.626 0.0694 128    0.488    0.763
+ medium    0.525 0.0694 128    0.388    0.662
+ high      0.489 0.0694 128    0.352    0.627
+
+DwellTimeAdvantage_bin = 2:
+ OVcate_2 emmean     SE  df lower.CL upper.CL
+ low       0.585 0.0694 128    0.448    0.723
+ medium    0.505 0.0694 128    0.368    0.643
+ high      0.393 0.0694 128    0.255    0.530
+
+DwellTimeAdvantage_bin = 3:
+ OVcate_2 emmean     SE  df lower.CL upper.CL
+ low       0.530 0.0694 128    0.392    0.667
+ medium    0.522 0.0694 128    0.384    0.659
+ high      0.361 0.0694 128    0.224    0.499
+
+DwellTimeAdvantage_bin = 4:
+ OVcate_2 emmean     SE  df lower.CL upper.CL
+ low       0.500 0.0694 128    0.363    0.637
+ medium    0.461 0.0694 128    0.323    0.598
+ high      0.323 0.0694 128    0.185    0.460
+
+DwellTimeAdvantage_bin = 5:
+ OVcate_2 emmean     SE  df lower.CL upper.CL
+ low       0.520 0.0694 128    0.383    0.657
+ medium    0.518 0.0732 130    0.373    0.663
+ high      0.437 0.0694 128    0.299    0.574
+
+Degrees-of-freedom method: kenward-roger 
+Confidence level used: 0.95 
+
+$contrasts
+DwellTimeAdvantage_bin = 1:
+ contrast      estimate     SE  df t.ratio p.value
+ low - medium   0.10054 0.0954 125   1.054  0.8824
+ low - high     0.13606 0.0954 125   1.426  0.4693
+ medium - high  0.03553 0.0954 125   0.372  1.0000
+
+DwellTimeAdvantage_bin = 2:
+ contrast      estimate     SE  df t.ratio p.value
+ low - medium   0.07997 0.0954 125   0.838  1.0000
+ low - high     0.19255 0.0954 125   2.018  0.1373
+ medium - high  0.11258 0.0954 125   1.180  0.7211
+
+DwellTimeAdvantage_bin = 3:
+ contrast      estimate     SE  df t.ratio p.value
+ low - medium   0.00828 0.0954 125   0.087  1.0000
+ low - high     0.16863 0.0954 125   1.767  0.2390
+ medium - high  0.16035 0.0954 125   1.680  0.2862
+
+DwellTimeAdvantage_bin = 4:
+ contrast      estimate     SE  df t.ratio p.value
+ low - medium   0.03930 0.0954 125   0.412  1.0000
+ low - high     0.17743 0.0954 125   1.859  0.1960
+ medium - high  0.13814 0.0954 125   1.447  0.4508
+
+DwellTimeAdvantage_bin = 5:
+ contrast      estimate     SE  df t.ratio p.value
+ low - medium   0.00214 0.0982 125   0.022  1.0000
+ low - high     0.08316 0.0954 125   0.871  1.0000
+ medium - high  0.08101 0.0982 125   0.825  1.0000
+
+Degrees-of-freedom method: kenward-roger 
+P value adjustment: bonferroni method for 3 tests 
+

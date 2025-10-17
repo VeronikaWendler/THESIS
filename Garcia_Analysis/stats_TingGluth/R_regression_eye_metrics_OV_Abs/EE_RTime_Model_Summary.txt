@@ -1,0 +1,33 @@
+### Linear Mixed Model for Reaction Times (EE Phase) ###
+
+#### Model Summary ####
+Linear mixed model fit by REML. t-tests use Satterthwaite's method ['lmerModLmerTest']
+Formula: rtime ~ OV_num_2 + AbsValueDiff_2 + (1 | sub_id)
+   Data: ee_data
+
+REML criterion at convergence: 6712.9
+
+Scaled residuals: 
+   Min     1Q Median     3Q    Max 
+-1.370 -0.392 -0.135  0.151 36.735 
+
+Random effects:
+ Groups   Name        Variance Std.Dev.
+ sub_id   (Intercept) 0.07053  0.2656  
+ Residual             0.50424  0.7101  
+Number of obs: 3080, groups:  sub_id, 22
+
+Fixed effects:
+                 Estimate Std. Error         df t value Pr(>|t|)    
+(Intercept)       0.92556    0.05805   20.99999  15.945 3.29e-13 ***
+OV_num_2         -0.07698    0.01284 3056.00000  -5.995 2.28e-09 ***
+AbsValueDiff_2   -0.13434    0.01284 3056.00000 -10.462  < 2e-16 ***
+---
+Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
+
+Correlation of Fixed Effects:
+            (Intr) OV_n_2
+OV_num_2     0.000       
+AbsValDff_2  0.000 -0.002
+
+#### Tabulated Model Output ####
