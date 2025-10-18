@@ -13,7 +13,6 @@ version = 2 # 1 runs first code, 2 runs second code, I don't know of some other 
 
 
 if version == 1:
-    # get comprehensive eyetracking csv with data from response and feedback phase
     data = pd.read_csv('D:/Aberdeen_Uni_June24/cap/THESIS/Garcia_Analysis/data/data_sets/GarciaParticipants_Eye_Response_Feed_Allfix_EXP_1_2_3_4.csv')  
     
     # modify the raw probabilities to have them on a scale, similar to CCT and Ian, i.e. 0.3 -> 30 
@@ -40,7 +39,7 @@ if version == 1:
     data['AttentionW'] = data['AttentionW'].round(3)
     data['InattentionW'] = data['InattentionW'].round(3)
 
-    # Determine the better option based on the higher expected value for RESPONSE eyetracking data
+    # better option based on the higher expected value for RESPONSE eyetracking data
     data['BetterOption'] = np.where(data['ev1'] > data['ev2'], 1, 2)  # 1 for left, 2 for right
     data['FixLocFirstCorr'] = (data['FirstFixLoc'] == data['BetterOption']).astype(int)
 
@@ -69,7 +68,6 @@ if version == 1:
     
 #-------FEEDBACK eyetracking columns -----------------------------------------------------------------------------------
     
-    # Determine optimal option for FEEDBACK eyetracking data
     data['DwellTime_opt_Feed'] = np.where(data['ev1'] == data['ev_opt'], data['DwellLeft_Feed'], data['DwellRight_Feed'])
     data['DwellTime_sub_Feed'] = np.where(data['ev1'] == data['ev_sub'], data['DwellLeft_Feed'], data['DwellRight_Feed'])
     # PropDwell
@@ -78,14 +76,11 @@ if version == 1:
     #missing or zero dwell data
     data.loc[data['DwellTotal_Feed'] == 0, ['PropDwell_opt_Feed', 'PropDwell_sub_Feed']] = np.nan  
     
-    # Compute AttentionW for FEEDBACK duration eyetracking data
     data['AttentionW_Feed'] = (data['PropDwell_opt_Feed'] * data['V_corr']) - (data['PropDwell_sub_Feed'] * data['V_sub'])
     #  Compute InattentionW
     data['InattentionW_Feed'] = (data['PropDwell_sub_Feed'] * data['V_corr']) - (data['PropDwell_opt_Feed'] * data['V_sub'])
     data['AttentionW_Feed'] = data['AttentionW_Feed'].round(3)
     data['InattentionW_Feed'] = data['InattentionW_Feed'].round(3)
-
-    # Determine the better option based on the higher expected value for RESPONSE eyetracking data
     data['BetterOption_Feed'] = np.where(data['ev1'] > data['ev2'], 1, 2)  # 1 for left, 2 for right
     data['FixLocFirstCorr_Feed'] = (data['FirstFixLoc_Feed'] == data['BetterOption_Feed']).astype(int)
     #FixLocLastCorr: 1 if the final fixation was on the better option, 0 otherwise
@@ -95,28 +90,21 @@ if version == 1:
 
 #-------ALLFIX eyetracking data (all fixations in the trial; no restrictions)-----------------------------------------------    
     
-    # Determine optimal option for FEEDBACK eyetracking data
+    # optimal option for FEEDBACK eyetracking data
     data['DwellTime_opt_allfix'] = np.where(data['ev1'] == data['ev_opt'], data['DwellLeft_allfix'], data['DwellRight_allfix'])
     data['DwellTime_sub_allfix'] = np.where(data['ev1'] == data['ev_sub'], data['DwellLeft_allfix'], data['DwellRight_allfix'])
     # PropDwell
     data['PropDwell_opt_allfix'] = data['DwellTime_opt_allfix'] / data['DwellTotal_allfix']
     data['PropDwell_sub_allfix'] = data['DwellTime_sub_allfix'] / data['DwellTotal_allfix']
-    #missing or zero dwell data
     data.loc[data['DwellTotal_allfix'] == 0, ['PropDwell_opt_allfix', 'PropDwell_sub_allfix']] = np.nan  
-    
-    # Compute AttentionW for FEEDBACK duration eyetracking data
     data['AttentionW_allfix'] = (data['PropDwell_opt_allfix'] * data['V_corr']) - (data['PropDwell_sub_allfix'] * data['V_sub'])
-    #  Compute InattentionW
     data['InattentionW_allfix'] = (data['PropDwell_sub_allfix'] * data['V_corr']) - (data['PropDwell_opt_allfix'] * data['V_sub'])
     data['AttentionW_allfix'] = data['AttentionW_allfix'].round(3)
     data['InattentionW_allfix'] = data['InattentionW_allfix'].round(3)
-
-    # Determine the better option based on the higher expected value for RESPONSE eyetracking data
     data['BetterOption_allfix'] = np.where(data['ev1'] > data['ev2'], 1, 2)  # 1 for left, 2 for right
     data['FixLocFirstCorr_allfix'] = (data['FirstFixLoc_allfix'] == data['BetterOption_allfix']).astype(int)
     #FixLocLastCorr: 1 if the final fixation was on the better option, 0 otherwise
     data['FixLocLastCorr_allfix'] = (data['FinalFixLoc_allfix'] == data['BetterOption_allfix']).astype(int)
-
     data['DwellTimeAdvantage_allfix'] = data['DwellRight_allfix'] - data['DwellLeft_allfix']
 
     
@@ -131,14 +119,10 @@ if version == 1:
 
 #--------------------------------------------------------------------------------------------------------------------------------------------------------------
 elif version == 2:
-    # data
     data = pd.read_csv("D:/Aberdeen_Uni_June24/cap/THESIS/Garcia_Analysis/data/data_sets/GarciaParticipants_Eye_Response_Feed_Allfix_addm_EXP_1_2_3_4_CCT.csv")
-    
     # participants to exclude
     exclude_part = {4, 5, 6, 14}
-    data['sub_id'] = data['sub_id'].astype(int)  # Ensure sub_id is an integer for easier processing
-
-    # Initialize OV, OV_category, and absolute value difference columns as NaN
+    data['sub_id'] = data['sub_id'].astype(int)  
     data['OV_num'] = np.nan
     data['OV_num_2'] = np.nan
     data['OVcate'] = np.nan
@@ -149,7 +133,6 @@ elif version == 2:
     data['Abscate_2'] = np.nan
     data['VD'] = np.nan
     data['VD_2'] = np.nan
-    
     data['RLdiff'] = np.nan
     data['feedback'] = np.nan  
     data['split_by'] = np.nan  
@@ -158,7 +141,6 @@ elif version == 2:
     data['out'] = pd.to_numeric(data['out'], errors='coerce')  
     data['stim_chosen'] = np.nan
  
-    
     data.loc[data['phase'] == 'LE', 'feedback'] = data.loc[data['phase'] == 'LE', 'out'].replace({-1: 0, 1: 1})
     data['feedback'] = data['feedback'].astype(float) 
 
@@ -167,9 +149,8 @@ elif version == 2:
 
     # 'q_init' column is where 'phase' == 'LE'
     data.loc[data['phase'] == 'LE', 'q_init'] = 0.5
-    data['q_init'] = data['q_init'].astype(float)  # Ensuring it's a float
-    
-    
+    data['q_init'] = data['q_init'].astype(float) 
+
     data['stim_chosen'] = np.where(data['phase'] == 'ES', 
                                    data['chose_right'].apply(lambda x: 'E' if x == 0 else 'S'), 
                                    np.nan)
@@ -195,7 +176,6 @@ elif version == 2:
             # thresholds for OV (25th and 75th percentiles) and round
             T1_OV, T2_OV = participant_data['OV_num'].quantile([0.25, 0.75]).round(1)
 
-            # Categorize OV
             def categorize_ov(ov):
                 if ov <= T1_OV:
                     return 'low'
@@ -209,7 +189,6 @@ elif version == 2:
             # thresholds for absolute value difference (25th and 75th percentiles) and round
             T1_AbsDiff, T2_AbsDiff = participant_data['AbsValueDiff'].quantile([0.25, 0.75]).round(1)
 
-            # Categorize absolute value difference
             def categorize_abs_diff(abs_diff):
                 if abs_diff <= T1_AbsDiff:
                     return 'low'
@@ -219,12 +198,10 @@ elif version == 2:
                     return 'high'
 
             participant_data['Abscate'] = participant_data['AbsValueDiff'].apply(categorize_abs_diff)
-            
             category_mapping = {'low': 1, 'medium': 2, 'high': 3}
             participant_data['OV'] = participant_data['OVcate'].map(category_mapping)
             participant_data['VD'] = participant_data['Abscate'].map(category_mapping)
             
-            # Update only relevant rows in the original DataFrame
             data.loc[participant_data.index, ['OV', 'VD', 'OVcate', 'OV_num', 'AbsValueDiff', 'Abscate', 'RLdiff']] = participant_data[['OV', 'VD','OVcate','OV_num', 'AbsValueDiff', 'Abscate', 'RLdiff']]
     
         return data
@@ -263,10 +240,8 @@ elif version == 2:
 
             participant_data['OVcate_2'] = participant_data['OV_num_2'].apply(categorize_ov_tertile)
 
-            # thresholds for absolute value difference (25th and 75th percentiles)
             T1_AbsDiff_tertile, T2_AbsDiff_tertile = participant_data['AbsValueDiff_2'].quantile([0.33, 0.66]).round(1)
 
-            # categorize absolute value difference
             def categorize_abs_diff_tertile(abs_diff):
                 if abs_diff <= T1_AbsDiff_tertile:
                     return 'low'
@@ -277,7 +252,6 @@ elif version == 2:
 
             participant_data['Abscate_2'] = participant_data['AbsValueDiff_2'].apply(categorize_abs_diff_tertile)
 
-            # mapping categories to numeric values
             category_mapping2 = {'low': 1, 'medium': 2, 'high': 3}
             participant_data['OV_2'] = participant_data['OVcate_2'].map(category_mapping2)
             participant_data['VD_2'] = participant_data['Abscate_2'].map(category_mapping2)
@@ -287,16 +261,13 @@ elif version == 2:
     
         return data
 
-    # process data for each phase
     phases = ['ES', 'LE', 'EE']
     for phase in phases:
         data = calculate_ov_and_abs_value_diff_tertiles(data, exclude_part, phase)
         
     
-    # Save
     output_path = "D:/Aberdeen_Uni_June24/cap/THESIS/Garcia_Analysis/data/data_sets/GarciaParticipants_Eye_Response_Feed_Allfix_addm_OV_Abs_CCT.csv"
     data.to_csv(output_path, index=False)
 
-    # Print the processed data for verification
     print(data[data['phase'].isin(phases)].head(20))
     

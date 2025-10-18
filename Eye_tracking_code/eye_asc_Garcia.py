@@ -506,7 +506,7 @@ for root, dirs, files in os.walk(bids_root):
 
                             fixation_start_time = None
 
-                    # Save the last trial's data
+                    # Save the previous trial data
                     if current_trial_id is not None:
                         trial_data.append({
                         "TrialID": current_trial_id,
@@ -567,7 +567,7 @@ for root, dirs, files in os.walk(bids_root):
             
             trial_df = pd.DataFrame(trial_data)
             trial_df["Messages"] = trial_df["Messages"].fillna("")
-            # Add the 'Phase' column using the assign_phase function
+            # Add the Phase column using the assign_phase function
             trial_df["Phase"] = trial_df["Messages"].apply(assign_phase)
             # # # Save the processed DataFrame to a CSV file
             output_file = os.path.join(root,

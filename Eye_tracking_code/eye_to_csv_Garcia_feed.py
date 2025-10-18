@@ -45,10 +45,8 @@ participant_indices = {
     99: (17776, 17935)
 }
 
-# Load the Garcia dataset
 garcia_data = pd.read_csv(garcia_file)
 
-# Initialize eye-tracking columns in the original dataset
 eye_tracking_columns = [
     "DwellLeft_Feed",
     "DwellRight_Feed",
@@ -74,7 +72,6 @@ for col in eye_tracking_columns:
     if col not in garcia_data.columns:
         garcia_data[col] = None
 
-# Process participants
 participants = list(range(1, 27))  # Includes participants 1 to 26
 participants.append(99)
 
@@ -82,7 +79,6 @@ for participant in participants:
     if participant in exclude_part:
         continue
 
-    # Load the eye-tracking file for the current participant
     eye_file = f"{eye_dir}/sub-{str(participant).zfill(2)}/eyetracking/sub-{str(participant).zfill(2)}_eye_feedback_phase.csv"
     try:
         eye_data = pd.read_csv(eye_file)
@@ -93,7 +89,6 @@ for participant in participants:
     # Filter eye-tracking data for TrialID >= 49
     eye_data_filtered = eye_data[(eye_data["TrialID"] >= 49) & (eye_data["TrialID"] <= 208)].reset_index(drop=True)
 
-    # Check if participant has corresponding indices in the Garcia data
     if participant in participant_indices:
         start_idx, end_idx = participant_indices[participant]
         garcia_sub_indices = (
@@ -104,20 +99,16 @@ for participant in participants:
 
         garcia_sub = garcia_data.loc[garcia_sub_indices]
 
-        # Ensure matching row counts
         if len(eye_data_filtered) != len(garcia_sub):
             raise ValueError(f"Row count mismatch: Eye-tracking ({len(eye_data_filtered)}) and Garcia ({len(garcia_sub)}).")
 
-        # Assign eye-tracking data to the relevant rows in garcia_data
         for col in eye_tracking_columns:
             if col not in eye_data_filtered.columns:
                 eye_data_filtered[col] = None
             garcia_data.loc[garcia_sub_indices, col] = eye_data_filtered[col].values
 
-        # Debugging: Check assigned columns
         print(f"Participant {participant}: Eye-tracking data successfully merged.")
         print(garcia_data.loc[garcia_sub_indices].head())
 
-# Save the updated dataset without modifying the original structure
 garcia_data.to_csv(output_file, index=False)
 print(f"Updated Garcia data saved to {output_file}")

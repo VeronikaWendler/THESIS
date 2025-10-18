@@ -12,6 +12,9 @@ from matplotlib.lines import Line2D
 import os
 from collections import defaultdict
 from scipy.stats import ttest_rel
+from scipy.stats import ttest_rel
+from statsmodels.stats.multitest import multipletests
+import ast 
 
 
 
@@ -100,11 +103,10 @@ def trial_bins_ES(row):
 
 
 def trial_bins_EvS_byChoice(row):
-    """
-    Return per-25 ms bins:
-        • E_cnt, S_cnt
-        • identify trial group: 'E-chosen' (cho==1) or 'S-chosen' (cho==2)
-    """
+    #Return per-25 ms bins:
+    #E_cnt, S_cnt
+    # identify trial group where E-chosen (cho==1) or S-chosen (cho==2)
+    
     try:
         fixes = ast.literal_eval(row.Fixations) or []
     except Exception:
@@ -116,12 +118,12 @@ def trial_bins_EvS_byChoice(row):
     t0, bins = fixes[0]['start_time'], {}
 
     for f in fixes:
-        side = ROI.get(f['roi'], 'none')            # 'left' | 'right' | 'none'
-        idx  = 0 if side == E_side else 1           # 0 = E, 1 = S
+        side = ROI.get(f['roi'], 'none')            
+        idx  = 0 if side == E_side else 1           
         for b in range(f['start_time']//BIN_MS - t0//BIN_MS,
                        (f['end_time']-1)//BIN_MS - t0//BIN_MS + 1):
             if b not in bins:
-                bins[b] = [0, 0]                    # [E_cnt, S_cnt]
+                bins[b] = [0, 0]                   
             bins[b][idx] += 1
 
     out = pd.DataFrame.from_dict(bins, orient='index',
@@ -138,12 +140,11 @@ def trial_bins_EvS_byChoice(row):
 
 
 def trial_bins_EvS_byAcc(row):
-    """
-    For every 25-ms bin during ES trials count E- and S-fixations.
-    Attach a trial label:
-        • 'Correct'    (row.corr == 1)
-        • 'Incorrect'  (row.corr == 0)
-    """
+    #For every 25-ms bin during ES trials count E- and S-fixations.
+    #Attach a trial label:
+    # Correct    (row.corr == 1)
+    # Incorrect  (row.corr == 0)
+    
     try:
         fixes = ast.literal_eval(row.Fixations) or []
     except Exception:
@@ -168,32 +169,24 @@ def trial_bins_EvS_byAcc(row):
     out['sub']   = row.sub_id
     out['trial'] = row.TrialID
     out['bin']   = out.index
-
-    # ── FIX here ───────────────────────
     out['acc_grp'] = 'Correct' if row['corr'] == 1 else 'Incorrect'
-    # ───────────────────────────────────
-
     out['ratio_E'] = out.E_cnt / (out.E_cnt + out.S_cnt)
     out['ratio_S'] = 1 - out['ratio_E']
     return out[['sub','trial','bin','acc_grp','ratio_E','ratio_S']]
 
 
 
-# bin table per trial -------------------------------------------------------------------------------------
+# bin table per trial 
 tbl = raw.apply(trial_bins, axis=1).dropna()
 tbl = pd.concat(tbl.tolist(), ignore_index=True)
-
-# mask bins after each individual RT 
 rts = (raw[['sub_id','TrialID','rtime']]
        .rename(columns={'sub_id':'sub','TrialID':'trial','rtime':'rt'}))
 rts['rt_bin'] = (rts.rt*1000 // BIN_MS).astype(int)
-
 tbl = tbl.merge(rts, on=['sub','trial'])
-tbl = tbl[tbl.bin <= tbl.rt_bin]           # keep up to the click
+tbl = tbl[tbl.bin <= tbl.rt_bin]         
 
 # time in ms relative to onset
 tbl['time_ms'] = tbl['bin'] * BIN_MS
-
 # subject-average trajectory 
 sub_traj = (tbl.groupby(['sub','time_ms']).hi_ratio.mean().reset_index(name='hi_ratio'))
 
@@ -202,25 +195,20 @@ grand = (sub_traj.groupby('time_ms')
                    .agg(mean=('hi_ratio','mean'),
                         sem =('hi_ratio', lambda x: x.std()/np.sqrt(len(x))))
                    .reset_index())
-grand['lo_mean'] = 1 - grand['mean']   # complementary curve
-grand['lo_sem' ] = grand['sem']        # same SEM
+grand['lo_mean'] = 1 - grand['mean']   
+grand['lo_sem' ] = grand['sem']        
 
-# global mean RT & its SEM 
-rt_mean = raw.rtime.mean()*1000            # ms
+rt_mean = raw.rtime.mean()*1000            
 rt_sem  = raw.rtime.std(ddof=1)/np.sqrt(len(raw))*1000
 
-
-# ─── build table for ES phase ─────────────────────────────────────
+# table for ES phase
 ES_tbl = raw.apply(trial_bins_ES, axis=1).dropna()
 ES_tbl = pd.concat(ES_tbl.tolist(), ignore_index=True)
-
 rts_ES = (raw[['sub_id','TrialID','rtime']]
        .rename(columns={'sub_id':'sub','TrialID':'trial','rtime':'rt'}))
 rts_ES['rtES_bin'] = (rts_ES.rt*1000 // BIN_MS).astype(int)
-
 ES_tbl = ES_tbl.merge(rts_ES, on=['sub','trial'])
 ES_tbl = ES_tbl[ES_tbl.bin <= ES_tbl.rtES_bin]           
-# time in ms relative to onset
 ES_tbl['timeES_ms'] = ES_tbl['bin'] * BIN_MS
 
 
@@ -239,7 +227,7 @@ for (w_start, w_end) in windows:
     # paired t-test across subjects
     tval, pval = ttest_rel(df_win["ES_ratio"], df_win["S_ratio"])
 
-    # compute SEM across subjects
+    # SEM across subjects
     E_sem = df_win["ES_ratio"].std(ddof=1) / np.sqrt(len(df_win))
     S_sem = df_win["S_ratio"].std(ddof=1) / np.sqrt(len(df_win))
 
@@ -262,7 +250,7 @@ results_df.to_csv(stats_path, index=False)
 
 
 
-# subject-average trajectory 
+# average trajectory per participant
 sub_trajES = (ES_tbl.groupby(['sub','timeES_ms']).ES_ratio.mean().reset_index(name='ES_ratio'))
 
 # grand mean & SEM across participants
@@ -270,21 +258,19 @@ grandES = (sub_trajES.groupby('timeES_ms')
                    .agg(mean=('ES_ratio','mean'),
                         sem =('ES_ratio', lambda x: x.std()/np.sqrt(len(x))))
                    .reset_index())
-grandES['S_mean'] = 1 - grandES['mean']   # complementary curve
-grandES['S_sem' ] = grandES['sem']        # same SEM
-
-# global mean RT & its SEM 
-rtES_mean = raw.rtime.mean()*1000            # ms
+grandES['S_mean'] = 1 - grandES['mean']  
+grandES['S_sem' ] = grandES['sem']     
+rtES_mean = raw.rtime.mean()*1000           
 rtES_sem  = raw.rtime.std(ddof=1)/np.sqrt(len(raw))*1000
 
 #----------------------------------------------------------------------------
 # chocie E vs S
 
-t_cap = int(rt_glob_mean + 100)      # ≈ 1 × mean RT + 100 ms
+t_cap = int(rt_glob_mean + 100)    
 choice_tbl = raw.apply(trial_bins_EvS_byChoice, axis=1).dropna()
 choice_tbl = pd.concat(choice_tbl.tolist(), ignore_index=True)
 choice_tbl['time_ms'] = choice_tbl['bin'] * BIN_MS
-choice_tbl = choice_tbl[choice_tbl.time_ms <= rt_glob_mean + 100]  # trim
+choice_tbl = choice_tbl[choice_tbl.time_ms <= rt_glob_mean + 100] 
 
 sub_choice = (choice_tbl
               .groupby(['sub','cho_grp','time_ms'])
@@ -300,12 +286,11 @@ grp_choice = (sub_choice
                    S_sem = ('S_mean', lambda x: x.std(ddof=1)/np.sqrt(len(x))))
               .reset_index())
 
-#-----------------------------------------------------------------------
-# ----------  accuracy-based E vs S  ---------- #
+# accuracy-based E vs S plot 
 acc_tbl = raw.apply(trial_bins_EvS_byAcc, axis=1).dropna()
 acc_tbl = pd.concat(acc_tbl.tolist(), ignore_index=True)
 acc_tbl['time_ms'] = acc_tbl['bin'] * BIN_MS
-acc_tbl = acc_tbl[acc_tbl.time_ms <= rt_glob_mean + 100]   # trim to mean RT + 100 ms
+acc_tbl = acc_tbl[acc_tbl.time_ms <= rt_glob_mean + 100] 
 
 sub_acc = (acc_tbl
            .groupby(['sub','acc_grp','time_ms'])
@@ -321,30 +306,24 @@ grp_acc = (sub_acc
                 S_sem = ('S_mean', lambda x: x.std(ddof=1)/np.sqrt(len(x))))
            .reset_index())
 
-#-----------------
-
-# -----------------------------------------------------------------------
-# helper: small, tidy legend kwargs
+# helper for smaller legend
 legend_kw = dict(loc='upper right', frameon=False,
                  fontsize=8,  title_fontsize=9,
                  borderpad=0.2, labelspacing=0.25, handlelength=2)
-
 line_handles = [
     Line2D([], [], color='darkorchid',  lw=2, label='higher'),
     Line2D([], [], color='darkorchid', ls='--', lw=2, label='lower')
 ]
-
 line_handles2 = [
     Line2D([], [], color='deepskyblue',  lw=2, label='E'),
     Line2D([], [], color='darkorchid', ls='--', lw=2, label='S')
 ]
 
-# ────────────────────────────────────────────────────────────────────────
-# CHOICE  (stimulus-locked) – its own figure
-# ────────────────────────────────────────────────────────────────────────
+# Choice figure - stimulus-locked ------------------------------------------
+
 fig_choice, ax_c = plt.subplots(figsize=(4.5, 3))
 
-# RT band  (mean ± SEM)
+# RT + mean SD
 ax_c.axvspan(rt_mean-rt_sem, rt_mean+rt_sem,
              color='lightgrey', alpha=.5, zorder=0)
 # RT mean line on top of the band
@@ -378,16 +357,13 @@ plot_path= os.path.join(fig_dir, "gaze_choice_ES_EV.png")
 fig_choice.savefig(plot_path, dpi=300, bbox_inches='tight')
 fig_choice.show()
 
-# ────────────────────────────────────────────────────────────────────────
-# FEEDBACK  (outcome-locked) – separate figure
-# ────────────────────────────────────────────────────────────────────────
+# Feedback figure - stimulus-locked ------------------------------------------
 
 fig_choiceES, ax_ES = plt.subplots(figsize=(4.5, 3))
 
-# RT band  (mean ± SEM)
+# RT band - mean SD
 ax_ES.axvspan(rtES_mean-rtES_sem, rtES_mean+rtES_sem,
              color='lightgrey', alpha=.5, zorder=0)
-# RT mean line on top of the band
 ax_ES.axvline(rtES_mean, color='grey', lw=1.2, zorder=1)
 
 # higher-EV
@@ -414,15 +390,13 @@ ax_ES.set(xlim=(0, rtES_mean+100), ylim=(0, 1),
 ax_ES.set_xlabel("Time (ms)", fontsize=13)
 ax_ES.set_ylabel("Fixation ratio", fontsize=13)
 
-
 ax_ES.legend(handles=line_handles2, title='Gaze on', **legend_kw)
 fig_choiceES.tight_layout()
 plot_path2= os.path.join(fig_dir, "gaze_choice_ES_ES.png")
 fig_choiceES.savefig(plot_path2, dpi=300, bbox_inches='tight')
 fig_choiceES.show()
 
-#-----------------------------------------------------------------------------------------------------------------
-# ── colours / styles
+# colours 
 fig, ax = plt.subplots(figsize=(4.8,3.3))
 
 # RT cue
@@ -502,12 +476,8 @@ fig.savefig(os.path.join(fig_dir, 'ES_EvS_byAccuracy.png'),
 plt.show()
 
 
+# additonal plots per OV block -------------------------------------------
 
-# ──────────────────────────────────────────────────────────────────────────
-#  EXTRA: plots *per OV block*  (cond = 0‒3)
-# ──────────────────────────────────────────────────────────────────────────
-
-# ---------------------------------------------------------------
 OV_level = {1: "low",
             2: "medium",
             3: "high"}  
@@ -521,10 +491,7 @@ for OV_val, col in zip(range(1, 4), block_cols):
         print(f'Block {OV_val} is empty – skipped.')
         continue
 
-    # ===========================================================
-    # ---------- RE-RUN the pipeline on *blk_raw*  ---------------
-    # ===========================================================
-    # 1)  choice-phase bins  ------------------------------------
+    # choice-phase bins  ------------------------------------
     tbl = blk_raw.apply(trial_bins, axis=1).dropna()
     tbl = pd.concat(tbl.tolist(), ignore_index=True)
 
@@ -547,8 +514,6 @@ for OV_val, col in zip(range(1, 4), block_cols):
     rt_mean = blk_raw.rtime.mean()*1000
     rt_sem  = blk_raw.rtime.std(ddof=1)/np.sqrt(len(blk_raw))*1000
 
-
-
     # for E vs S ######################################################################
     ES_tbl = blk_raw.apply(trial_bins_ES, axis=1).dropna()
     ES_tbl = pd.concat(ES_tbl.tolist(), ignore_index=True)
@@ -558,12 +523,11 @@ for OV_val, col in zip(range(1, 4), block_cols):
     rts_ES['rtES_bin'] = (rts_ES.rt*1000 // BIN_MS).astype(int)
 
     ES_tbl = ES_tbl.merge(rts_ES, on=['sub','trial'])
-    ES_tbl = ES_tbl[ES_tbl.bin <= ES_tbl.rtES_bin]           # keep up to the click
+    ES_tbl = ES_tbl[ES_tbl.bin <= ES_tbl.rtES_bin]          
 
     # time in ms relative to onset
     ES_tbl['timeES_ms'] = ES_tbl['bin'] * BIN_MS
 
-    # subject-average trajectory 
     sub_trajES = (ES_tbl.groupby(['sub','timeES_ms']).ES_ratio.mean().reset_index(name='ES_ratio'))
 
     grandES = (sub_trajES.groupby('timeES_ms')
@@ -576,11 +540,9 @@ for OV_val, col in zip(range(1, 4), block_cols):
     rtES_mean = blk_raw.rtime.mean()*1000
     rtES_sem  = blk_raw.rtime.std(ddof=1)/np.sqrt(len(blk_raw))*1000
 
-    # ===========================================================
     # ----------------------  PLOTS  -----------------------------
-    # ===========================================================
 
-    # ----- figure 1: choice -----------------------------------
+    # choice figure -----------------------------------
     fig_c, ax_c = plt.subplots(figsize=(4.3,3))
     ax_c.axvspan(rt_mean-rt_sem, rt_mean+rt_sem,
                  color='lightgrey', alpha=.5, zorder=0)
@@ -603,7 +565,7 @@ for OV_val, col in zip(range(1, 4), block_cols):
              xlabel='Time (ms)', ylabel='Fixation ratio',
              title=f'OV-level {label}: Choice')
 
-    # ----- figure 2: ES  E VS S  -------------------
+    # ES  E VS S figure -------------------
     fig_f, ax_f = plt.subplots(figsize=(4.3,3))
     ax_f.axvspan(rtES_mean-rtES_sem, rtES_mean+rtES_sem,
                  color='lightgrey', alpha=.5, zorder=0)
@@ -626,8 +588,8 @@ for OV_val, col in zip(range(1, 4), block_cols):
              xlabel='Time (ms)', ylabel='Fixation ratio',
              title=f'OV-level {label}: Choice')
     
-    # tidy legends (same style for every plot)
-    # ── tidy legends (same style for every plot) ─────────────────────────────
+
+    # legends
     solid_hi  = Line2D([], [], color=col, lw=2,      label='higher EV')
     dashed_lo = Line2D([], [], color=col, ls='--', lw=2, label='lower EV')
 
@@ -643,16 +605,16 @@ for OV_val, col in zip(range(1, 4), block_cols):
 
 
 
-# 1) -------------------------------------------------------------
-all_curves = defaultdict(list)          # keys → 'choice' | 'feed' | 'outcf'
+# -------------------------------------------------------------
+all_curves = defaultdict(list)          # keys for choice,feed, outcf
 
 
-for OV_val, col in zip(range(1, 4), block_cols):      # 1, 2, 3  (= low-medium-high)
+for OV_val, col in zip(range(1, 4), block_cols):      
     label   = OV_level[OV_val]
-    blk_raw = raw[raw['OV_2'] == OV_val]              # ← FIX 1
+    blk_raw = raw[raw['OV_2'] == OV_val]             
     if blk_raw.empty:
         continue
-    # ---------- a) choice: hi vs lo EV -------------------------
+    # choice: hi vs lo EV -------------------------
     tbl   = blk_raw.apply(trial_bins, axis=1).dropna()
     tbl   = pd.concat(tbl.tolist(), ignore_index=True)
     rts   = blk_raw[['sub_id','TrialID','rtime']].rename(
@@ -666,7 +628,7 @@ for OV_val, col in zip(range(1, 4), block_cols):      # 1, 2, 3  (= low-medium-h
     g['lo_mean'] = 1-g['mean'];  g['lo_sem'] = g['sem']
     all_curves['choice'].append((label, col, g, 'higher EV', 'lower EV'))
 
-    # ---------- b) feedback: hi vs lo EV -----------------------
+    # feedback: hi vs lo EV -----------------------
     
     tbl_ES   = blk_raw.apply(trial_bins_ES, axis=1).dropna()
     tbl_ES   = pd.concat(tbl_ES.tolist(), ignore_index=True)
@@ -678,17 +640,15 @@ for OV_val, col in zip(range(1, 4), block_cols):      # 1, 2, 3  (= low-medium-h
     rts_ES['rtES_bin'] = (rts_ES.rt * 1000 // BIN_MS).astype(int)
 
     tbl_ES = tbl_ES.merge(rts_ES, on=['sub','trial'])
-    tbl_ES = tbl_ES[tbl_ES.bin <= tbl_ES.rtES_bin]   # ← now this works
+    tbl_ES = tbl_ES[tbl_ES.bin <= tbl_ES.rtES_bin]   
     tbl_ES['timeES_ms'] = tbl_ES['bin'] * BIN_MS
     sub_ES   = tbl_ES.groupby(['sub','timeES_ms']).ES_ratio.mean().reset_index()
     g_ES     = sub_ES.groupby('timeES_ms').ES_ratio.agg(['mean','sem']).reset_index()
     g_ES['S_mean'] = 1-g_ES['mean'];  g_ES['S_sem'] = g_ES['sem']
-    g_ES.rename(columns={'timeES_ms': 'time_ms'}, inplace=True)   # ← unify x-axis name
+    g_ES.rename(columns={'timeES_ms': 'time_ms'}, inplace=True)  
     all_curves['ES'].append((label, col, g_ES, 'E', 'S'))   
 
-
-# ---------------------------------------------------------------
-# 2)  helper to draw one overlay figure
+# helper to draw one overlay figure
 # ---------------------------------------------------------------
 def overlay_plot(key, title, ylab, fname):
     """
@@ -705,7 +665,7 @@ def overlay_plot(key, title, ylab, fname):
     ax.axvline(rt_glob_mean, color='grey', lw=1.2, zorder=11)
 
     for label, col, df, solid_lbl, dash_lbl in all_curves[key]:
-        # solid line (+ SEM band)
+        # solid line + SEM band
         ax.plot(df.time_ms, df['mean'],
                 color=col, lw=2, label=f'{label} – {solid_lbl}')
         ax.fill_between(df.time_ms,
@@ -713,7 +673,7 @@ def overlay_plot(key, title, ylab, fname):
                         df['mean']+df['sem'],
                         color=col, alpha=.20)
 
-        # dashed line (+ SEM band)
+        # dashed line + SEM band
         second   = 'lo_mean' if key == 'choice' else 'S_mean'
         second_s = 'lo_sem'  if key == 'choice' else 'S_sem'
         ax.plot(df.time_ms, df[second],
@@ -728,7 +688,6 @@ def overlay_plot(key, title, ylab, fname):
     ax.set(xlim=(0, 1300), ylim=(0,1),
            xlabel='Time (ms)', ylabel=ylab, title=title)
 
-    # put legend outside (to the right)
     ax.legend(frameon=False, fontsize=7, ncol=1,
               bbox_to_anchor=(1.02, 1), loc="upper left", borderaxespad=0.)
     fig.tight_layout()
@@ -736,8 +695,7 @@ def overlay_plot(key, title, ylab, fname):
                 dpi=300, bbox_inches='tight')
     plt.show()
 
-# ---------------------------------------------------------------
-# 3)  make the three overlay figures
+#  three overlay figures
 # ---------------------------------------------------------------
 overlay_plot('choice',
              'Choice – gaze on higher vs lower EV (OV levels)',
@@ -750,13 +708,8 @@ overlay_plot('ES',
              'ALL_OV_levels_ES_ES.png')
 
 
-
-# ─────────────────────────────────────────────────────────────────────────
 #  FIXATION-BY-FIXATION (response-aligned, ES phase only)
-# ─────────────────────────────────────────────────────────────────────────
-from scipy.stats import ttest_rel
-from statsmodels.stats.multitest import multipletests
-import ast  # ensure available for literal_eval
+
 
 EXCLUDE_SUBS = {1, 4, 5, 6, 14, 99}
 if "sub_id" not in raw.columns:
@@ -765,17 +718,13 @@ raw = raw[~raw["sub_id"].isin(EXCLUDE_SUBS)].copy()
 print(f"Excluded subjects: {sorted(EXCLUDE_SUBS)}")
 print(f"Included subjects: {sorted(raw['sub_id'].unique().tolist())}")
 
-# helper ─────────────────────────────────────────────────────────────────
+# helper
 def gather_fixseq(row, back=4):
-    """
-    Returns a list whose first element (index 0) is the fixation *at* the
-    response, followed by up to `back` preceding fixations.
-    The function assumes `row.Fixations` is either a list of dicts or a string
-    that can be safely parsed by ast.literal_eval, where each dict contains:
-        - 'start_time' (in ms, relative to the first fixation)
-        - 'roi' in {1:'E', 2:'S', ...}
-    and `row.rtime` is the response time in seconds.
-    """
+    # list with first element (index 0) beign the fixation at the moment of response
+    # all fixtions are fixations preceding it row.fixations is a list of dicts or a string
+    # that can be parsed. Each dict contains a start_time in ms relative to first fix, roi which
+    # is either E=1 or S=2 & row.time = response time in sec
+    
     fx_raw = row.Fixations
     if pd.isna(fx_raw):
         return []
@@ -785,7 +734,7 @@ def gather_fixseq(row, back=4):
         return []
 
     t0    = fixes[0]['start_time']
-    rt_ms = row.rtime * 1000  # click (relative, ms)
+    rt_ms = row.rtime * 1000 
 
     usable = [f for f in fixes if (f['start_time'] - t0) <= rt_ms]
     if not usable:
@@ -793,29 +742,24 @@ def gather_fixseq(row, back=4):
 
     lab = {1: "E", 2: "S"}
     seq = [lab[f['roi']] for f in usable if f.get('roi') in (1, 2)]
-
-    # reverse to: click (idx 0), then -1, -2, ...
     seq = seq[::-1]
     return seq[:back + 1]
 
-# ------------------------------------------------------------------------
-# 1)  build sequences & drop trials with ≤1 fixation
-# ------------------------------------------------------------------------
+#  build sequences & drop trials with ≤1 fixation (but this can actually be changed)
+
 MAX_BACK = 4
-raw_ES            = raw.copy()  # (comment: phase == 'ES' if `raw` already filtered upstream)
+raw_ES            = raw.copy()
 raw_ES['fix_seq'] = raw_ES.apply(lambda r: gather_fixseq(r, back=MAX_BACK), axis=1)
-
-raw_ES = raw_ES[raw_ES.fix_seq.apply(len) > 1]
+raw_ES = raw_ES[raw_ES.fix_seq.apply(len) > -1]
 if raw_ES.empty:
-    raise RuntimeError("No ES trial has ≥2 usable fixations after exclusions.")
+    raise RuntimeError("No ES trial has usable fixations after exclusions")
 
-# ------------------------------------------------------------------------
-# 2)  long table: one row = one fixation
-# ------------------------------------------------------------------------
+# long table: one row = one fixation
+
 records = []
 for _, r in raw_ES.iterrows():
-    for idx, lab in enumerate(r.fix_seq):       # idx 0 = click fixation
-        if idx > MAX_BACK:                      # safety guard (shouldn’t trigger)
+    for idx, lab in enumerate(r.fix_seq):       
+        if idx > MAX_BACK:                   
             break
         records.append(dict(sub     = r.sub_id,
                             fix_idx = idx,      # 0, 1, 2, 3, 4
@@ -823,8 +767,7 @@ for _, r in raw_ES.iterrows():
                             is_S    = int(lab == "S")))
 fix_df = pd.DataFrame.from_records(records)
 
-# ------------------------------------------------------------------------
-# 3)  participant means  →  grand mean ± SEM
+# participant means that is grand mean & SEM
 # ------------------------------------------------------------------------
 sub_fix = (fix_df.groupby(["sub", "fix_idx"], as_index=False)
                    .agg(E_ratio=("is_E", "mean"),
@@ -845,8 +788,7 @@ grand_fix = grand_fix[grand_fix["fix_idx"] <= MAX_BACK].copy()
 grand_fix["x"] = -grand_fix.fix_idx
 grand_fix.loc[grand_fix.fix_idx == 0, "x"] = 0
 
-# ------------------------------------------------------------------------
-# 4)  plot (no significance stars)
+# plot
 # ------------------------------------------------------------------------
 fig, ax = plt.subplots(figsize=(4.8, 3.0))
 
@@ -879,8 +821,7 @@ fig.savefig(fig_fixseq, dpi=300, bbox_inches="tight")
 plt.show()
 print("Saved:", fig_fixseq)
 
-# ------------------------------------------------------------------------
-# 5) paired t-tests: is E_ratio ≠ S_ratio across subjects per fixation idx?
+# paired t-tests is E_ratio not S_ratio across subjects per fixation idx?
 # ------------------------------------------------------------------------
 ttest_results = []
 for i in range(MAX_BACK + 1):
@@ -900,8 +841,7 @@ grand_fix["p_value_uncorrected"] = p_vals
 _, p_vals_corr, _, _ = multipletests(p_vals, method="fdr_bh")
 grand_fix["p_value_fdr"] = p_vals_corr
 
-# ------------------------------------------------------------------------
-# 6)  export table (mean ± SEM + t/p values)
+# export table (mean & SEM + t/p values)
 # ------------------------------------------------------------------------
 n_subs = sub_fix["sub"].nunique()
 grand_table = (grand_fix
@@ -912,4 +852,4 @@ grand_table = (grand_fix
 
 grand_csv = os.path.join(fig_dir, f"ES_fixseq_grand_mean_clickPlus{MAX_BACK}_withSig_OV.csv")
 grand_table.to_csv(grand_csv, index=False)
-print(f"Grand-mean fixation table with stats saved → {grand_csv}")
+print(f"Grand-mean fixation table with stats saved in {grand_csv}")

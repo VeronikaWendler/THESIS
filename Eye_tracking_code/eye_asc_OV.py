@@ -541,15 +541,12 @@ for root, dirs, files in os.walk(bids_root):
 
 
 #------------------------------------------------------------------------------------------------------------
-            # #Convert trial data to a list of dictionaries for DataFrame compatibility
             # trial_data_list = []
             # for trial_id, data in trial_data.items():
             #     trial_data_list.append({"TrialID": trial_id, **data})  # Add TrialID to each row
 
-            # # Create a DataFrame from the list of dictionaries
             # trial_df = pd.DataFrame(trial_data_list)
 
-            # # Ensure 'Messages' and 'Task' columns exist, and fill missing values
             # if "Messages" not in trial_df.columns:
             #     trial_df["Messages"] = ""
             # if "Task" not in trial_df.columns:
@@ -559,9 +556,8 @@ for root, dirs, files in os.walk(bids_root):
             
             trial_df = pd.DataFrame(trial_data)
             trial_df["Messages"] = trial_df["Messages"].fillna("")
-            # Add the 'Phase' column using the assign_phase function
             trial_df["Phase"] = trial_df["Messages"].apply(assign_phase)
-            # # # Save the processed DataFrame to a CSV file
+
             output_file = os.path.join(root,
                            f'{participant_id}_{"eye_response_phase" if mode == 1 else "eye_feedback_phase" if mode == 2 else "eye_allfix_phase"}.csv')
             trial_df.to_csv(output_file, index=False)

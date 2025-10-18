@@ -81,7 +81,6 @@ for participant in participants:
     if participant in exclude_part:
         continue
 
-    # Load the eye-tracking file for the current participant
     eye_file = f"{eye_dir}/sub-{str(participant).zfill(2)}/eyetracking/sub-{str(participant).zfill(2)}_eye_allfix_phase.csv"
     try:
         eye_data = pd.read_csv(eye_file)
@@ -89,10 +88,9 @@ for participant in participants:
         print(f"Eye-tracking file for participant {participant} not found. Skipping...")
         continue
 
-    # Filter eye-tracking data for TrialID >= 49
+    # Filter eye-tracking data for TrialID >= 49 (everything up to there is training data)
     eye_data_filtered = eye_data[eye_data["TrialID"] >= 49].reset_index(drop=True)
 
-    # Check if participant has corresponding indices in the Garcia data
     if participant in participant_indices:
         start_idx, end_idx = participant_indices[participant]
         garcia_sub_indices = (
@@ -103,26 +101,19 @@ for participant in participants:
 
         garcia_sub = garcia_data.loc[garcia_sub_indices]
 
-        # Ensure matching row counts
         if len(eye_data_filtered) != len(garcia_sub):
             raise ValueError(f"Row count mismatch: Eye-tracking ({len(eye_data_filtered)}) and Garcia ({len(garcia_sub)}).")
 
-        # Assign eye-tracking data to the relevant rows in garcia_data
         for col in eye_tracking_columns:
             if col not in eye_data_filtered.columns:
                 eye_data_filtered[col] = None
             garcia_data.loc[garcia_sub_indices, col] = eye_data_filtered[col].values
 
-        # Debugging: Check assigned columns
         print(f"Participant {participant}: Eye-tracking data successfully merged.")
         print(garcia_data.loc[garcia_sub_indices].head())
 
-# Save the updated dataset without modifying the original structure
 garcia_data.to_csv(output_file, index=False)
 print(f"Updated Garcia data saved to {output_file}")
-
 garcia_data.update(garcia_sub)
-
-# Save the updated dataset
 garcia_data.to_csv(output_file, index=False)
 print(f"Updated Garcia data saved to {output_file}")

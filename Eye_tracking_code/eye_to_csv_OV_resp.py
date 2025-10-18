@@ -84,14 +84,13 @@ for col in eye_tracking_columns:
         ov_data[col] = None
 
 # Process participants
-participants = list(range(1, 28))  # Includes participants 1 to 27
+participants = list(range(1, 28)) 
 #participants.append(99)
 
 for participant in participants:
     if participant in exclude_part:
         continue
 
-    # Load the eye-tracking file for the current participant
     eye_file = f"{eye_dir}/sub-{str(participant).zfill(2)}/eyetracking/sub-{str(participant).zfill(2)}_eye_response_phase.csv"
     try:
         eye_data = pd.read_csv(eye_file)
@@ -102,7 +101,6 @@ for participant in participants:
     # Filter eye-tracking data for TrialID >= 49
     eye_data_filtered = eye_data[eye_data["TrialID"] >= 49].reset_index(drop=True)
 
-    # Check if participant has corresponding indices in the OV data
     if participant in participant_indices:
         start_idx, end_idx = participant_indices[participant]
         ov_sub_indices = (
@@ -113,39 +111,26 @@ for participant in participants:
 
         ov_sub = ov_data.loc[ov_sub_indices]
 
-        # Ensure matching row counts
         if len(eye_data_filtered) != len(ov_sub):
             raise ValueError(f"Row count mismatch: Eye-tracking ({len(eye_data_filtered)}) and OV ({len(ov_sub)}).")
 
-        # Assign eye-tracking data to the relevant rows in garcia_data
         for col in eye_tracking_columns:
             if col not in eye_data_filtered.columns:
                 eye_data_filtered[col] = None
             ov_data.loc[ov_sub_indices, col] = eye_data_filtered[col].values
 
-        # Debugging: Check assigned columns
         print(f"Participant {participant}: Eye-tracking data successfully merged.")
         print(ov_data.loc[ov_sub_indices].head())
 
-# Save the updated dataset without modifying the original structure
 ov_data.to_csv(output_file, index=False)
 print(f"Updated OV data saved to {output_file}")
-
-
 ov_data.update(ov_sub)
 
-# Save the updated dataset
 ov_data.to_csv(output_file, index=False)
 print(f"Updated OV data saved to {output_file}")
 
-# # Step 6: Resolve column duplication
-# # # Keep `_x` columns and rename them to their original names
 # garcia_df = garcia_df.rename(columns=lambda x: x[:-2] if x.endswith('_x') else x)
-
-# # Drop all `_y` columns
 # garcia_df = garcia_df[[col for col in garcia_df.columns if not col.endswith('_y')]]
-
-# # Step 7: Save the updated Garcia dataset
 # garcia_df.to_csv(output_file, index=False)
 # print(f"Updated Garcia data saved to {output_file}")
 

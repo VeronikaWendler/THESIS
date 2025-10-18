@@ -10,7 +10,7 @@ data = pd.read_csv("D:/Aberdeen_Uni_June24/cap/THESIS/Pilot_Analysis/data/data_s
     
 # participants to exclude
 exclude_part = {}
-data['sub_id'] = data['sub_id'].astype(int)  # sub_id is an integer for easier processing
+data['sub_id'] = data['sub_id'].astype(int)  
 
 # Initialize OV, OV_category, and absolute value difference columns as NaN
 data['OV_num'] = np.nan
@@ -23,7 +23,6 @@ data['Abscate'] = np.nan
 data['Abscate_2'] = np.nan
 data['VD'] = np.nan
 data['VD_2'] = np.nan
-
 data['RLdiff'] = np.nan
 data['feedback'] = np.nan  
 data['split_by'] = np.nan  
@@ -36,13 +35,9 @@ data['stim_chosen'] = np.nan
 data.loc[data['phase'] == 'LE', 'feedback'] = data.loc[data['phase'] == 'LE', 'out'].replace({-1: 0, 1: 1})
 data['feedback'] = data['feedback'].astype(float) 
 
-# 'split_by' column is based on 'cond', converting to integers only where 'phase' == 'LE'
 data.loc[data['phase'] == 'LE', 'split_by'] = data.loc[data['phase'] == 'LE', 'cond'].astype(int)
-
-# 'q_init' column is where 'phase' == 'LE'
 data.loc[data['phase'] == 'LE', 'q_init'] = 0.5
 data['q_init'] = data['q_init'].astype(float)  
-    
     
 data['stim_chosen'] = np.where(data['phase'] == 'ES', 
                                data['chose_right'].apply(lambda x: 'E' if x == 0 else 'S'), 
@@ -69,7 +64,6 @@ def calculate_ov_and_abs_value_diff(data, exclude_part, phase):
         # thresholds for OV (25th and 75th percentiles) and round
         T1_OV, T2_OV = participant_data['OV_num'].quantile([0.25, 0.75]).round(1)
 
-        # categorize OV
         def categorize_ov(ov):
             if ov <= T1_OV:
                 return 'low'
@@ -80,10 +74,8 @@ def calculate_ov_and_abs_value_diff(data, exclude_part, phase):
 
         participant_data['OVcate'] = participant_data['OV_num'].apply(categorize_ov)
 
-        # thresholds for absolute value difference (25th and 75th percentiles) and round
         T1_AbsDiff, T2_AbsDiff = participant_data['AbsValueDiff'].quantile([0.25, 0.75]).round(1)
 
-        # Categorize absolute value difference
         def categorize_abs_diff(abs_diff):
             if abs_diff <= T1_AbsDiff:
                 return 'low'
@@ -93,12 +85,10 @@ def calculate_ov_and_abs_value_diff(data, exclude_part, phase):
                 return 'high'
 
         participant_data['Abscate'] = participant_data['AbsValueDiff'].apply(categorize_abs_diff)
-            
         category_mapping = {'low': 1, 'medium': 2, 'high': 3}
         participant_data['OV'] = participant_data['OVcate'].map(category_mapping)
         participant_data['VD'] = participant_data['Abscate'].map(category_mapping)
             
-        # Update only relevant rows in the original DataFrame
         data.loc[participant_data.index, ['OV', 'VD', 'OVcate', 'OV_num', 'AbsValueDiff', 'Abscate', 'RLdiff']] = participant_data[['OV', 'VD','OVcate','OV_num', 'AbsValueDiff', 'Abscate', 'RLdiff']]
     
     return data
@@ -123,10 +113,8 @@ def calculate_ov_and_abs_value_diff_tertiles(data, exclude_part, phase):
         participant_data['OV_num_2'] = (participant_data['p1'] + participant_data['p2']).round(1)
         participant_data['AbsValueDiff_2'] = (participant_data['p1'] - participant_data['p2']).abs().round(1)
 
-        # get thresholds (33rd and 66th percentiles) for OV
         T1_OV_tertile, T2_OV_tertile = participant_data['OV_num_2'].quantile([0.33, 0.66]).round(1)
 
-        # terciles
         def categorize_ov_tertile(ov):
             if ov <= T1_OV_tertile:
                 return 'low'
@@ -137,10 +125,8 @@ def calculate_ov_and_abs_value_diff_tertiles(data, exclude_part, phase):
 
         participant_data['OVcate_2'] = participant_data['OV_num_2'].apply(categorize_ov_tertile)
 
-        # thresholds for absolute value difference (25th and 75th percentiles)
         T1_AbsDiff_tertile, T2_AbsDiff_tertile = participant_data['AbsValueDiff_2'].quantile([0.33, 0.66]).round(1)
 
-        # categorize absolute value difference
         def categorize_abs_diff_tertile(abs_diff):
             if abs_diff <= T1_AbsDiff_tertile:
                 return 'low'
@@ -151,25 +137,20 @@ def calculate_ov_and_abs_value_diff_tertiles(data, exclude_part, phase):
 
         participant_data['Abscate_2'] = participant_data['AbsValueDiff_2'].apply(categorize_abs_diff_tertile)
 
-        # mapping categories to numeric values
         category_mapping2 = {'low': 1, 'medium': 2, 'high': 3}
         participant_data['OV_2'] = participant_data['OVcate_2'].map(category_mapping2)
         participant_data['VD_2'] = participant_data['Abscate_2'].map(category_mapping2)
-
 
         data.loc[participant_data.index, ['OV_2', 'VD_2', 'OVcate_2', 'OV_num_2', 'AbsValueDiff_2', 'Abscate_2']] = participant_data[['OV_2', 'VD_2','OVcate_2','OV_num_2', 'AbsValueDiff_2', 'Abscate_2']]
     
     return data
 
-# process data for each phase
 phases = ['ES', 'LE']
 for phase in phases:
     data = calculate_ov_and_abs_value_diff_tertiles(data, exclude_part, phase)
         
     
-# Save
 output_path = "D:/Aberdeen_Uni_June24/cap/THESIS/Pilot_Analysis/data/data_sets/PilotParticipants_ddm_OV_Abs.csv"
 data.to_csv(output_path, index=False)
 
 print(data[data['phase'].isin(phases)].head(20))
-    
