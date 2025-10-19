@@ -651,12 +651,12 @@ for OV_val, col in zip(range(1, 4), block_cols):
 # helper to draw one overlay figure
 # ---------------------------------------------------------------
 def overlay_plot(key, title, ylab, fname):
-    """
-    key        : 'choice', 'ES'
-    title      : figure title
-    ylab       : y-axis label
-    fname      : file name (saved in fig_dir)
-    """
+    
+    #key        : choice, ES
+    #title      : figure title
+    #ylab       : y-axis label
+    #fname      : file name (in fig_dir)
+    
     fig, ax = plt.subplots(figsize=(6.2, 3.8))
     
     ax.axvspan(rt_glob_mean-rt_glob_sem,
@@ -713,7 +713,7 @@ overlay_plot('ES',
 
 EXCLUDE_SUBS = {1, 4, 5, 6, 14, 99}
 if "sub_id" not in raw.columns:
-    raise KeyError("Expected column 'sub_id' in `raw`.")
+    raise KeyError("Expected column sub_id in raw.")
 raw = raw[~raw["sub_id"].isin(EXCLUDE_SUBS)].copy()
 print(f"Excluded subjects: {sorted(EXCLUDE_SUBS)}")
 print(f"Included subjects: {sorted(raw['sub_id'].unique().tolist())}")
@@ -745,7 +745,7 @@ def gather_fixseq(row, back=4):
     seq = seq[::-1]
     return seq[:back + 1]
 
-#  build sequences & drop trials with ≤1 fixation (but this can actually be changed)
+#  build sequences & drop trials with <1 fixation (but this can actually be changed)
 
 MAX_BACK = 4
 raw_ES            = raw.copy()

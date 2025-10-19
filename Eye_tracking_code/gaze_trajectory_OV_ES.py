@@ -740,7 +740,7 @@ def gather_fixseq(row, back=4):
     seq = seq[::-1]
     return seq[:back + 1]
 
-#  build sequences & drop trials with ≤1 fixation (but this can actually be changed)
+#  build sequences & drop trials with <1 fixation (but this can actually be changed)
 
 MAX_BACK = 4
 raw_ES            = raw.copy()
