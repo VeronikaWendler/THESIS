@@ -33,7 +33,9 @@ groupParamNames = {'a_high','a_low','a_medium','t','z', ...
                    'v_ES_AttentionW','v_ES_InattentionW_E','v_ES_InattentionW_S', ...
                    'theta_E','theta_S'};
 
-% Loop over draws
+% loop over draws, seed can be randomized or left out, keeping a random but stable seed for
+% reproducabiltiy
+
 h = waitbar(0,'Simulating posterior draws...');
 bS = 1234577;
 seed = bS;
@@ -134,7 +136,6 @@ for d = 1:nDraws
                         'stats_TingGluth/Analysis_Simulation_replication/simulation/NewFixCode_EXP2/ppc_full_bayesian/sim_1000_postdraws2/' ...
                         'Sim_HDDM_m6_draw%03d.mat'], d);
     save(filename,'TBsim','subjlist','groupParams','groupParamNames','seed');
-    fprintf('Saved %s (seed=%d)\n',filename,seed);
 
     waitbar(d/nDraws,h);
 end

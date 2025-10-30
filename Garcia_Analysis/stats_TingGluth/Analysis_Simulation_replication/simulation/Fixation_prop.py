@@ -91,7 +91,7 @@ summary["median_percent"] = summary["median_prob"] * 100.0
 summary.to_csv(output_csv, index=False)
 print(f"Saved: {os.path.abspath(output_csv)}")
 
-# --- Plot with SE bars (percent scale) ---
+# Plot with SE bars 
 roles     = ["First","Middle","Final"]
 opt_types = ["E","S"]
 role_idx  = {r:i for i,r in enumerate(roles)}

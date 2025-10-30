@@ -1,8 +1,3 @@
-# -*- coding: utf-8 -*-
-# Probability that fixation is on E vs S by value dominance in one big plot.
-# For each fixation type: 4 bars = (E>S,E), (E>S,S), (S>E,E), (S>E,S)
-# Aggregation: mean over subjects (per-subject probabilities), SE across subjects
-# Saves CSV and one PNG (percent scale).
 
 import os
 import numpy as np
@@ -18,7 +13,7 @@ output_csv_summary = "FixLoc_Prob_ES_by_ExpectedValue_Garcia.csv"
 output_csv_stats   = "FixLoc_Prob_ES_by_ExpectedValue_OV_stats_paired_ttests_Garcia.csv"
 output_plot        = "fixation_location_probability_ES_by_value_Garcia.png"
 
-# --- Helpers ---
+# Helpers
 def to_numeric(x):
     try:
         if pd.isna(x): return np.nan
@@ -35,14 +30,13 @@ def sd1(x):
     x = np.asarray(x, dtype=float)
     return float(np.std(x, ddof=1)) if x.size > 1 else np.nan
 
-# --- Load & checks ---
+#  Load & checks 
 df = pd.read_csv(file)
 required = ["sub_id","phase","p1","p2","FirstFixLoc","MiddleDominantLoc","FinalFixLoc"]
 missing = [c for c in required if c not in df.columns]
 if missing:
     raise ValueError(f"Missing columns: {missing}")
 
-# --- Clean & filter ---
 df["sub_id"] = pd.to_numeric(df["sub_id"], errors="coerce").astype("Int64")
 df["phase"]  = df["phase"].astype(str).str.upper()
 for col in ["p1","p2","FirstFixLoc","MiddleDominantLoc","FinalFixLoc"]:
@@ -50,14 +44,12 @@ for col in ["p1","p2","FirstFixLoc","MiddleDominantLoc","FinalFixLoc"]:
 
 df = df[(df["phase"] == "ES") & (~df["sub_id"].isin(excluded_subs))].copy()
 
-# Value dominance: E>S (p1>p2), S>E (p2>p1); ties dropped
 cond = np.where(df["p1"] > df["p2"], "E>S",
         np.where(df["p2"] > df["p1"], "S>E", None)).astype(object)
 
 df["value_cond"] = pd.Categorical(cond, ["E>S","S>E"], ordered=True)
 df = df[~df["value_cond"].isna()].copy()
 
-# --- Long table of fixation locations ---
 first  = pd.DataFrame({"sub_id": df["sub_id"], "role":"First",  "value_cond": df["value_cond"],
                        "opt_type": df["FirstFixLoc"].map(loc_to_opt)})
 middle = pd.DataFrame({"sub_id": df["sub_id"], "role":"Middle", "value_cond": df["value_cond"],
@@ -70,7 +62,6 @@ loc_long = loc_long[loc_long["opt_type"].isin(["E","S"])].copy()
 loc_long["role"] = pd.Categorical(loc_long["role"], ["First","Middle","Final"], ordered=True)
 loc_long["opt_type"] = pd.Categorical(loc_long["opt_type"], ["E","S"], ordered=True)
 
-# --- Per-subject probabilities within (role × value_cond) ---
 counts = (loc_long.groupby(["sub_id","role","value_cond","opt_type"])
           .size().unstack(fill_value=0).reindex(columns=["E","S"], fill_value=0)).reset_index()
 counts["total"]  = counts["E"] + counts["S"]
@@ -85,7 +76,6 @@ subj_probs = counts.melt(id_vars=["sub_id","role","value_cond"],
 subj_probs["opt_type"] = subj_probs["opt_type"].map({"prob_E":"E","prob_S":"S"})
 subj_probs["opt_type"] = pd.Categorical(subj_probs["opt_type"], ["E","S"], ordered=True)
 
-# --- Across-subject descriptive summary (mean of subject probs, SE across subjects) ---
 summary = (subj_probs.groupby(["role","value_cond","opt_type"], observed=True, as_index=False)
            .agg(n_subjects=("sub_id","nunique"),
                 mean_prob=("prob","mean"),
@@ -100,7 +90,7 @@ summary["median_percent"] = summary["median_prob"] * 100.0
 summary.to_csv(output_csv_summary, index=False)
 print(f"Saved summary CSV → {os.path.abspath(output_csv_summary)}")
 
-# --- Paired t-tests: E vs S probabilities within each role × value_cond (per-subject) ---
+# Paired t-tests
 rows = []
 for role in ["First","Middle","Final"]:
     for val_cond in ["E>S","S>E"]:
@@ -199,6 +189,5 @@ fig.tight_layout()
 fig.savefig(output_plot, dpi=300, bbox_inches="tight")
 plt.show()
 
-# --- Console summary for quick copy/paste ---
 print("\nPaired t-tests (prob_E vs prob_S) within each role × value_cond:")
 print(stats_df.to_string(index=False))

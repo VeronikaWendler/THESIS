@@ -1,15 +1,16 @@
-# Fixation durations (ms) by value dominance in one big plot:
-# For each fixation type (First/Middle/Final): 4 bars = (E>S,E), (E>S,S), (S>E,E), (S>E,S)
+# Fixation durations (ms) by value
+# For each fixation type (First/Middle/Final): 4 bars
 # Aggregation: mean over subjects (mean of per-subject means), SE across subjects
-# Saves CSV and one PNG.
+# Saves CSV and one PNG
 
 import os
 import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
 from scipy.stats import ttest_rel, t
+from scipy.stats import t
 
-# --- Inputs ---
+
 file = r"D:/Aberdeen_Uni_June24/cap/THESIS/Garcia_Analysis/data/data_sets/GarciaParticipants_Eye_Response_Feed_Allfix_addm_OV_Abs_CCT.csv"
 excluded_subs = {1,4,5,6,14,99}   # OV: 6, 14, 20, 26, 2, 9, 18   # Garcia: 1,4,5,6,14,99
 
@@ -17,7 +18,7 @@ output_csv_summary = "fixation_duration_ES_by_value_condition_subjectmean_Garcia
 output_csv_stats   = "fixation_duration_ES_by_value_stats_paired_ttests_Garcia.csv"
 output_plot        = "fixation_duration_ES_by_value_Garcia.png"
 
-# --- Helpers ---
+# Helpers 
 def to_numeric(x):
     try:
         if pd.isna(x): return np.nan
@@ -34,7 +35,7 @@ def sd1(x):
     x = np.asarray(x, dtype=float)
     return float(np.std(x, ddof=1)) if x.size > 1 else np.nan
 
-# --- Load & checks ---
+# Load & checks 
 df = pd.read_csv(file)
 required = ["sub_id","phase","p1","p2",
             "FirstFixLoc","FirstFixDur",
@@ -44,7 +45,7 @@ missing = [c for c in required if c not in df.columns]
 if missing:
     raise ValueError(f"Missing columns: {missing}")
 
-# --- Clean & filter ---
+# Clean & filter 
 df["sub_id"] = pd.to_numeric(df["sub_id"], errors="coerce").astype("Int64")
 df["phase"]  = df["phase"].astype(str).str.upper()
 for col in ["p1","p2","FirstFixLoc","MiddleDominantLoc","FinalFixLoc",
@@ -53,14 +54,14 @@ for col in ["p1","p2","FirstFixLoc","MiddleDominantLoc","FinalFixLoc",
 
 df = df[(df["phase"] == "ES") & (~df["sub_id"].isin(excluded_subs))].copy()
 
-# Value dominance: E>S (p1>p2), S>E (p2>p1); ties dropped
+# Value dominance: E>S (p1>p2), S>E (p2>p1)
 cond = np.where(df["p1"] > df["p2"], "E>S",
         np.where(df["p2"] > df["p1"], "S>E", None)).astype(object)
 
 df["value_cond"] = pd.Categorical(cond, ["E>S","S>E"], ordered=True)
 df = df[~df["value_cond"].isna()].copy()
 
-# --- Long table: role × option × value_cond with durations ---
+# Long table: role × option × value_cond with durations 
 first  = pd.DataFrame({"sub_id": df["sub_id"], "role":"First",  "value_cond": df["value_cond"],
                        "opt_type": df["FirstFixLoc"].map(loc_to_opt),        "dur_ms": df["FirstFixDur"]})
 middle = pd.DataFrame({"sub_id": df["sub_id"], "role":"Middle", "value_cond": df["value_cond"],
@@ -73,13 +74,13 @@ dur_long = dur_long[dur_long["opt_type"].isin(["E","S"]) & (~dur_long["dur_ms"].
 dur_long["role"] = pd.Categorical(dur_long["role"], ["First","Middle","Final"], ordered=True)
 dur_long["opt_type"] = pd.Categorical(dur_long["opt_type"], ["E","S"], ordered=True)
 
-# --- Per-subject means (this is the basis for paired tests) ---
+# subject means
 subj = (dur_long.groupby(["sub_id","role","value_cond","opt_type"], observed=True, as_index=False)
         .agg(mean_ms=("dur_ms","mean"),
              median_ms=("dur_ms","median"),
              n_trials=("dur_ms","size")))
 
-# --- Across-subject descriptive summary (mean of subject means, SE across subjects) ---
+# Across-subject descriptive summary
 summary = (subj.groupby(["role","value_cond","opt_type"], observed=True, as_index=False)
            .agg(n_subjects=("sub_id","nunique"),
                 n_trials_total=("n_trials","sum"),
@@ -92,7 +93,7 @@ summary["se_ms"] = summary["sd_ms"] / np.sqrt(summary["n_subjects"].clip(lower=1
 summary.to_csv(output_csv_summary, index=False)
 print(f"Saved summary CSV → {os.path.abspath(output_csv_summary)}")
 
-# --- Paired t-tests: E vs S within each role × value_cond (per-subject means) ---
+# Paired t-tests: E vs S within each role × value_cond (per-subject means) 
 rows = []
 for role in ["First","Middle","Final"]:
     for val_cond in ["E>S","S>E"]:
@@ -101,7 +102,6 @@ for role in ["First","Middle","Final"]:
             continue
         wide = subdat.pivot(index="sub_id", columns="opt_type", values="mean_ms")
 
-        # Need both E and S for the same subjects
         if not set(["E","S"]).issubset(wide.columns):
             continue
         wide = wide.dropna(subset=["E","S"])
@@ -117,20 +117,15 @@ for role in ["First","Middle","Final"]:
         sd_diff   = sd1(diffs)
         se_diff   = sd_diff / np.sqrt(n)
 
-        # Paired t-test (scipy)
+        # Paired t-test
         tval, pval = ttest_rel(wide["E"], wide["S"])
         dfree = n - 1
 
-        # 95% CI for mean difference
         tcrit = t.ppf(0.975, dfree)
         ci_low  = mean_diff - tcrit * se_diff
         ci_high = mean_diff + tcrit * se_diff
-
-        # Cohen's dz (paired)
         cohen_dz = mean_diff / sd_diff if sd_diff and not np.isnan(sd_diff) else np.nan
 
-        # Also include total trials across subjects (helpful context)
-        # Sum trials from the original subj table for E and S separately (optional)
         n_trials_E = int(subdat.loc[subdat["opt_type"]=="E","n_trials"].sum())
         n_trials_S = int(subdat.loc[subdat["opt_type"]=="S","n_trials"].sum())
 
@@ -149,7 +144,6 @@ stats_df = pd.DataFrame(rows).sort_values(["role","value_cond"])
 stats_df.to_csv(output_csv_stats, index=False)
 print(f"Saved stats CSV → {os.path.abspath(output_csv_stats)}")
 
-# --- Plot: single figure (3 groups × 4 bars per group) ---
 from matplotlib.patches import Patch
 
 roles = ["First","Middle","Final"]
@@ -171,7 +165,6 @@ pos = [x - 1.5*width, x - 0.5*width, x + 0.5*width, x + 1.5*width]
 
 fig, ax = plt.subplots(figsize=(10, 5.8), dpi=150)
 
-# Bars: solid = E>S, hatched = S>E
 ax.bar(pos[0], mean_mat[:,0], width, yerr=np.nan_to_num(se_mat[:,0]), capsize=4, color="deepskyblue", edgecolor="black")
 ax.bar(pos[1], mean_mat[:,1], width, yerr=np.nan_to_num(se_mat[:,1]), capsize=4, color="darkorchid", edgecolor="black")
 ax.bar(pos[2], mean_mat[:,2], width, yerr=np.nan_to_num(se_mat[:,2]), capsize=4, color="deepskyblue", hatch="//", edgecolor="black")
@@ -195,22 +188,18 @@ fig.tight_layout()
 fig.savefig(output_plot, dpi=300, bbox_inches="tight")
 plt.show()
 
-# --- Print stats to console for quick copy-paste ---
 print("\nPaired t-tests (E vs S) within each role × value_cond:")
 print(stats_df.to_string(index=False))
 
 
 ##########
 
-from scipy.stats import t
 
-# Per-subject mean duration for each role, collapsing across opt_type and value_cond
 subj_role = (dur_long.groupby(["sub_id", "role"], observed=True, as_index=False)
              .agg(mean_ms=("dur_ms", "mean"),
                   median_ms=("dur_ms", "median"),
                   n_trials=("dur_ms", "size")))
 
-# Across-subject summary: mean of per-subject means, plus SD, SE, and 95% CI
 overall_role = (subj_role.groupby("role", observed=True, as_index=False)
                 .agg(n_subjects=("sub_id", "nunique"),
                      n_trials_total=("n_trials", "sum"),
@@ -221,7 +210,6 @@ overall_role = (subj_role.groupby("role", observed=True, as_index=False)
 
 overall_role["se_ms"] = overall_role["sd_ms"] / np.sqrt(overall_role["n_subjects"].clip(lower=1))
 
-# 95% CI around the across-subject mean of subject means
 def ci95(row):
     n = int(row["n_subjects"])
     if n <= 1 or np.isnan(row["sd_ms"]):
@@ -237,9 +225,9 @@ overall_role["ci_high_ms"] = cis[1]
 # Save CSV
 output_csv_overall = "fixation_duration_ES_overall_by_role_Garcia.csv"
 overall_role.to_csv(output_csv_overall, index=False)
-print(f"Saved overall-by-role CSV → {os.path.abspath(output_csv_overall)}")
+print(f"Saved {os.path.abspath(output_csv_overall)}")
 
 # Console print for quick reference
-print("\nOverall fixation durations by role (mean of per-subject means):")
+print("\nOverall fixation durations by role:")
 print(overall_role[["role","n_subjects","mean_ms","sd_ms","se_ms","ci_low_ms","ci_high_ms","n_trials_total"]]
       .to_string(index=False))

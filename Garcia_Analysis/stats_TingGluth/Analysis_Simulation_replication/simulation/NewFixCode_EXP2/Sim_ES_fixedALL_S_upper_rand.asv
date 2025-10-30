@@ -1,50 +1,46 @@
-% This code is a modification of Dr Chih-Chung's Code
-% with the main difference that I'm doing ppc using 1000 random draws from
-% the posterior instead of M,SD to keep interdependence between aDDM parameters
-
+% Clean up the environment
 clear all
 clc
 close all
 
-m_num = 7;
+m_num = 6;
 
-% Load data
-data = readtable('D:/Aberdeen_Uni_June24/cap/THESIS/Garcia_Analysis/data/data_sets/GarciaParticipants_Eye_Response_Feed_Allfix_addm_OV_Abs_CCT.csv');
+data = readtable('D:/Aberdeen_Uni_June24/cap/THESIS/OV_Analysis/data/data_sets/OVParticipants_Eye_Response_Feed_Allfix_addm_OV_Abs_CCT.csv');
 data.OV = data.OV_2;
 data.VD = data.VD_2;
+
+% Convert cho (1=left,2=right) into Choice (0=left,1=right)
 data.Choice = data.cho - 1;
 data.Correct = data.chose_right;
+
 cols_to_check = {'OV_2','VD_2','OV','VD','GazeDiff','FirstFixDur','FinalFixDur','MiddleFixDur', ...
                  'eachMiddleFixDur','GazeSwitch','FirstFixLoc','FinalFixLoc','DwellTimeAdvantage','chose_right'};
 cols_to_check = cols_to_check(ismember(cols_to_check,data.Properties.VariableNames));
 data = rmmissing(data,'DataVariables',cols_to_check);
-
-% Only ES trials
 data = data(strcmp(data.phase,'ES'),:);
-subjlist = setdiff(1:26,[1,4,5,6,14,99]);
+subjlist = setdiff([1:27], [6, 14, 20, 26, 2, 9, 18]);
 nSubj = length(subjlist);
-minSigma = randsample(0.02:0.001:0.03, nSubj, true);
+minSigma = randsample(0.02:0.001:0.03, nSubj, true); % HDDM assumes intra-trial variance is 1 for each time unit.
 
-% Load posterior draws
-posterior_file = 'garcia_replication_For_paper_7_posterior_draws.csv';
+% posterior draws
+posterior_file = 'OV_replication_For_paper_6_posterior_draws.csv';
 T = readtable(posterior_file,'VariableNamingRule','preserve');
 
-% simulate only first 10 draws for now
-nDraws = min(5,height(T));
+nDraws = min(1000,height(T));
 
-% Group param meta
+% group param meta
 groupParamNames = {'a_high','a_low','a_medium','t','z', ...
                    'v_ES_AttentionW','v_ES_InattentionW_E','v_ES_InattentionW_S', ...
                    'theta_E','theta_S'};
 
-% Loop and save each draw independently + fixed starting point for later reproduction
+% loop over draws, seed can be randomized or left out
 h = waitbar(0,'Simulating posterior draws...');
-bS = 1234577; 
+bS = 1234577;
+seed = bS;
+rng(seed)
+
 for d = 1:nDraws
     fprintf('Draw %d/%d\n', d, nDraws);
-    seed = bS;
-    rng(seed);
-
     paramset = nan(nSubj,9);
     for k_subj = 1:nSubj
         subjID = subjlist(k_subj);
@@ -95,6 +91,7 @@ for d = 1:nDraws
     theta_S = g_b4 ./ g_b2;
     groupParams = [g_aH g_aL g_aM g_t g_z g_b2 g_b3 g_b4 theta_E theta_S];
 
+    % simulate 
     TBsim = [];
     for k_subj = 1:nSubj
         subjID = subjlist(k_subj);
@@ -131,12 +128,11 @@ for d = 1:nDraws
         end
     end
 
-    % Tag draw
     TBsim.draw_id = repmat(d,height(TBsim),1);
 
     filename = sprintf(['D:/Aberdeen_Uni_June24/cap/THESIS/Garcia_Analysis/' ...
-                        'stats_TingGluth/Analysis_Simulation_replication/simulation/NewFixCode/simjoke/' ...
-                        'Sim_HDDM_m7_draw%03d.mat'], d);
+                        'stats_TingGluth/Analysis_Simulation_replication/simulation/NewFixCode_EXP2/ppc_full_bayesian/sim_1000_postdraws2/' ...
+                        'Sim_HDDM_m6_draw%03d.mat'], d);
     save(filename,'TBsim','subjlist','groupParams','groupParamNames','seed');
 
     waitbar(d/nDraws,h);
@@ -150,6 +146,6 @@ function colIdx = safeFindCol(T, expectedName)
     actualNorms  = cellfun(norm, T.Properties.VariableNames, 'UniformOutput', false);
     colIdx = find(strcmp(actualNorms, expectedNorm), 1);
     if isempty(colIdx)
-        error('Column %s not found', expectedName);
+        error('Column %s not found in table.', expectedName);
     end
 end
