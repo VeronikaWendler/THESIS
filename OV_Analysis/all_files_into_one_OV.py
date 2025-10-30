@@ -67,7 +67,7 @@ for participant_id in participant_ids:
         exp_file = None
         for f in os.listdir(participant_folder):
             if exp_num in f and f.endswith(".csv") and ("_info" not in f):
-                if exp_num == 'EXP2' and not f.endswith("_re.csv"): #  we need the _re files as they fit Garcia's code
+                if exp_num == 'EXP2' and not f.endswith("_re.csv"): #  we need the _re files as they fit Garcia's code, re = reorganized (E on the left, S on the right)
                     continue  
                 exp_file = os.path.join(participant_folder, f)
                 break
@@ -126,7 +126,7 @@ output_csv = os.path.join(data_dir, "OVParticipants_EXP_1_2_3_4.csv")
 df_combined.to_csv(output_csv, index=False)
 print(f"CSV saved at: {output_csv}")
 
-#----.MAT file creation (I know this is probably useless but I wanted to create it so I can really fit all of Garcia's code, to see if I can replicate it)
+#.MAT file creation (I know this is probably useless but I wanted to create it so I can really fit all of Garcia's code, to see if I can replicate it)
 # .mat file processing
 df_combined['elic'] = df_combined['phase'].map({
     'LE': -1,
