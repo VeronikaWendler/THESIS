@@ -33,7 +33,7 @@ groupParamNames = {'a_high','a_low','a_medium','t','z', ...
                    'v_ES_AttentionW','v_ES_InattentionW_E','v_ES_InattentionW_S', ...
                    'theta_E','theta_S'};
 
-% loop over draws, seed can be randomized or left out, keeping a random but stable seed for
+% loop over draws, seed can be randomized or left out, keeping random but stable seed for
 % reproducabiltiy
 
 h = waitbar(0,'Simulating posterior draws...');
