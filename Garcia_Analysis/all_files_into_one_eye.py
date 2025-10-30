@@ -57,7 +57,7 @@ for root, dirs, files in os.walk(bids_root):
 # combine all
 combined_eye_df = pd.concat(eye_tracking_data, ignore_index=True)
 
-# `trial` should match the first 160 trials in Garcia
+# trial should match the first 160 trials in Garcia (because this is the lenght of LE phase)
 combined_eye_df = combined_eye_df[combined_eye_df["trial"].isin(range(1, 161))]
 
 # merge with Garcia DataFrame on left
