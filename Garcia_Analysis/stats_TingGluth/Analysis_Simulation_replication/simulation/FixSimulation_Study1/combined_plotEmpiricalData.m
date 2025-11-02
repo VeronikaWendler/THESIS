@@ -3,8 +3,8 @@ function combined_plotEmpiricalData(matOrCsvFile)
 % plots empirical and simulated together
 
 
-empiricalPath = 'D:/Aberdeen_Uni_June24/cap/THESIS/Garcia_Analysis/stats_TingGluth/Analysis_Simulation_replication/simulation/NewFixCode/Data/GarciaParticipants_Eye_Response_Feed_Allfix_addm_OV_Abs_CCT.csv';
-simulatedPath = 'D:/Aberdeen_Uni_June24/cap/THESIS/Garcia_Analysis/stats_TingGluth/Analysis_Simulation_replication/simulation/NewFixCode/ppc_full_bayesian/sim_10_postdraws2/For_paper_7_metrics_summary_mean.csv';
+empiricalPath = 'D:/Aberdeen_Uni_June24/cap/THESIS/Garcia_Analysis/stats_TingGluth/Analysis_Simulation_replication/simulation/FixSimulation_Study1/Data/GarciaParticipants_Eye_Response_Feed_Allfix_addm_OV_Abs_CCT.csv';
+simulatedPath = 'D:/Aberdeen_Uni_June24/cap/THESIS/Garcia_Analysis/stats_TingGluth/Analysis_Simulation_replication/simulation/FixSimulation_Study1/ppc_full_bayesian/sim_10_postdraws5/For_paper_7_metrics_summary_mean.csv';
 
 % load empirical data
 T = readtable(empiricalPath);

@@ -6,6 +6,8 @@ function plotEmpiricalData_auto(matOrCsvFile, autoMode)
 %   plotEmpiricalData_auto('.mat')    % single file
 %   plotEmpiricalData_auto('sim_10_postdraws2', true)   % all files in folder
 
+  %set(0, 'DefaultFigureVisible', 'off');
+
   if nargin < 2
       autoMode = false;
   end
@@ -235,6 +237,21 @@ function plotEmpiricalData_auto(matOrCsvFile, autoMode)
   savefig(gcf, fullfile(folder, [baseName '_plot.fig']));
   saveas(gcf, fullfile(folder, [baseName '_plot.png']));
 
+
+   f = figure('Visible', 'off');  
+   simulationESmodel_plotWithSEM(NaN, NaN, NaN, ...
+    m_qRT, sem_qRT, ...
+    m_pS, sem_pS, ...
+    m_RT, sem_RT, ...
+    m_corrProb, sem_corrProb);
+
+  sgtitle(sprintf('Results from %s', baseName),'Interpreter','none');
+
+  % Save the plot (still invisible)
+  savefig(f, fullfile(folder, [baseName '_plot.fig']));
+  saveas(f, fullfile(folder, [baseName '_plot.png']));
+
+  close(f);  % <- closes the figure to free memory
 end
 
 % Helpers

@@ -8,7 +8,7 @@ import matplotlib.pyplot as plt
 file = r"C:\Cluster_Github\HDDM_Vero\data_sets\data_sets_Garcia\GarciaParticipants_Eye_Response_Feed_Allfix_addm_OV_Abs_CCT.csv"
 excluded_subs = {1, 4, 5, 6, 14, 99}
 output_csv  = "Fix_Prop_ES.csv"   # same as before
-output_plot = "fixation_location_probability_ES_bars_SE.png"       # NEW filename
+output_plot = "fixation_location_probability_ES_bars_SE.png"       
 
 def to_numeric(x):
     try:

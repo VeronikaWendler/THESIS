@@ -6,7 +6,7 @@ function [Choice, RT, E, tempEyeData, FixAaLL, sumdvALL, FixDur]= EvidenceAccumu
 
 a     = params(1).*0.5;        % boundary seperation 
 ndt   = params(2);             % non-decision time
-z     = params(3);
+z     = parms(3);
 beta2 = params(4)./1000;       % attention
 beta3 = params(5)./1000;       % inattention E
 beta4 = params(6)./1000;       % inattention S
@@ -18,7 +18,7 @@ spbias = (2*z - 1) * a;       % if no bias, then z=0.5, and spbias simply 0, but
 
 
 %% pre-determine fixations
-pre_Nfix = 70; % assume 70 fixations before decision
+pre_Nfix = 3; % assume 70 fixations before decision
 FixR     = rand()> 0.69;   % 0.71                0.69256 , participants look at the E option first
 
 %% Updated Fixations from 25.08.2025
@@ -35,7 +35,24 @@ elseif OV == 3
     FixDur = [round(lognrnd(5.31, 0.58, 1, 1)); round(lognrnd(5.34, 0.46, pre_Nfix-1, 1))];
 end
 
+%% Veronika, think, why am I simulating this with gaze behviour for OV, if I am also interested in VD?
+% How does it make sense that you only use emprical fixation patterns for OV but not VD ??
 
+if OV == 1 & VD == 1
+    FixR = rand() > (0.70*(Vr>Vl) + 0.67*(Vr<Vl) + 0.67 *(Vr==Vl) ); 
+    FixDur = [round(lognrnd(5.26, 0.59, 1, 1)); round(lognrnd(5.37, 0.42, pre_Nfix-1, 1))];
+elseif OV == 1 & VD == 2
+elseif OV == 1 & VD == 3
+    
+
+elseif OV == 2
+    FixR = rand() > ( 0.68*(Vr>Vl) + 0.68 *(Vr<Vl) + 0.65 *(Vr==Vl) );
+    FixDur = [round(lognrnd(5.30, 0.63, 1, 1)); round(lognrnd(5.30, 0.44, pre_Nfix-1, 1))];
+
+elseif OV == 3
+    FixR = rand() > ( 0.70*(Vr>Vl) + 0.70*(Vr<Vl) + 0.71*(Vr==Vl) );
+    FixDur = [round(lognrnd(5.31, 0.58, 1, 1)); round(lognrnd(5.34, 0.46, pre_Nfix-1, 1))];
+end
 
 if FixR
     FixR(2:pre_Nfix+1) = repmat([0 1]',pre_Nfix/2,1);
