@@ -22,7 +22,7 @@ replication experiment (Study 2)
 
 3. 'quick_data_frame.py'
    Adds ggaze and attention-based regressors (e.g. AttentionW,
-   InattentionW, fixation indicators) for HDDM modelling.
+   InattentionW, fixation indicators) for HDDM modelling
 
    Output:
    Updated modelling CSV
