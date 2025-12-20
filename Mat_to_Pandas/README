@@ -1,0 +1,49 @@
+# Mat file to CSV conversion scripts for both studies
+
+# This folder contains conversion scripts that transform raw MATLAB files collected from both experiments to trial-level CSV files across all phases (LE, ES, EE, SP)
+
+All scripts:
+- iterate over participant .mat files
+- extract task-specific variables
+- recreate columns used in Garcia's original analyses
+- output one CSV per participant and phase
+
+The resulting CSVs are the starting point for all downstream analyses
+(eye-tracking merge, aDDM regressors, HDDM fitting)
+
+## File overview & run order
+
+### mat_to_py_garcia_EXP1.py
+- Converts .mat files from EXP1 (LE – learning phase) into trial-level CSVs
+
+Output (for every participant):
+'EXP1_garcia_participant_ID.csv'  
+'EXP1_garcia_participant_ID_info.csv'
+
+### 'mat_to_py_garcia_Exp2.py'  
+- Converts .mat files from EXP2 (ES – experiential vs symbolic phase) into
+CSV format + columns of interest
+
+Output:  
+'EXP2_garcia_participant_ID.csv'
+
+### mat_to_py_garcia_EXP2_re.py
+- Revised version of the EXP2 (ES) conversion script that additionally reorders
+and standardizes column layout (e.g. S option always on the right side and E on the left)
+
+Output:  
+'EXP2_garcia_participant_ID_re.csv'
+
+### 'mat_to_py_garcia_EXP3.py'  
+- Converts .mat files from EXP3 (EE – experiential vs experiential phase)
+into CSVs
+
+Output:  
+'EXP3_garcia_participant_ID.csv'
+
+### 'mat_to_py_garcia_Slider.py'  
+- Converts slider-rating .mat files from the SP (slider / probability
+estimation) phase into CSV
+
+Output: 
+'EXP4_garcia_participant_ID.csv'
