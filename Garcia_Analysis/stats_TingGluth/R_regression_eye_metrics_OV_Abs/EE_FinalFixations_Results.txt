@@ -1,2 +1,0 @@
-
-===== ANOVA: Effect of FinalFixations_bin on P(Choose Right) =====
