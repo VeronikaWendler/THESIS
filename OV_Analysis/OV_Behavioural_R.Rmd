@@ -907,7 +907,7 @@ print(cohens_d_result)
 # Slope Comparisons from Behavioural MATLAB data
 ```{r}
 #slope data from B. Garcia's code
-slope_data <- read.csv("D:/Aberdeen_Uni_June24/cap/THESIS/Basile_Garcia/RetrieveAndCompareAnalysis-cleaning_VW/RetrieveAndCompareAnalysis-cleaning/data/stats/Fig2D_OV.csv")
+slope_data <- read.csv("D:/Aberdeen_Uni_June24/cap/THESIS/Basile_Garcia_Code/RetrieveAndCompareAnalysis-cleaning_VW/RetrieveAndCompareAnalysis-cleaning/data/stats/Fig2D_OV_SP.csv")
 
 # phases
 slope_data <- slope_data %>%
@@ -956,7 +956,7 @@ slope_data %>%
 # Slope Comparisons (WITH PIE) from Behavioural MATLAB data
 ```{r}
 #slope data from B. Garcia's code
-slope_data <- read.csv("D:/Aberdeen_Uni_June24/cap/THESIS/Basile_Garcia/RetrieveAndCompareAnalysis-cleaning_VW/RetrieveAndCompareAnalysis-cleaning/data/stats/Fig2D_OV_fullSP.csv")
+slope_data <- read.csv("D:/Aberdeen_Uni_June24/cap/THESIS/Basile_Garcia_Code/RetrieveAndCompareAnalysis-cleaning_VW/RetrieveAndCompareAnalysis-cleaning/data/stats/Fig2D_OV_fullSP.csv")
 
 # phases
 slope_data <- slope_data %>%
@@ -1006,7 +1006,7 @@ slope_data %>%
 
 ```{r}
 #slope data from B. Garcia's code
-data <- read.csv("D:/Aberdeen_Uni_June24/cap/THESIS/Basile_Garcia/RetrieveAndCompareAnalysis-cleaning_VW/RetrieveAndCompareAnalysis-cleaning/data/stats/Fig2C_OV.csv") %>%
+data <- read.csv("D:/Aberdeen_Uni_June24/cap/THESIS/Basile_Garcia_Code/RetrieveAndCompareAnalysis-cleaning_VW/RetrieveAndCompareAnalysis-cleaning/data/stats/Fig2C_OV.csv") %>%
   mutate(
     subject = as.factor(subject),
     modality = as.factor(modality)

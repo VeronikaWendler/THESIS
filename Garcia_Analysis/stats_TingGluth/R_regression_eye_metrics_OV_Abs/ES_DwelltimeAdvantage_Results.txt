@@ -16,27 +16,27 @@ $`Sphericity Corrections`
 
 ===== Post-hoc Tests: Pairwise Comparisons for DwellTimeAdvantage_bin =====
 $emmeans
- DwellTimeAdvantage_bin emmean     SE  df lower.CL upper.CL
- 1                       0.159 0.0328 100   0.0935    0.224
- 2                       0.301 0.0328 100   0.2363    0.366
- 3                       0.515 0.0328 100   0.4503    0.580
- 4                       0.707 0.0328 100   0.6421    0.772
- 5                       0.831 0.0328 100   0.7662    0.896
+ DwellTimeAdvantage_bin emmean     SE df lower.CL upper.CL
+ 1                       0.547 0.0297 80    0.488    0.606
+ 2                       0.428 0.0297 80    0.369    0.487
+ 3                       0.384 0.0297 80    0.325    0.443
+ 4                       0.414 0.0297 80    0.355    0.473
+ 5                       0.505 0.0297 80    0.446    0.564
 
 Confidence level used: 0.95 
 
 $contrasts
- contrast                                          estimate     SE  df t.ratio p.value
- DwellTimeAdvantage_bin1 - DwellTimeAdvantage_bin2   -0.143 0.0463 100  -3.080  0.0267
- DwellTimeAdvantage_bin1 - DwellTimeAdvantage_bin3   -0.357 0.0463 100  -7.698  <.0001
- DwellTimeAdvantage_bin1 - DwellTimeAdvantage_bin4   -0.549 0.0463 100 -11.836  <.0001
- DwellTimeAdvantage_bin1 - DwellTimeAdvantage_bin5   -0.673 0.0463 100 -14.514  <.0001
- DwellTimeAdvantage_bin2 - DwellTimeAdvantage_bin3   -0.214 0.0463 100  -4.618  0.0001
- DwellTimeAdvantage_bin2 - DwellTimeAdvantage_bin4   -0.406 0.0463 100  -8.756  <.0001
- DwellTimeAdvantage_bin2 - DwellTimeAdvantage_bin5   -0.530 0.0463 100 -11.433  <.0001
- DwellTimeAdvantage_bin3 - DwellTimeAdvantage_bin4   -0.192 0.0463 100  -4.138  0.0007
- DwellTimeAdvantage_bin3 - DwellTimeAdvantage_bin5   -0.316 0.0463 100  -6.816  <.0001
- DwellTimeAdvantage_bin4 - DwellTimeAdvantage_bin5   -0.124 0.0463 100  -2.678  0.0867
+ contrast                                          estimate     SE df t.ratio p.value
+ DwellTimeAdvantage_bin1 - DwellTimeAdvantage_bin2   0.1189 0.0421 80   2.828  0.0592
+ DwellTimeAdvantage_bin1 - DwellTimeAdvantage_bin3   0.1631 0.0421 80   3.880  0.0021
+ DwellTimeAdvantage_bin1 - DwellTimeAdvantage_bin4   0.1326 0.0421 80   3.154  0.0227
+ DwellTimeAdvantage_bin1 - DwellTimeAdvantage_bin5   0.0417 0.0421 80   0.991  1.0000
+ DwellTimeAdvantage_bin2 - DwellTimeAdvantage_bin3   0.0442 0.0421 80   1.052  1.0000
+ DwellTimeAdvantage_bin2 - DwellTimeAdvantage_bin4   0.0137 0.0421 80   0.327  1.0000
+ DwellTimeAdvantage_bin2 - DwellTimeAdvantage_bin5  -0.0772 0.0421 80  -1.836  0.7002
+ DwellTimeAdvantage_bin3 - DwellTimeAdvantage_bin4  -0.0305 0.0421 80  -0.725  1.0000
+ DwellTimeAdvantage_bin3 - DwellTimeAdvantage_bin5  -0.1215 0.0421 80  -2.888  0.0498
+ DwellTimeAdvantage_bin4 - DwellTimeAdvantage_bin5  -0.0910 0.0421 80  -2.163  0.3353
 
 P value adjustment: bonferroni method for 10 tests 
 

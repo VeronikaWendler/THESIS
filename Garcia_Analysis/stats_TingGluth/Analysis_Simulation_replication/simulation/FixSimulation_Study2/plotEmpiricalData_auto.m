@@ -1,9 +1,11 @@
 function plotEmpiricalData_auto(matOrCsvFile, autoMode)
-% plotEmpiricalData  Load CSV or MAT, plot, save 
-%   plotEmpiricalData_auto()          % select the input
-%   plotEmpiricalData_auto('.mat')    % single file, e.g. .mat file
-%   plotEmpiricalData_auto('sim_10_postdraws2', true)   % loops through all
-%   inidvidual simulations in this folder
+% plotEmpiricalData  load csv or mat, plot, save 
+%
+%   plotEmpiricalData_auto()          % manual selection
+%   plotEmpiricalData_auto('.mat')    % single file
+%   plotEmpiricalData_auto('sim_10_postdraws2', true)   % all files in folder
+
+%  set(0, 'DefaultFigureVisible', 'off');  % change on/off
 
   if nargin < 2
       autoMode = false;
@@ -13,14 +15,12 @@ function plotEmpiricalData_auto(matOrCsvFile, autoMode)
       dataDir = matOrCsvFile;
       files   = dir(fullfile(dataDir,'*.mat'));
       if isempty(files)
-          error('No .mat files found in %s', dataDir); 
+          error('No mat files in %s', dataDir); 
       end
 
       for iFile = 1:numel(files)
           fpath = fullfile(dataDir, files(iFile).name);
-          fprintf('Processing %s (%d/%d)\n', files(iFile).name, iFile, numel(files));
-
-          % recursive call for single-file mode
+          fprintf('processing %s (%d/%d)\n', files(iFile).name, iFile, numel(files));
           plotEmpiricalData_auto(fpath, false);
       end
       return
@@ -29,7 +29,7 @@ function plotEmpiricalData_auto(matOrCsvFile, autoMode)
   if nargin<1 || isempty(matOrCsvFile)
       dataDir = fullfile(pwd,'Sim');
       files   = [dir(fullfile(dataDir,'*.csv')); dir(fullfile(dataDir,'*.mat'))];
-      if isempty(files), error('No CSV or MAT found in %s',dataDir); end
+      if isempty(files), error('no csv or mat found in %s',dataDir); end
       if numel(files)>1
         [f,p] = uigetfile({'*.csv;*.mat','Data files (*.csv,*.mat)'}, dataDir);
         if f==0, return; end
@@ -39,7 +39,7 @@ function plotEmpiricalData_auto(matOrCsvFile, autoMode)
       end
   end
 
-  % load data
+  % laod data
   [folder,baseName,ext] = fileparts(matOrCsvFile);
   switch lower(ext)
     case '.csv'
@@ -52,8 +52,8 @@ function plotEmpiricalData_auto(matOrCsvFile, autoMode)
 
   % Analysis
   vars = T.Properties.VariableNames;
-  isReal = ismember('cho',vars);   % empirical CSV
-  isSim  = ismember('Choice',vars);% simulation MAT
+  isReal = ismember('cho',vars);   % empirical csv
+  isSim  = ismember('Choice',vars);% simulation mrt
 
   exclude = [6, 14, 20, 26, 2, 9, 18];
   maskExclude = ~ismember(T.sub_id,exclude);
@@ -70,11 +70,11 @@ function plotEmpiricalData_auto(matOrCsvFile, autoMode)
       dwaSall    = T.DwellTimeAdvantage;        
   else % sim
       RTvec      = T.rt;
-      choiceEall = (T.Choice==0);                % do this: Choice == 1 if cdoe involves E as uppper bound, otherwise set to 0 
+      choiceEall = (T.Choice==0);                % Choice == 1 if code involves E as upper bound, otherwise set to 0 
       dwaSall    = T.DwellDiff;                  % S-E    
   end
 
-  rtMask = (RTvec >= 0) & (RTvec <= 18);
+  rtMask = (RTvec >= 0) & (RTvec <= 10);
   RTvec      = RTvec(rtMask);
   choiceEall = choiceEall(rtMask);
   dwaSall    = dwaSall(rtMask);
@@ -195,7 +195,6 @@ function plotEmpiricalData_auto(matOrCsvFile, autoMode)
 
   sgtitle(sprintf('Results from %s', baseName),'Interpreter','none');
 
-  % participant-level outputs 
   subjData = [];
   for i = 1:nS
       for b = 1:5
@@ -206,7 +205,7 @@ function plotEmpiricalData_auto(matOrCsvFile, autoMode)
   subjTable = cell2table(subjData, ...
       'VariableNames', {'Subject','Bin','ProbE','ProbS'});
 
-  % saving summary and subject-level
+  % save both summary and participant-level
   summaryStats = table( ...
       (1:5)', ...
       m_qRT_E', sem_qRT_E', ...
@@ -227,18 +226,27 @@ function plotEmpiricalData_auto(matOrCsvFile, autoMode)
           'Mean_CorrectProb', 'SEM_CorrectProb' ...
       });
 
-  % file names
   summaryFile = fullfile(folder, [baseName '_summary.csv']);
   subjFile    = fullfile(folder, [baseName '_subjectLevel.csv']);
-
-  % write both
   writetable(summaryStats, summaryFile);
   writetable(subjTable, subjFile);
-
-  % also save plot
   savefig(gcf, fullfile(folder, [baseName '_plot.fig']));
   saveas(gcf, fullfile(folder, [baseName '_plot.png']));
 
+
+   f = figure('Visible', 'off');  
+   simulationESmodel_plotWithSEM(NaN, NaN, NaN, ...
+    m_qRT, sem_qRT, ...
+    m_pS, sem_pS, ...
+    m_RT, sem_RT, ...
+    m_corrProb, sem_corrProb);
+
+  sgtitle(sprintf('Results from %s', baseName),'Interpreter','none');
+
+  savefig(f, fullfile(folder, [baseName '_plot.fig']));
+  saveas(f, fullfile(folder, [baseName '_plot.png']));
+
+  close(f); 
 end
 
 % Helpers
@@ -274,7 +282,4 @@ function T = findFirstTable(x)
       end
   end
 end
-
-
-
 

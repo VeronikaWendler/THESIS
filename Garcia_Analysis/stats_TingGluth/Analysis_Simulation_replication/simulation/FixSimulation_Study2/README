@@ -1,0 +1,14 @@
+# Simulation Code Structure
+
+Sim_ES_fixedALL_S_upper_rand.m & EvidenceAccumulate_S_upper.m are the main files to perform evidence accumulation for the selected model
+
+Afterwards, plotEmpiricalData_auto.m can be used to get summaries of the simulated draws and plot indiividually to see variance 
+
+Afterwards, combined_plotEmpiricalData can be run to compare simulated to real data over all draws
+
+garcia_replication_For_paper_11_posterior_draws.csv  -->  draws for the ESaDDM, no z
+garcia_replication_For_paper_8_posterior_draws.csv  --> draws for the aDDM, no z
+garcia_replication_For_paper_6_posterior_draws.csv   --> draws for the ESaDDM + z, a~OV
+garcia_replication_For_paper_5_posterior_draws.csv   --> draws for the ESaDDM + z
+garcia_replication_For_paper_3_posterior_draws.csv   --> draws for the aDDM + z
+

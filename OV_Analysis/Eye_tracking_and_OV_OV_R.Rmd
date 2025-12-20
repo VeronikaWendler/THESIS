@@ -1199,7 +1199,8 @@ data <- data %>%
     OV = OV_2,
     VD = AbsValueDiff_2
   ) %>%
-  select(-OV_2, -AbsValueDiff_2)
+  dplyr::select(-OV_2, -AbsValueDiff_2)
+
 
 
 # z-score VD & OV & gaze metrics at  OV Level
@@ -1311,8 +1312,65 @@ tab_model(model, transform = NULL)
 ```
 
 ```{r}
-data
+quad_model_ES <- glmer(
+  chose_right ~ 
+    OV * (DwellTimeAdvantage + I(DwellTimeAdvantage^2)) +
+    (1 | sub_id),
+  data = data,
+  family = binomial(link = "logit")
+)
+
+summary(quad_model_ES)
+tab_model(quad_model_ES, transform = NULL)
 ```
+
+```{r}
+data$DTA_bin <- ntile(data$DwellTimeAdvantage, 5)
+
+model_bins <- glmer(chose_right ~ DTA_bin + OV + (1|sub_id),
+                    data=data, family=binomial)
+summary(model_bins)
+
+```
+```{r}
+library(mgcv)
+gam_model <- gam(
+  chose_right ~ s(DwellTimeAdvantage) + OV,
+  data = data,
+  family = binomial
+)
+
+summary(gam_model)
+plot(gam_model)
+
+```
+
+```{r}
+install.packages("segmented")
+library(segmented)
+
+glm_base <- glm(chose_right ~ DwellTimeAdvantage + OV, 
+                data=data, family=binomial)
+
+seg_model <- segmented(glm_base, seg.Z = ~ DwellTimeAdvantage)
+
+summary(seg_model)
+
+```
+
+```{r}
+library(splines)
+
+model_spline <- glmer(
+  chose_right ~ ns(DwellTimeAdvantage, df = 3) + OV + (1 | sub_id),
+  data = data,
+  family = binomial
+)
+
+summary(model_spline)
+
+```
+
 
 # EE - Eye-tracking (choose right, corr, rtime)
 
@@ -1860,6 +1918,20 @@ print(p)
 agg_data <- data %>%
   group_by(sub_id, DwellTimeAdvantage_bin, OVcate_2) %>%
   summarise(mean_p_choose_right = mean(chose_right, na.rm = TRUE), .groups = 'drop')
+  
+agg_data <- agg_data %>%
+  mutate(
+    DTA_num = as.numeric(DwellTimeAdvantage_bin)  # 1 = E>>S ... 5 = S>>E
+  )
+
+trend_model <- lmer(
+  mean_p_choose_right ~ poly(DTA_num, 2, raw = FALSE) + (1 | sub_id),
+  data = agg_data
+)
+
+summary(trend_model)
+
+
 anova_results <- list()  # Store ANOVA results
 
 lmm_model <- lmer(mean_p_choose_right ~ OVcate_2 * DwellTimeAdvantage_bin + (1 | sub_id),
@@ -1888,31 +1960,210 @@ sink()
 cat("\n results saved to:", results_file, "\n")
 
 # mean P(choose right) per bin for each participant
+#agg_data <- data %>%
+#  group_by(sub_id, DwellTimeAdvantage_bin) %>%
+#  summarise(mean_p_choose_right = mean(chose_right, na.rm = TRUE), .groups = 'drop')
+
+#anova_res <- ezANOVA(
+#  data = agg_data,
+#  dv = mean_p_choose_right,  
+#  wid = sub_id,              
+#  within = DwellTimeAdvantage_bin,  
+#  type = 3,               
+#  detailed = TRUE
+#)
+
+#anova_res
+
+# post-hoc pairwise comparisons with Bonferroni cor
+#posthoc_result1 <- emmeans(
+#  lm(mean_p_choose_right ~ factor(DwellTimeAdvantage_bin), data = agg_data),  
+#  pairwise ~ DwellTimeAdvantage_bin,  
+#  adjust = "bonferroni"  
+#)
+
+#posthoc_result1
+
+```
+
+# ES -Dwell-Time Advantage (without OV)
+
+```{r}
+data <- read.csv(file)
+
+# phase ES
+phase_filter <- "ES"
+excluded_subjects <- c(6, 14, 20, 26, 2, 9, 18)
+
+# Basic filtering
+data <- data %>%
+  filter(phase == phase_filter & !sub_id %in% excluded_subjects)
+
+# Additional dwell time filtering
+data <- data %>% 
+  filter(
+    phase == phase_filter,
+    !sub_id %in% excluded_subjects,
+    DwellRight > -1,        
+    DwellLeft  > -1,
+  ) %>% 
+  drop_na(DwellTimeAdvantage, chose_right)
+
+
+# Quantile Binning of DwellTimeAdvantage (per subject, collapsed across OV)
+data <- data %>%
+  group_by(sub_id) %>%
+  mutate(
+    DwellTimeAdvantage_bin = cut(
+      DwellTimeAdvantage,
+      breaks = unique(quantile(
+        DwellTimeAdvantage,
+        probs = seq(0, 1, length.out = 6),
+        na.rm = TRUE
+      )),
+      labels = 1:(length(unique(quantile(
+        DwellTimeAdvantage,
+        probs = seq(0, 1, length.out = 6),
+        na.rm = TRUE
+      ))) - 1),
+      include.lowest = TRUE
+    )
+  ) %>%
+  ungroup()
+
+
+summary_df <- data %>%
+  group_by(DwellTimeAdvantage_bin) %>%
+  summarise(
+    p_choose_right = mean(chose_right, na.rm = TRUE),
+    ci = 1.96 * sd(chose_right, na.rm = TRUE) / sqrt(n()),
+    .groups = "drop"
+  )
+
+# bin order / labels
+summary_df$DwellTimeAdvantage_bin <- factor(
+  summary_df$DwellTimeAdvantage_bin,
+  levels = 1:5,
+  labels = c("E>>S", "E>S", "E~S", "S>E", "S>>E")
+)
+
+
+p <- ggplot(summary_df,
+            aes(x = DwellTimeAdvantage_bin,
+                y = p_choose_right,
+                group = 1)) +
+  geom_point(size = 4, color = "darkorchid") +
+  geom_line(linewidth = 1.2, color = "darkorchid") +
+  geom_errorbar(
+    aes(ymin = p_choose_right - ci,
+        ymax = p_choose_right + ci),
+    width = 0.2,
+    linewidth = 0.8,
+    color = "darkorchid"  
+  ) +
+  geom_hline(
+    yintercept = 0.5,
+    linetype = "dotted",
+    color = "gray50",
+    linewidth = 1
+  ) +
+  theme_minimal() +
+  theme(
+    panel.grid.major = element_blank(),
+    panel.grid.minor = element_blank(),
+    axis.line = element_line(color = "black", linewidth = 0.8),
+    legend.position = "none",
+    axis.text = element_text(size = 19, color = "black"),
+    axis.title = element_text(size = 20, color = "black"),
+    plot.title = element_text(size = 19, hjust = 0.5, color = "black"),
+    plot.background = element_rect(fill = "white", color = "white")
+  ) +
+  labs(
+    title = "Dwell-Time Advantage on Choice - ES Phase",
+    x = "Dwell Time Advantage (S > E)",
+    y = "P(Choose Symbolic)"
+  )
+
+ggsave(
+  "D:/Aberdeen_Uni_June24/cap/THESIS/OV_Analysis/stats_TingGluth/R_regression_OV_Abs/ES_DTA_no_OV.pdf",
+  plot = p,
+  width = 5,
+  height = 6,
+  device = "pdf",
+  bg = "white"
+)
+
+print(p)
+
+
+# Mean P(choose right) per bin for each participant
 agg_data <- data %>%
   group_by(sub_id, DwellTimeAdvantage_bin) %>%
-  summarise(mean_p_choose_right = mean(chose_right, na.rm = TRUE), .groups = 'drop')
+  summarise(
+    mean_p_choose_right = mean(chose_right, na.rm = TRUE),
+    .groups = "drop"
+  )
+
+# Numeric bin index for trend modelling
+agg_data <- agg_data %>%
+  mutate(
+    DTA_num = as.numeric(DwellTimeAdvantage_bin)
+  )
+
+# Polynomial trend across bins (collapsed across OV)
+trend_model <- lmer(
+  mean_p_choose_right ~ poly(DTA_num, 2, raw = FALSE) + (1 | sub_id),
+  data = agg_data
+)
+
+summary(trend_model)
+
+agg_data_anova <- agg_data %>%
+  group_by(sub_id) %>%
+  filter(n_distinct(DwellTimeAdvantage_bin) == 5) %>%
+  ungroup()
 
 anova_res <- ezANOVA(
-  data = agg_data,
-  dv = mean_p_choose_right,  
-  wid = sub_id,              
-  within = DwellTimeAdvantage_bin,  
-  type = 3,               
+  data = agg_data_anova,
+  dv = mean_p_choose_right,
+  wid = sub_id,
+  within = DwellTimeAdvantage_bin,
+  type = 3,
   detailed = TRUE
 )
 
 anova_res
 
-# post-hoc pairwise comparisons with Bonferroni cor
 posthoc_result1 <- emmeans(
-  lm(mean_p_choose_right ~ factor(DwellTimeAdvantage_bin), data = agg_data),  
-  pairwise ~ DwellTimeAdvantage_bin,  
-  adjust = "bonferroni"  
+  lm(mean_p_choose_right ~ factor(DwellTimeAdvantage_bin), data = agg_data_anova),
+  pairwise ~ DwellTimeAdvantage_bin,
+  adjust = "bonferroni"
 )
 
 posthoc_result1
 
+
+results_file <- "D:/Aberdeen_Uni_June24/cap/THESIS/OV_Analysis/stats_TingGluth/R_regression_OV_Abs/ES_DwelltimeAdvantage_Results_no_OV.txt"
+
+sink(results_file)
+
+cat("\n===== Polynomial Trend Mixed Model (DTA_num) =====\n")
+print(summary(trend_model))
+
+cat("\n===== ezANOVA: Effect of DwellTimeAdvantage_bin on P(Choose Right) =====\n")
+print(anova_res)
+
+cat("\n===== Post-hoc Tests: Pairwise Comparisons for DwellTimeAdvantage_bin =====\n")
+print(posthoc_result1)
+
+sink()
+cat("\nResults saved to:", results_file, "\n")
 ```
+
+
+
+
+
 
 # DTA split by E \> S, S \> E
 
@@ -4593,7 +4844,7 @@ data <- read.csv(file)
 
 # phase ES
 phase_filter <- "ES"
-excluded_subjects <- c(1, 4, 5, 6, 14, 99)
+excluded_subjects <- c(6, 14)   # exlcusion of participants that have bad eye-tracking data: 
 
 data <- data %>%
   filter(phase == phase_filter & !sub_id %in% excluded_subjects) %>%
@@ -4788,7 +5039,7 @@ data <- read.csv(file)
 
 # phase ES
 phase_filter <- "ES"
-excluded_subjects <- c(6, 14, 20, 26, 2, 9, 18)    #1, 4, 5, 6, 14, 99
+excluded_subjects <- c(6, 14)    #6, 14, 20, 26, 2, 9, 18  - participants with behav. data issues: 6,14
 
 data <- data %>%
   filter(phase == phase_filter & !sub_id %in% excluded_subjects) %>%
@@ -4802,11 +5053,8 @@ data <- data %>%
                                       include.lowest = TRUE)) %>%
   ungroup()
 
-## ----------------------------------------------------------
-## 1.  Subject-level probabilities for choosing E vs S
-## ----------------------------------------------------------
-# chose_right == 0  ➜  “E” chosen
-# chose_right == 1  ➜  “S” chosen
+## Subject-level probabilities for choosing E vs S
+
 agg <- data %>%
   group_by(sub_id, rtime_bin) %>%
   summarise(
@@ -4821,9 +5069,7 @@ agg <- data %>%
                          levels = c("p_E", "p_S"),
                          labels = c("E", "S")))
 
-## ----------------------------------------------------------
 ## 2.  Grand-mean ± SEM for each gaze bin × choice
-## ----------------------------------------------------------
 summary_df <- agg %>%
   group_by(rtime_bin, Choice) %>%
   summarise(
@@ -4832,55 +5078,140 @@ summary_df <- agg %>%
     .groups   = "drop"
   )
 
-## keep the descriptive bin labels you used before
 summary_df$rtime_bin <- factor(
   summary_df$rtime_bin,
   levels = 1:5,
   labels = c("0-20%", "20-40%", "40-60%", "60-80%", "80-100%")
 )
 
-p <- ggplot(summary_df,
-            aes(x = rtime_bin,
-                y = mean_prob,
-                group = Choice,
-                color = Choice)) +
-  geom_line(linewidth = 1) +  # straight lines only
-  geom_errorbar(aes(ymin = mean_prob - sem,
-                    ymax = mean_prob + sem),
-                width = 0.15,
-                linewidth = 0.7) +
+p <- ggplot(
+  summary_df,
+  aes(x = rtime_bin,
+      y = mean_prob,
+      fill = Choice)   # use fill instead of color for bars
+) +
+  # bars instead of lines
+  geom_col(
+    position = position_dodge(width = 0.8),
+    width = 0.7
+  ) +
+  # error bars on top of bars
+  geom_errorbar(
+    aes(ymin = mean_prob - sem,
+        ymax = mean_prob + sem),
+    position = position_dodge(width = 0.8),
+    width = 0.2,
+    linewidth = 0.7
+  ) +
+  # reference line at 0.5
   geom_hline(yintercept = 0.5, linetype = "dotted") +
-  scale_color_manual(values = c("E" = "deepskyblue", "S" = "darkorchid"),
-                     name   = "Chosen option") +
-  labs(title = "Probability of Choosing E vs S-Option by Reaction Time Quintile",
-       x     = "RT Bin (shortest to longest RT)",
-       y     = "Probability") +
-  coord_cartesian(ylim = c(0.30, 0.70)) +   # y-axis from 0.20 to 0.70
+  # manual colors, now for fill
+  scale_fill_manual(
+    values = c("E" = "deepskyblue", "S" = "darkorchid"),
+    name   = "Chosen option"
+  ) +
+  labs(
+    title = "Probability of Choosing E vs S-Option by Reaction Time Quintile",
+    x     = "RT Bin (shortest to longest RT)",
+    y     = "Probability"
+  ) +
+  coord_cartesian(ylim = c(0.30, 0.70)) +
   theme_minimal(base_size = 15) +
   theme(
-    legend.position = c(0.85, 0.90),  # (x,y) in [0,1], relative to plot panel
-    legend.background = element_rect(fill = "white", color = NA),  # white box for readability
-    legend.key = element_rect(fill = NA, color = NA),  
-    legend.title = element_text(size = 16),
-    legend.text  = element_text(size = 16),
-  axis.line         = element_line(colour = "black"),
-  panel.grid.major  = element_blank(),
-  panel.grid.minor  = element_blank(),
-  axis.text.x       = element_text(color = "black", size = 16),  # tick labels
-  axis.text.y       = element_text(color = "black", size = 18),  # tick labels
-  axis.title.x      = element_text(size = 18),                   # axis title
-  axis.title.y      = element_text(size = 18)                    # axis title
+    legend.position   = c(0.85, 0.90),
+    legend.background = element_rect(fill = "white", color = NA),
+    legend.key        = element_rect(fill = NA, color = NA),
+    legend.title      = element_text(size = 16),
+    legend.text       = element_text(size = 16),
+    axis.line         = element_line(colour = "black"),
+    panel.grid.major  = element_blank(),
+    panel.grid.minor  = element_blank(),
+    axis.text.x       = element_text(color = "black", size = 16),
+    axis.text.y       = element_text(color = "black", size = 18),
+    axis.title.x      = element_text(size = 18),
+    axis.title.y      = element_text(size = 18)
+  )
+
+ggsave(
+  "D:/Aberdeen_Uni_June24/cap/THESIS/OV_Analysis/Figures/ES_rtimeAdvantage_E_vs_S_bars.pdf",
+  plot   = p,
+  width  = 6,
+  height = 5,
+  device = "pdf",
+  bg     = "white"
 )
 
-ggsave("D:/Aberdeen_Uni_June24/cap/THESIS/OV_Analysis/Figures/ES_rtimeAdvantage_E_vs_S_lines.pdf",
-       plot   = p,
-       width  = 6,
-       height = 5,
-       device = "pdf",
-       bg     = "white")
-
 print(p)
+
+#----------------------------------------
+# GLM
+
+data$chose_E <- ifelse(data$chose_right == 0, 1, 0)
+data$rtime_bin <- factor(data$rtime_bin)
+
+# Model with no overall intercept → get log-odds of choosing E per bin
+model <- glmer(chose_E ~ 0 + rtime_bin + (1 | sub_id),
+               data = data,
+               family = binomial)
+
+# Get estimated marginal means (logit scale)
+em_logit <- as.data.frame(summary(emmeans(model, ~ rtime_bin)))
+
+# Get response scale (probability)
+em_prob <- as.data.frame(summary(emmeans(model, ~ rtime_bin), type = "response"))
+
+em_link <- summary(emmeans(model, ~ rtime_bin),
+                   infer = c(TRUE, TRUE))   # log-odds + z + p
+
+em_resp <- summary(emmeans(model, ~ rtime_bin),
+                   type  = "response",
+                   infer = c(TRUE, TRUE))   # probabilities + CI + same z, p
+
+em_link
+em_resp
 ```
+```{r}
+data <- read.csv(file)
+
+excluded_subjects <- c(6, 14)  # this here is variable (one could also exclude the participants that have missing data in the eye-tracking code - theese would be more)  6, 14, 20, 26, 2, 9, 18
+
+data <- read.csv(file) %>%
+  filter(phase == "ES",
+         !sub_id %in% excluded_subjects,
+         rtime >= 0.250,   # >= 250 ms
+         rtime <= 1000) %>% # I don't really have an upper cut off
+  drop_na(DwellTimeAdvantage, OVcate_2, chose_right) %>%
+  mutate(
+    chooseE = as.integer(chose_right == 0),
+    log_rtime = scale(log(rtime)) # log + z-scale for stability
+  )
+
+m <- glmer(chooseE ~ log_rtime + (1|sub_id),
+           data = data,
+           family = binomial)
+
+q_edges <- quantile(data$log_rtime, probs = seq(0,1,length.out=6))
+q_mid <- (head(q_edges,-1) + tail(q_edges,-1)) / 2
+
+preds <- emmeans(m, ~ log_rtime,
+                 at = list(log_rtime = q_mid),
+                 type = "response")
+
+tests <- contrast(
+  emmeans(m, ~ log_rtime, at = list(log_rtime = q_mid), type="link"),
+  method="eff"
+)
+summary(tests, infer=TRUE)
+
+preds_resp <- summary(preds)
+preds_resp$prob_percent <- round(preds_resp$prob * 100, 1)
+preds_resp
+```
+
+
+
+
+
 
 ```{r}
 library(tidyverse)
@@ -4987,7 +5318,7 @@ excluded_subjects <- c(6, 14, 20, 26, 2, 9, 18)
 # Step 1: Load and preprocess
 dat <- read.csv(file)
 es <- dat %>%
-  filter(phase == "ES", !sub_id %in% excluded_subjects) %>%
+  filter(phase == "EE", !sub_id %in% excluded_subjects) %>%
   drop_na(sub_id, rtime, Fixations)
 
 # Step 2: Fixation parsing
@@ -5029,6 +5360,28 @@ fix_long <- es_seq %>%
   filter(fix_idx <= MAX_BACK) %>%
   mutate(label = factor(label, levels = c("S", "E")),  # S is reference
          y = as.integer(label == "E"))
+
+# Overall mean and SD (all fixations)
+overall_fix_stats <- fix_long %>%
+  summarise(
+    mean_E = mean(y),   # proportion of fixations on E
+    sd_E   = sd(y),     # SD of that proportion
+    n      = n()
+  )
+
+print(overall_fix_stats)
+
+# Mean and SD per fixation index (0 = last fixation, 1 = one back, etc.)
+fixidx_fix_stats <- fix_long %>%
+  group_by(fix_idx) %>%
+  summarise(
+    mean_E = mean(y),
+    sd_E   = sd(y),
+    n      = n(),
+    .groups = "drop"
+  )
+
+print(fixidx_fix_stats)
 
 # Step 4: Fix model (don't create y manually, just use label)
 model_results <- map_dfr(0:MAX_BACK, function(idx) {

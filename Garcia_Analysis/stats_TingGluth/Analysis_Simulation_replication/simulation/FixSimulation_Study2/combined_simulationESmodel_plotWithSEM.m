@@ -7,7 +7,7 @@ function combined_simulationESmodel_plotWithSEM(...
 
 figure; set(gcf,'Position',[100 100 800 800])
 
-% Colours for plotting
+% Colors for plotting
 color_E         = [0 0.749 1];   % deepskyblue
 color_S         = [0.6 0 0.6];   % darkorchid
 color_sim_E     = color_E;       % same for sim
@@ -66,7 +66,7 @@ xlim([0.5,5.5])
 
 
 
-% 2. Plot: P(choose S) by Dwell-time Advantage (Top Right)
+% 2. P(choose S) by Dwelltime Advantage
 subplot(2,2,2); hold on
 errorbar(1:5, m_pS, sem_pS, '.-', 'MarkerSize',20, 'LineWidth',2, 'Color', color_S)
 errorbar(1:5, s_pS, s_pS_sem, ':o', 'LineWidth', 1.5, 'Color', color_S)
@@ -75,9 +75,9 @@ xlabel('Dwell-time Advantage for S Quintile', 'FontSize', 16)
 ylabel('P(choose S)','FontSize', 16)
 title('')
 xlim([0.5,5.5])
-ylim([0.35 0.55])
+ylim([0.3 0.7])
 
-% 3. Plot: RT by Dwell-time Advantage (Bottom Left)
+% 3. RT by Dwelltime Advantage
 subplot(2,2,3); hold on
 errorbar(1:5, m_RT, sem_RT, '.-', 'MarkerSize',20, 'LineWidth',2, 'Color', color_black)
 errorbar(1:5, s_RT, s_RT_sem, ':o', 'LineWidth', 1.5, 'Color', color_black)
@@ -87,7 +87,7 @@ ylabel('RT', 'FontSize', 16)
 title('')
 xlim([0.5,5.5])
 
-% 4. Plot: Accuracy by DwellAdvCorrect (Bottom Right)
+% 4. Accuracy by DwellAdvCorrect
 subplot(2,2,4); hold on
 errorbar(1:5, m_corrProb, sem_corrProb, '.-', 'MarkerSize',20, 'LineWidth',2, 'Color', color_black)
 errorbar(1:5, s_corrProb, s_corrProb_sem, ':o', 'LineWidth', 1.5, 'Color', color_black)
@@ -96,6 +96,6 @@ ylabel('P(correct)', 'FontSize', 16)
 title('')
 set(gca,'XTick',1:5,'XTickLabel',{'I>>C','I>C','C~I','C>I','C>>I'})
 xlim([0.5,5.5])
-ylim([0.75, 0.90]) 
+ylim([0.75, 1.00]) 
 
 end

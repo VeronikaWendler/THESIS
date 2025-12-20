@@ -908,7 +908,7 @@ print(cohens_d_result)
 # Slope Comparisons from Behavioural MATLAB data
 ```{r}
 #slope data from B. Garcia's code
-slope_data <- read.csv("D:/Aberdeen_Uni_June24/cap/THESIS/Basile_Garcia/RetrieveAndCompareAnalysis-cleaning_VW/RetrieveAndCompareAnalysis-cleaning/data/stats/Fig2D_SP_Garcia.csv")
+slope_data <- read.csv("D:/Aberdeen_Uni_June24/cap/THESIS/Basile_Garcia_Code/RetrieveAndCompareAnalysis-cleaning_VW/RetrieveAndCompareAnalysis-cleaning/data/stats/Fig2D_Garcia_SP.csv")
 
 # phases
 slope_data <- slope_data %>%
@@ -957,7 +957,7 @@ slope_data %>%
 # Slope Comparisons (WITH PIE) from Behavioural MATLAB data
 ```{r}
 #slope data from B. Garcia's code
-slope_data <- read.csv("D:/Aberdeen_Uni_June24/cap/THESIS/Basile_Garcia/RetrieveAndCompareAnalysis-cleaning_VW/RetrieveAndCompareAnalysis-cleaning/data/stats/Fig2D_Garcia_with_SP_with_Pie.csv")
+slope_data <- read.csv("D:/Aberdeen_Uni_June24/cap/THESIS/Basile_Garcia_Code/RetrieveAndCompareAnalysis-cleaning_VW/RetrieveAndCompareAnalysis-cleaning/data/stats/Fig2D_Garcia_with_SP_with_Pie.csv")
 
 # phases
 slope_data <- slope_data %>%
