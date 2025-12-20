@@ -1,2 +1,31 @@
 # This readme file provides explanations for the eye tracking preprocessing code
+## Eye-tracking preprocessing & aDDM feature pipeline
 
+This repository contains a pipeline that converts raw EyeLink '.asc' files
+into trial-level attention and value regressors suitable for aDDM / HDDM analyses.
+
+There are two parallel but similar pipelines:
+
+- **Garcia task** ('Garcia_Analysis') --> This is for Study 1
+- **OV task** ('OV_Analysis')        --> This is for Study 2
+
+## Overview: what runs when
+
+1. Raw EyeLink .asc files 
+    'eye_asc_.py' --> extract fixations per trial
+
+2. Merge response-phase eye data 
+    'eye_to_csv_resp.py' --> this is what I use in the analysis, e.g. the fixation filtering algorithm in Study 1 and 2 (we are interested in fixations that fall within the time window of the stimulus appearing and the button press + small buffer around the button press)
+
+3. Merge feedback-phase eye data (not really used)
+    'eye_to_csv_feed.py' --> everything with the suffix 'feed' corresponds to eye-tracking data related to feedback processing only (e.g. in the learning phase of the studies 1 & 2)
+
+4. Merge unfiltered fixation data (not really used)
+    'eye_to_csv_allfix.py' --> this contains fixations from the start till the end of a trial and is relatively unfiltered (not using it)
+
+5. Compute aDDM regressors 
+    'cols_for_addm.py' --> final modelling CSVs which are further used in HDDM
+
+6. 'gaze_trajectory_Garcia_ES.py' generates time-resolved gaze trajectories for the ES  phase in Study 1
+
+7. 'gaze_trajectory_OV_ES.py' generates time-resolved gaze trajectories for the ES  phase in Study 2
