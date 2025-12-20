@@ -6,10 +6,10 @@ into trial-level attention and value regressors suitable for aDDM / HDDM analyse
 
 There are two parallel but similar pipelines:
 
-- **Garcia task** ('Garcia_Analysis') --> This is for Study 1
-- **OV task** ('OV_Analysis')        --> This is for Study 2
+- Garcia task ('Garcia_Analysis') --> This is for Study 1
+- OV task ('OV_Analysis')        --> This is for Study 2
 
-## Overview: what runs when
+## Overview
 
 1. Raw EyeLink .asc files 
     'eye_asc_.py' --> extract fixations per trial
