@@ -20,11 +20,11 @@ Both studies follow a similar procssing/analysis structure
 ### Mat_to_Pandas
 - Code for converting raw MATLAB files into CSV files
 
-### 'Eye_tracking_code'
+### Eye_tracking_code
 - eye-tracking preprocessing code
 - parsing of EyeLink files + extracting fixations + assigning ROIs + and computing gaze metrics
 
-### 'Garcia_Analysis' (Study 1)
+### Garcia_Analysis (Study 1)
 
 Analysis pipeline for the Garcia replication:
 - behavioural dataset construction
@@ -32,7 +32,7 @@ Analysis pipeline for the Garcia replication:
 - computation of aDDM regressors + necessary cols
 - behavioural and gaze analyses
 
-### 'OV_Analysis' (Study 2)
+### OV_Analysis (Study 2)
 
 pipeline for the OV experiment:
 - behavioural and eye-tracking preprocessing
