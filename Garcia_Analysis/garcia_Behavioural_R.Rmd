@@ -139,7 +139,7 @@ learning_acc_plot
 learning_acc_df <- learning_acc_df %>%
   mutate(cond = factor(cond, levels = c("40/60", "30/70", "20/80", "10/90")))
 
-ez_out <- ezANOVA(
+anov <- ezANOVA(
   data        = learning_acc_df,
   dv          = .(mean_acc_LE),
   wid         = .(sub_id),
@@ -148,7 +148,7 @@ ez_out <- ezANOVA(
   detailed    = TRUE     
 )
 
-print(ez_out)
+print(anov)
 
 ##########################################################################
 posthoc <- learning_acc_df %>%
@@ -184,14 +184,14 @@ posthoc_tbl <- posthoc %>%
   ) %>%
   select(contrast, estimate, conf.low, conf.high, statistic, df, p.adj)
 
-write.csv(
-  posthoc_tbl,
-  "D:/Aberdeen_Uni_June24/cap/THESIS/Garcia_Analysis/garcia_table_LE.csv",
-  row.names = FALSE
-)
+#write.csv(
+#  posthoc_tbl,
+#  "D:/Aberdeen_Uni_June24/cap/THESIS/Garcia_Analysis/garcia_table_LE.csv",
+#  row.names = FALSE
+#)
 
 
-# Descriptive stats table: mean and SE per condition
+#stats table
 desc_tbl <- learning_acc_df %>%
   group_by(cond) %>%
   summarise(
@@ -207,12 +207,11 @@ desc_tbl <- learning_acc_df %>%
     sem_acc  = round(sem_acc, 2)
   )
 
-# Save descriptive table as CSV
-write.csv(
-  desc_tbl,
-  "D:/Aberdeen_Uni_June24/cap/THESIS/Garcia_Analysis/garcia_table_LE_descriptives.csv",
-  row.names = FALSE
-)
+#write.csv(
+#  desc_tbl,
+#  "D:/Aberdeen_Uni_June24/cap/THESIS/Garcia_Analysis/garcia_table_LE_descriptives.csv",
+#  row.names = FALSE
+#)
 ```
 
 
@@ -231,7 +230,7 @@ learning_rt_df <- data %>%
                        labels = c("40/60", "30/70", "20/80", "10/90")),
          cond_num  = as.numeric(cond),
          jittered_x = cond_num + runif(n(), -0.10, 0.10))
-# with the red mean point
+# the red mean point
 mean_points_rt <- learning_rt_df %>%
   group_by(cond) %>%
   summarise(mean_val = mean(mean_rt_LE), .groups = "drop")

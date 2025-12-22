@@ -20,7 +20,7 @@ Both studies follow a similar processing and analysis structure.
 ## Repository structure
 
 ### `Mat_to_Pandas`
-Code for converting raw MATLAB files into CSV files.
+Code for converting raw MATLAB files into CSV files
 
 ### `Eye_tracking_code`
 Eye-tracking preprocessing code, including:
