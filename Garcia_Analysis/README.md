@@ -6,37 +6,37 @@ replication experiment (Study 1)
 
 ## pipeline
 
-1. 'all_files_into_one.py'  
-   Concatenates EXP1–EXP4 behavioural CSVs that I already preprocessed for inidvidual participants in the 'Mat_to_Pandas' folder into a single dataset and
+1. `all_files_into_one.py`  
+   Concatenates EXP1–EXP4 behavioural CSVs that I already preprocessed for inidvidual participants in the `Mat_to_Pandas` folder into a single dataset and
    additionally exports a compatible mat file that can be used for simulations
 
    Output:  
-   'GarciaParticipants_EXP_1_2_3_4.csv'  
-   'GarciaParticipants_EXP_1_2_3_4.mat'
+   `GarciaParticipants_EXP_1_2_3_4.csv`  
+   `GarciaParticipants_EXP_1_2_3_4.mat`
 
-2. 'all_files_into_one_eye.py' 
+2. `all_files_into_one_eye.py`
    Merges trial-level eye-tracking metrics into the combined behavioural dataset
 
    Output:
-   'GarciaParticipants_EXP_1_2_3_4_with_eyetracking.csv'
+   `GarciaParticipants_EXP_1_2_3_4_with_eyetracking.csv`
 
-3. 'quick_data_frame.py'
+3. `quick_data_frame.py`
    Adds ggaze and attention-based regressors (e.g. AttentionW,
    InattentionW, fixation indicators) for HDDM modelling.
 
    Output:
    Updated modelling CSV
 
-4. 'convert_to_mat_for_sim.py'  
+4. `convert_to_mat_for_sim.py`  
    Converts the CSV into a MATLAB table
 
 ## Analysis & reporting
 
-- 'learning_curves_garcia.py'  
+- `learning_curves_garcia.py` 
   Computes and plots learning curves for the LE phase
 
-- 'garcia_Behavioural_R.Rmd' 
+- `garcia_Behavioural_R.Rmd` 
   Behavioural analyses in R
 
-- 'garcia_Eye_tracking_and_OV_R.Rmd'  
+- `garcia_Eye_tracking_and_OV_R.Rmd`
   Eye-tracking and OV analyses in R
