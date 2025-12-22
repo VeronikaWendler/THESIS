@@ -257,10 +257,10 @@ learning_rt_plot <- ggplot() +
     axis.text.x  = element_text(size = 14, color = "black"),
     axis.text.y  = element_text(size = 14, color = "black")
   )
-fig_out_rt <- "D:/Aberdeen_Uni_June24/cap/THESIS/Garcia_Analysis/Figures/Garcia_EXP_Mean_RT_LE_cond.pdf"
-ggsave(filename = fig_out_rt, plot = learning_rt_plot,
-       width = 8, height = 6, dpi = 300)
-learning_rt_plot
+#fig_out_rt <- "D:/Aberdeen_Uni_June24/cap/THESIS/Garcia_Analysis/Figures/Garcia_EXP_Mean_RT_LE_cond.pdf"
+#ggsave(filename = fig_out_rt, plot = learning_rt_plot,
+#       width = 8, height = 6, dpi = 300)
+#learning_rt_plot
 
 ```
 
@@ -276,7 +276,7 @@ learning_rt_df <- data %>%
                        levels = c(3, 2, 1, 0),
                        labels = c("40/60", "30/70", "20/80", "10/90")))
 
-ez_rt <- ezANOVA(
+anov_rt <- ezANOVA(
   data     = learning_rt_df,
   dv       = .(mean_logRT),
   wid      = .(sub_id),
@@ -284,6 +284,7 @@ ez_rt <- ezANOVA(
   type     = 3,
   detailed = TRUE
 )
+summary(anov_rt)
 
 posthoc_rt <- learning_rt_df %>% 
   pairwise_t_test(
@@ -313,7 +314,6 @@ learning_rt_df %>%
 
 # Shapiro results
 ```{r}
-# shapiro test results
 shapiro_results_corr
 
 ```
@@ -325,7 +325,7 @@ anova_results <- accuracy_df %>%
   anova_test(dv = Mean_Accuracy, wid = sub_id, within = phase)
 anova_table <- get_anova_table(anova_results)
 
-fig_out <- "D:/Aberdeen_Uni_June24/cap/THESIS/Garcia_Analysis/Figures/Garcia_EXP_Mean_Acc_LE_ES_EE.pdf"       
+#fig_out <- "D:/Aberdeen_Uni_June24/cap/THESIS/Garcia_Analysis/Figures/Garcia_EXP_Mean_Acc_LE_ES_EE.pdf"       
 
 # summary of rmANOVA
 anova_results <- accuracy_df %>%
@@ -382,12 +382,10 @@ accuracy_plot <- ggplot() +
     axis.text.y        = element_text(size = 18, color = "black")
   )
 
-
-
 accuracy_plot
 
-fig_out <- "D:/Aberdeen_Uni_June24/cap/THESIS/Garcia_Analysis/Figures/Garcia_EXP_Mean_Acc_LE_ES_EE.pdf"
-ggsave(filename = fig_out, plot = accuracy_plot, width = 4, height = 4, dpi = 300)
+#fig_out <- "D:/Aberdeen_Uni_June24/cap/THESIS/Garcia_Analysis/Figures/Garcia_EXP_Mean_Acc_LE_ES_EE.pdf"
+#ggsave(filename = fig_out, plot = accuracy_plot, width = 4, height = 4, dpi = 300)
 
 
 anova_results %>% get_anova_table()
@@ -395,7 +393,6 @@ anova_results %>% get_anova_table()
 anova_afex <- aov_ez(id = "sub_id", dv = "Mean_Accuracy", within = "phase", data = accuracy_df)
 summary(anova_afex)
 
-# mean and SEM for each phase
 accuracy_summary <- accuracy_df %>%
   group_by(phase) %>%
   summarise(mean_accuracy = mean(Mean_Accuracy),sd_accuracy = sd(Mean_Accuracy),n = n(),sem_accuracy = sd_accuracy / sqrt(n))
@@ -631,8 +628,8 @@ rt_plot <- ggplot() +
     axis.text.y         = element_text(size = 18, color = "black")
   )
 
-fig_out <- "D:/Aberdeen_Uni_June24/cap/THESIS/Garcia_Analysis/Figures/Garcia_EXP_Mean_rt_LE_ES_EE.pdf"
-ggsave(filename = fig_out, plot = rt_plot, width = 4, height = 4, dpi = 300)
+#fig_out <- "D:/Aberdeen_Uni_June24/cap/THESIS/Garcia_Analysis/Figures/Garcia_EXP_Mean_rt_LE_ES_EE.pdf"
+#ggsave(filename = fig_out, plot = rt_plot, width = 4, height = 4, dpi = 300)
 rt_plot
 
 ```
@@ -732,8 +729,8 @@ acc_es_plot <- ggplot() +
     legend.title = element_text(size = 18)
   )
 
-fig_out <- "D:/Aberdeen_Uni_June24/cap/THESIS/Garcia_Analysis/Figures/Garcia_EXP_Mean_Acc_E_S_options.pdf"
-ggsave(filename = fig_out, plot = acc_es_plot, width = 4, height = 4, dpi = 300)
+#fig_out <- "D:/Aberdeen_Uni_June24/cap/THESIS/Garcia_Analysis/Figures/Garcia_EXP_Mean_Acc_E_S_options.pdf"
+#ggsave(filename = fig_out, plot = acc_es_plot, width = 4, height = 4, dpi = 300)
 
 acc_es_plot
 
@@ -821,7 +818,7 @@ test_rtime <- t.test(
 )
 test_rtime
 
-# additional lmer
+# lmer
 es_data_log <- es_data %>%
   mutate(logRT = log(rtime))
 
@@ -869,8 +866,8 @@ rt_es_plot <- ggplot() +
     legend.title      = element_text(size = 18)
   )
 
-fig_out <- "D:/Aberdeen_Uni_June24/cap/THESIS/Garcia_Analysis/Figures/Garcia_EXP_Mean_rt_E_S_options.pdf"
-ggsave(filename = fig_out, plot = rt_es_plot, width = 4, height = 4, dpi = 300)
+#fig_out <- "D:/Aberdeen_Uni_June24/cap/THESIS/Garcia_Analysis/Figures/Garcia_EXP_Mean_rt_E_S_options.pdf"
+#ggsave(filename = fig_out, plot = rt_es_plot, width = 4, height = 4, dpi = 300)
 
 rt_es_plot
 ```

@@ -1,0 +1,1818 @@
+---
+title: "Eye_tracking_R"
+output:
+  pdf_document: default
+  html_document: default
+date: "2025-04-14"
+---
+
+# Eye-tracking Analysis for Study 1 (Garcia quasi replication)
+
+#libraries
+
+```{r}
+# Load libraries
+library(lme4)
+library(lmerTest)
+library(tidyverse)
+library(ggplot2)
+library(svglite)
+library(sjPlot)
+#install.packages("performance")
+library(performance)
+library(emmeans)
+library(ez)
+library(dplyr)
+library(Matrix)
+library(carData)                  # For plotting mixed model
+library(effects)                  # For visualizing model effects
+library("Hmisc")
+library(rstatix)
+library(ggpubr)
+library(broom)
+library(broom.mixed)
+library(jsonlite)
+
+
+# general rules:
+# everything from the ES phase -> darkorchid
+# everything from the EE phaes -> deepskyblue
+```
+
+# reading in the file
+
+```{r}
+file <- "C:/Cluster_Github/HDDM_Vero/data_sets/data_sets_Garcia/GarciaParticipants_Eye_Response_Feed_Allfix_addm_OV_Abs_CCT.csv"
+data <- read.csv(file)
+```
+
+# Accuracy \~ overall value + absolute value
+
+
+```{r}
+es_data
+```
+
+# ES - number of fixations first, middle last fix
+
+```{r}
+data
+```
+
+# ES - Eye-tracking (choose right, corr, rtime) (similar to CCTs paper)
+
+```{r}
+data <- read.csv(file)
+
+# phase ES
+phase_filter <- "ES"
+excluded_subjects <- c(1, 4, 5, 6, 14, 99)
+
+data <- data %>%
+  filter(phase == phase_filter & !sub_id %in% excluded_subjects) %>%
+  drop_na(FixationAdvantage, OVcate_2, chose_right)
+
+
+output_dir <- "D:/Aberdeen_Uni_June24/cap/THESIS/Garcia_Analysis/stats_TingGluth/ES_eye_predict/"
+dir.create(output_dir)
+
+# dependent variable
+dep_var <- "chose_right"  # others: 'corr', 'rtime', 'chose_right'
+eye_metrics <- c("DwellTimeAdvantage")  #DwellTimeAdvantage, or FinalFix
+
+data <- data %>%
+  filter(phase == "ES" & !sub_id %in% excluded_subs)
+
+data <- data %>%
+  mutate(
+    OV = OV_2,
+    VD = AbsValueDiff_2
+  ) %>%
+  dplyr::select(-OV_2, -AbsValueDiff_2)
+
+
+
+# z-score VD & OV & gaze metrics at  OV Level
+data <- data %>%
+  group_by(OV) %>%
+  mutate(
+    VD = scale(VD, center = TRUE, scale = TRUE)[,1],  
+    across(all_of(eye_metrics), ~ scale(.x, center = TRUE, scale = TRUE)[,1]) 
+  ) %>%
+  ungroup()
+
+# z-score VD & eye metrics within individual sub_id
+data <- data %>%
+  group_by(sub_id) %>%
+  mutate(
+    VD = scale(VD, center = TRUE, scale = TRUE)[,1], 
+    across(all_of(eye_metrics), ~ scale(.x, center = TRUE, scale = TRUE)[,1]) 
+  ) %>%
+  ungroup()
+
+
+# loop through eye-tracking metrics
+for (eye_metric in eye_metrics) {
+  # interaction 
+  interaction_term <- paste0("OV:", eye_metric)
+  #logistic regression
+  #glmer
+  model <- glmer(as.formula(paste(dep_var, "~ OV *", eye_metric, "+ (1 | sub_id)")),data = data,family = binomial(link = "logit"))
+
+
+  stats_file <- paste0(output_dir, "ES_Logistic_Model_", dep_var, "_", eye_metric, ".txt")
+
+  # summary and tab_model
+  sink(stats_file)
+  cat("### Logistic Mixed Model - ES Phase ###\n\n")
+  cat("#### Model Summary ####\n")
+  print(summary(model)) 
+  cat("\n#### Tab Model Output ####\n")
+  print(tab_model(model, transform = NULL))  
+  sink()
+
+  #fixed effects + predictor names
+  beta_df <- as.data.frame(coef(summary(model)))
+  beta_df$Predictor <- rownames(beta_df)
+  rownames(beta_df) <- NULL
+  colnames(beta_df) <- c("Estimate", "SE", "z", "p", "Predictor")
+
+  # get 95% CI
+  beta_df <- beta_df %>%
+    mutate(
+      CI_Lower = Estimate - 1.96 * SE,  # CI Lower
+      CI_Upper = Estimate + 1.96 * SE   # CI Upper
+    ) %>%
+    filter(Predictor != "(Intercept)") 
+  # sig. display can be modified to include numbers
+  beta_df <- beta_df %>%
+    mutate(
+      Significance = case_when(
+        p < 0.001 ~ "***",
+        p < 0.01 ~ "**",
+        p < 0.05 ~ "*",
+        TRUE ~ "" 
+      )
+    )
+
+  # order
+  beta_df <- beta_df %>%
+  filter(Predictor %in% c(eye_metric, interaction_term))
+  beta_df$Predictor <- factor(beta_df$Predictor, levels = c(eye_metric, interaction_term))
+  output_path <- paste0(output_dir, "ES_", eye_metric, ".pdf")
+
+  plot_figure <- ggplot(beta_df, aes(x = Predictor, y = Estimate, fill = Predictor)) +
+    geom_bar(stat = "identity", alpha = 0.7, color = "black", width = 0.5, linewidth = 1) +
+    geom_errorbar(aes(ymin = CI_Lower, ymax = CI_Upper), width = 0.05, color = "black", linewidth = 1) +
+
+    geom_text(aes(y = ifelse(Estimate < 0, CI_Lower - 0.09, CI_Upper + 0.09), 
+                  label = Significance),
+              color = "black", size = 10, fontface = "bold") +  
+
+    geom_hline(yintercept = 0, color = "black", linewidth = 1) +
+
+    labs(title = paste("OV &", eye_metric, "on Symbolic Choice"),
+         x = "", y = "Beta Coefficients") +
+    
+    scale_fill_manual(values = setNames(rep("darkorchid", 4), c("VD", "OV", eye_metric, interaction_term))) +    
+    scale_x_discrete(labels = c("FinalFixLoc" = "FF",
+                              "OV:FinalFixLoc" = "OV:FF")) +
+    theme_minimal() +
+    theme(
+      legend.position = "none", 
+      panel.grid = element_blank(), 
+      axis.line.y = element_line(color = "black", linewidth = 1),  
+      axis.line.x = element_blank(),  
+      axis.text = element_text(size = 18, color = "black"), 
+      axis.title = element_text(size = 18, color = "black"),  
+      plot.title = element_text(size = 18, hjust = 0.5, color = "black"), 
+      panel.background = element_rect(fill = "white", color = "white"),  
+      plot.background = element_rect(fill = "white", color = "white") 
+    )
+
+  ggsave(output_path, plot = plot_figure, device = "pdf", width = 3, height = 5, dpi = 300)
+  cat("saved log regression plot for", eye_metric, "as PDF at:", output_path, "\n")
+
+}
+plot_figure
+summary(model)
+tab_model(model, transform = NULL)  
+
+```
+
+# EE - Eye-tracking (choose right, corr, rtime)
+
+```{r}
+data <- read.csv(file)
+
+# phase ES
+phase_filter <- "EE"
+excluded_subjects <- c(1, 4, 5, 6, 14, 99)
+
+data <- data %>%
+  filter(phase == phase_filter & !sub_id %in% excluded_subjects) %>%
+  drop_na(FixationAdvantage, OVcate_2, chose_right)
+
+
+output_dir <- "D:/Aberdeen_Uni_June24/cap/THESIS/Garcia_Analysis/stats_TingGluth/EE_eye_predict/"
+dir.create(output_dir, showWarnings = FALSE, recursive = TRUE)
+
+# dependent variable
+
+
+dep_var <- "chose_right"  # others: 'corr', 'rtime', 'chose_right'
+
+eye_metrics <- c("DwellTimeAdvantage")
+
+data <- data %>%
+  filter(phase == "EE" & !sub_id %in% excluded_subs)
+
+data <- data %>%
+  mutate(
+    OV = OV_2,
+    VD = AbsValueDiff_2
+  ) %>%
+  select(-OV_2, -AbsValueDiff_2)
+
+
+# z-score VD & OV & gaze metrics at  OV Level
+data <- data %>%
+  group_by(OV) %>%
+  mutate(
+    VD = scale(VD, center = TRUE, scale = TRUE)[,1],  
+    across(all_of(eye_metrics), ~ scale(.x, center = TRUE, scale = TRUE)[,1]) 
+  ) %>%
+  ungroup()
+
+# z-score VD & eye metrics within individual sub_id
+data <- data %>%
+  group_by(sub_id) %>%
+  mutate(
+    VD = scale(VD, center = TRUE, scale = TRUE)[,1], 
+    across(all_of(eye_metrics), ~ scale(.x, center = TRUE, scale = TRUE)[,1]) 
+  ) %>%
+  ungroup()
+
+# loop through eye-tracking metrics
+for (eye_metric in eye_metrics) {
+  # interaction 
+  interaction_term <- paste0("OV:", eye_metric)
+  #logistic regression
+  #glmer
+  model <- glmer(as.formula(paste(dep_var, "~ OV *", eye_metric, "+ (1 | sub_id)")),data = data,family = binomial(link = "logit"))
+
+
+  stats_file <- paste0(output_dir, "EE_Logistic_Model_", dep_var, "_", eye_metric, ".txt")
+
+  # summary and tab_model
+  sink(stats_file)
+  cat("### Logistic Mixed Model - EE Phase ###\n\n")
+  cat("#### Model Summary ####\n")
+  print(summary(model)) 
+  cat("\n#### Tab Model Output ####\n")
+  print(tab_model(model, transform = NULL))  
+  sink()
+
+  #fixed effects + predictor names
+  beta_df <- as.data.frame(coef(summary(model)))
+  beta_df$Predictor <- rownames(beta_df)
+  rownames(beta_df) <- NULL
+  colnames(beta_df) <- c("Estimate", "SE", "z", "p", "Predictor")
+
+  # get 95% CI
+  beta_df <- beta_df %>%
+    mutate(
+      CI_Lower = Estimate - 1.96 * SE,  # CI Lower
+      CI_Upper = Estimate + 1.96 * SE   # CI Upper
+    ) %>%
+    filter(Predictor != "(Intercept)") 
+  # sig. display can be modified to include numbers
+  beta_df <- beta_df %>%
+    mutate(
+      Significance = case_when(
+        p < 0.001 ~ "***",
+        p < 0.01 ~ "**",
+        p < 0.05 ~ "*",
+        TRUE ~ "" 
+      )
+    )
+
+  # order
+  beta_df <- beta_df %>%
+  filter(Predictor %in% c(eye_metric, interaction_term))
+  beta_df$Predictor <- factor(beta_df$Predictor, levels = c(eye_metric, interaction_term))
+  output_path <- paste0(output_dir, "EE_", eye_metric, ".pdf")
+
+  plot_figure <- ggplot(beta_df, aes(x = Predictor, y = Estimate, fill = Predictor)) +
+    geom_bar(stat = "identity", alpha = 0.7, color = "black", width = 0.5, linewidth = 1) +
+    geom_errorbar(aes(ymin = CI_Lower, ymax = CI_Upper), width = 0.05, color = "black", linewidth = 1) +
+
+    geom_text(aes(y = ifelse(Estimate < 0, CI_Lower - 0.09, CI_Upper + 0.09), 
+                  label = Significance),
+              color = "black", size = 10, fontface = "bold") +  
+
+    geom_hline(yintercept = 0, color = "black", linewidth = 1) +
+
+    labs(title = paste("OV &", eye_metric, "on Choosing Right"),
+         x = "", y = "Beta Coefficients") +
+    
+    scale_fill_manual(values = setNames(rep("deepskyblue", 4), c("VD", "OV", eye_metric, interaction_term))) +    
+    scale_x_discrete(labels = c("DwellTimeAdvantage" = "DTA",
+                              "OV:DwellTimeAdvantage" = "OV:DTA")) +
+    theme_minimal() +
+    theme(
+      legend.position = "none", 
+      panel.grid = element_blank(), 
+      axis.line.y = element_line(color = "black", linewidth = 1),  
+      axis.line.x = element_blank(),  
+      axis.text = element_text(size = 18, color = "black"), 
+      axis.title = element_text(size = 18, color = "black"),  
+      plot.title = element_text(size = 18, hjust = 0.5, color = "black"), 
+      panel.background = element_rect(fill = "white", color = "white"),  
+      plot.background = element_rect(fill = "white", color = "white") 
+    )
+
+  ggsave(output_path, plot = plot_figure, device = "pdf", width = 3, height = 5, dpi = 300)
+  cat("saved log regression plot for", eye_metric, "as PDF at:", output_path, "\n")
+
+}
+plot_figure
+summary(model)
+tab_model(model, transform = NULL)  
+```
+
+
+# ES - Dwell-Time Advantage
+
+```{r}
+
+data <- read.csv(file)
+
+# phase ES
+phase_filter <- "ES"
+excluded_subjects <- c(1, 4, 5, 6, 14, 99)
+
+data <- data %>%
+  filter(phase == phase_filter & !sub_id %in% excluded_subjects) %>%
+  drop_na(DwellTimeAdvantage, OVcate_2, chose_right )
+
+data <- data %>% 
+  filter(
+    phase == phase_filter,
+    !sub_id %in% excluded_subjects,
+    DwellRight > -1,          # here, we can check if we keep only trials where both sides > 0 ms for gaze
+    DwellLeft  > -1
+  ) %>% 
+  drop_na(DwellTimeAdvantage, OVcate_2, chose_right)
+
+
+data$OVcate_2 <- factor(data$OVcate_2, levels = c("low", "medium", "high"))
+
+# Quantile Binning of DwellTimeAdvantage
+data <- data %>%
+  group_by(sub_id, OVcate_2) %>%
+  mutate(DwellTimeAdvantage_bin = cut(DwellTimeAdvantage, 
+                                      breaks = unique(quantile(DwellTimeAdvantage, probs = seq(0, 1, length.out = 6), na.rm = TRUE)), 
+                                      labels = 1:(length(unique(quantile(DwellTimeAdvantage, probs = seq(0, 1, length.out = 6), na.rm = TRUE))) - 1),
+                                      include.lowest = TRUE)) %>%
+  ungroup()
+
+
+
+summary_df <- data %>%
+  group_by(DwellTimeAdvantage_bin, OVcate_2) %>%
+  summarise(
+    p_choose_right = mean(chose_right, na.rm = TRUE),       # mean 
+    ci = 1.96 * sd(chose_right, na.rm = TRUE) / sqrt(n()),  # 95% CI
+    .groups = 'drop'
+  )
+
+# bin order 
+summary_df$DwellTimeAdvantage_bin <- factor(summary_df$DwellTimeAdvantage_bin, 
+                                            levels = 1:5, 
+                                            labels = c("E>>S", "E>S", "E~S", "S>E", "S>>E"))
+
+# colours for OV levels (low, medium, high)
+colors <- c("low" = "darkorchid1", "medium" = "darkorchid3", "high" = "darkmagenta")
+
+p <- ggplot(summary_df, aes(x = DwellTimeAdvantage_bin, y = p_choose_right, 
+                            group = OVcate_2, color = OVcate_2)) +
+  geom_point(size = 4) +  
+  geom_line(linewidth = 1.2) +  
+  geom_errorbar(aes(ymin = p_choose_right - ci, ymax = p_choose_right + ci), 
+                width = 0.2, linewidth = 0.8) +  
+  geom_hline(yintercept = 0.5, linetype = "dotted", color = "gray50", linewidth = 1) +  
+  scale_color_manual(values = colors, name = "OV Level") +  
+  theme_minimal() +
+  theme(
+    panel.grid.major = element_blank(),  
+    panel.grid.minor = element_blank(),  
+    axis.line = element_line(color = "black", linewidth = 0.8),  
+    legend.position = "top",
+    legend.text = element_text(size = 18),  
+    legend.title = element_text(size = 18),
+    axis.text = element_text(size = 19, color = "black"), 
+    axis.title = element_text(size = 20, color = "black"),  
+    plot.title = element_text(size = 19, hjust = 0.5,color = "black"), 
+    plot.background = element_rect(fill = "white", color = "white") 
+  ) +
+  labs(
+    title = "Dwell-Time Advantage on Choice - ES Phase",
+    x = "Dwell Time Advantage (S > E)",
+    y = "P(Choose Symbolic)"
+  )
+
+ggsave("D:/Aberdeen_Uni_June24/cap/THESIS/Garcia_Analysis/stats_TingGluth/R_regression_eye_metric/ES_DTA.pdf", 
+       plot = p, width = 5, height = 6, device = "pdf", bg = "white"
+       )
+
+print(p)
+
+
+############### statistical analysis #####################################################################################
+
+# group by subject and get prob. chosign right per bin
+agg_data <- data %>%
+  group_by(sub_id, DwellTimeAdvantage_bin, OVcate_2) %>%
+  summarise(mean_p_choose_right = mean(chose_right, na.rm = TRUE), .groups = 'drop')
+  
+agg_data <- agg_data %>%
+  mutate(
+    DTA_num = as.numeric(DwellTimeAdvantage_bin)
+  )
+
+trend_model <- lmer(
+  mean_p_choose_right ~ poly(DTA_num, 2, raw = FALSE) + (1 | sub_id),
+  data = agg_data
+)
+
+summary(trend_model)
+
+
+
+anova_results <- list()  # Store ANOVA results
+
+lmm_model <- lmer(mean_p_choose_right ~ OVcate_2 * DwellTimeAdvantage_bin + (1 | sub_id),
+                  data = agg_data)
+
+anova(lmm_model)
+
+# Post-hoc for OVcate_2 within each DwellTimeAdvantage_bin
+posthoc_results <- emmeans(lmm_model, pairwise ~ OVcate_2 | DwellTimeAdvantage_bin, adjust = "bonferroni")
+print(posthoc_results)
+
+
+# results folder
+results_file <- "D:/Aberdeen_Uni_June24/cap/THESIS/Garcia_Analysis/stats_TingGluth/R_regression_eye_metric/ES_DwelltimeAdvantage_Results.txt"
+sink(results_file) 
+
+cat("\n ### Polynomial Trend Mixed Model (DTA bin) ###\n")
+print(summary(trend_model))
+cat("\n ### ANOVA: Effect of DwellTimeAdvantage_bin on P(Choose Right) ###\n")
+print(anova_result)
+cat("\n ### Post-hoc Tests: Pairwise Comparisons for DwellTimeAdvantage_bin ### \n")
+print(posthoc_result1)
+cat("\n ### Linear Mixed Model: OVcate_2 * DwellTimeAdvantage_bin Effect ### \n")
+print(anova(lmm_model))
+cat("\n ### Post-hoc Comparisons for OV Levels within Each Bin (LMM) ### \n")
+print(posthoc_results)
+sink()
+cat("\n results saved to:", results_file, "\n")
+
+# mean P(choose right) per bin for each participant
+agg_data <- data %>%
+  group_by(sub_id, DwellTimeAdvantage_bin) %>%
+  summarise(mean_p_choose_right = mean(chose_right, na.rm = TRUE), .groups = 'drop')
+
+anova_res <- ezANOVA(
+  data = agg_data,
+  dv = mean_p_choose_right,  
+  wid = sub_id,              
+  within = DwellTimeAdvantage_bin,  
+  type = 3,               
+  detailed = TRUE
+)
+
+anova_res
+
+# post-hoc pairwise comparisons with Bonferroni cor
+posthoc_result1 <- emmeans(
+  lm(mean_p_choose_right ~ factor(DwellTimeAdvantage_bin), data = agg_data),  
+  pairwise ~ DwellTimeAdvantage_bin,  
+  adjust = "bonferroni"  
+)
+
+posthoc_result1
+
+```
+# ES Dwelltime Advantge without OV
+```{r}
+
+data <- read.csv(file)
+
+# phase ES
+phase_filter <- "ES"
+excluded_subjects <- c(1, 4, 5, 6, 14, 99)
+
+# Basic filtering
+data <- data %>%
+  filter(phase == phase_filter & !sub_id %in% excluded_subjects) %>%
+  drop_na(DwellTimeAdvantage, chose_right)
+
+# Additional dwell time filtering
+data <- data %>% 
+  filter(
+    phase == phase_filter,
+    !sub_id %in% excluded_subjects,
+    DwellRight > 0,        
+    DwellLeft  > 0   # this can be adjusted in case we would like specific filters (or not)
+  ) %>% 
+  drop_na(DwellTimeAdvantage, chose_right)
+
+
+# Quantile Binning of DwellTimeAdvantage (per subject, collapsed across OV)
+data <- data %>%
+  group_by(sub_id) %>%
+  mutate(
+    DwellTimeAdvantage_bin = cut(
+      DwellTimeAdvantage,
+      breaks = unique(quantile(
+        DwellTimeAdvantage,
+        probs = seq(0, 1, length.out = 6),
+        na.rm = TRUE
+      )),
+      labels = 1:(length(unique(quantile(
+        DwellTimeAdvantage,
+        probs = seq(0, 1, length.out = 6),
+        na.rm = TRUE
+      ))) - 1),
+      include.lowest = TRUE
+    )
+  ) %>%
+  ungroup()
+
+
+summary_df <- data %>%
+  group_by(DwellTimeAdvantage_bin) %>%
+  summarise(
+    p_choose_right = mean(chose_right, na.rm = TRUE),
+    ci = 1.96 * sd(chose_right, na.rm = TRUE) / sqrt(n()),
+    .groups = "drop"
+  )
+
+# bin order / labels
+summary_df$DwellTimeAdvantage_bin <- factor(
+  summary_df$DwellTimeAdvantage_bin,
+  levels = 1:5,
+  labels = c("E>>S", "E>S", "E~S", "S>E", "S>>E")
+)
+
+
+p <- ggplot(summary_df,
+            aes(x = DwellTimeAdvantage_bin,
+                y = p_choose_right,
+                group = 1)) +
+  geom_point(size = 4, color = "darkorchid") +
+  geom_line(linewidth = 1.2, color = "darkorchid") +
+  geom_errorbar(
+    aes(ymin = p_choose_right - ci,
+        ymax = p_choose_right + ci),
+    width = 0.2,
+    linewidth = 0.8,
+    color = "darkorchid"   # can be black as well
+  ) +
+  geom_hline(
+    yintercept = 0.5,
+    linetype = "dotted",
+    color = "gray50",
+    linewidth = 1
+  ) +
+  theme_minimal() +
+  theme(
+    panel.grid.major = element_blank(),
+    panel.grid.minor = element_blank(),
+    axis.line = element_line(color = "black", linewidth = 0.8),
+    legend.position = "none",
+    axis.text = element_text(size = 19, color = "black"),
+    axis.title = element_text(size = 20, color = "black"),
+    plot.title = element_text(size = 19, hjust = 0.5, color = "black"),
+    plot.background = element_rect(fill = "white", color = "white")
+  ) +
+  labs(
+    title = "Dwell-Time Advantage on Choice - ES Phase",
+    x = "Dwell Time Advantage (S > E)",
+    y = "P(Choose Symbolic)"
+  )
+
+ggsave(
+  "D:/Aberdeen_Uni_June24/cap/THESIS/Garcia_Analysis/stats_TingGluth/R_regression_eye_metric/ES_DTA_no_OV.pdf",
+  plot = p,
+  width = 5,
+  height = 6,
+  device = "pdf",
+  bg = "white"
+)
+
+print(p)
+
+
+# Mean P(choose right) per bin for each participant
+agg_data <- data %>%
+  group_by(sub_id, DwellTimeAdvantage_bin) %>%
+  summarise(
+    mean_p_choose_right = mean(chose_right, na.rm = TRUE),
+    .groups = "drop"
+  )
+
+# Numeric bin index for trend modelling
+agg_data <- agg_data %>%
+  mutate(
+    DTA_num = as.numeric(DwellTimeAdvantage_bin)
+  )
+
+# Polynomial trend across bins
+trend_model <- lmer(
+  mean_p_choose_right ~ poly(DTA_num, 2, raw = FALSE) + (1 | sub_id),
+  data = agg_data
+)
+
+summary(trend_model)
+
+agg_data_anova <- agg_data %>%
+  group_by(sub_id) %>%
+  filter(n_distinct(DwellTimeAdvantage_bin) == 5) %>%
+  ungroup()
+
+anova_res <- ezANOVA(
+  data = agg_data_anova,
+  dv = mean_p_choose_right,
+  wid = sub_id,
+  within = DwellTimeAdvantage_bin,
+  type = 3,
+  detailed = TRUE
+)
+
+summary(anova_res)
+
+posthoc_result1 <- emmeans(
+  lm(mean_p_choose_right ~ factor(DwellTimeAdvantage_bin), data = agg_data_anova),
+  pairwise ~ DwellTimeAdvantage_bin,
+  adjust = "bonferroni"
+)
+
+posthoc_result1
+
+
+results_file <- "D:/Aberdeen_Uni_June24/cap/THESIS/Garcia_Analysis/stats_TingGluth/R_regression_eye_metric/ES_DwelltimeAdvantage_Results_no_OV.txt"
+
+sink(results_file)
+
+cat("\n ### Polynomial Trend Mixed Model (DTA bin) ###\n")
+print(summary(trend_model))
+
+cat("\n ### ANOVA: Effect of DwellTimeAdvantage_bin on P(Choose Right) ###\n")
+print(anova_res)
+
+cat("\n### Post-hoc Tests: Pairwise Comparisons for DwellTimeAdvantage_bin ###\n")
+print(posthoc_result1)
+
+sink()
+```
+
+
+# ES - p(E vs S) per rtime bin
+
+```{r}
+data <- read.csv(file)
+
+# phase ES
+phase_filter <- "ES"
+excluded_subjects <- c(6,99)    # 1, 4, 5, 6, 14, 99
+
+data <- data %>%
+  filter(phase == phase_filter & !sub_id %in% excluded_subjects,
+         rtime >= 0.250,
+         rtime <= 1000 ) %>%
+  drop_na(DwellTimeAdvantage, OVcate_2, chose_right)
+
+data <- data %>%
+  group_by(sub_id, OVcate_2) %>%
+  mutate(rtime_bin = cut(rtime, 
+                         breaks = unique(quantile(rtime, probs = seq(0, 1, length.out = 6), na.rm = TRUE)), 
+                         labels = 1:(length(unique(quantile(rtime, probs = seq(0, 1, length.out = 6), na.rm = TRUE))) - 1),
+                         include.lowest = TRUE)) %>%
+  ungroup()
+
+
+agg <- data %>%
+  group_by(sub_id, rtime_bin) %>%
+  summarise(
+    p_E = mean(chose_right == 0, na.rm = TRUE),
+    p_S = mean(chose_right == 1, na.rm = TRUE),
+    .groups = "drop"
+  ) %>%
+  pivot_longer(cols = c(p_E, p_S),
+               names_to  = "Choice",
+               values_to = "prob") %>%
+  mutate(Choice = factor(Choice,
+                         levels = c("p_E", "p_S"),
+                         labels = c("E", "S")))
+
+
+summary_df <- agg %>%
+  group_by(rtime_bin, Choice) %>%
+  summarise(
+    mean_prob = mean(prob, na.rm = TRUE),
+    sem       = sd(prob,  na.rm = TRUE) / sqrt(n()),   # SEM, can also do SD
+    .groups   = "drop"
+  )
+
+summary_df$rtime_bin <- factor(
+  summary_df$rtime_bin,
+  levels = 1:5,
+  labels = c("0-20%", "20-40%", "40-60%", "60-80%", "80-100%")
+)
+
+p <- ggplot(
+  summary_df,
+  aes(x = rtime_bin,
+      y = mean_prob,
+      fill = Choice)  
+) +
+  geom_col(
+    position = position_dodge(width = 0.8),
+    width = 0.7
+  ) +
+  geom_errorbar(
+    aes(ymin = mean_prob - sem,
+        ymax = mean_prob + sem),
+    position = position_dodge(width = 0.8),
+    width = 0.2,
+    linewidth = 0.7
+  ) +
+  # reference line at 0.5
+  geom_hline(yintercept = 0.5, linetype = "dotted") +
+  scale_fill_manual(
+    values = c("E" = "deepskyblue", "S" = "darkorchid"),
+    name   = "Chosen option"
+  ) +
+  labs(
+    title = "Probability of Choosing E vs S-Option by Reaction Time Quintile",
+    x     = "RT Bin (shortest to longest RT)",
+    y     = "Probability"
+  ) +
+  coord_cartesian(ylim = c(0.30, 0.70)) +
+  theme_minimal(base_size = 15) +
+  theme(
+    legend.position   = c(0.85, 0.90),
+    legend.background = element_rect(fill = "white", color = NA),
+    legend.key        = element_rect(fill = NA, color = NA),
+    legend.title      = element_text(size = 16),
+    legend.text       = element_text(size = 16),
+    axis.line         = element_line(colour = "black"),
+    panel.grid.major  = element_blank(),
+    panel.grid.minor  = element_blank(),
+    axis.text.x       = element_text(color = "black", size = 16),
+    axis.text.y       = element_text(color = "black", size = 18),
+    axis.title.x      = element_text(size = 18),
+    axis.title.y      = element_text(size = 18)
+  )
+
+#ggsave(
+#  "D:/Aberdeen_Uni_June24/cap/THESIS/Garcia_Analysis/Figures/ES_rtimeAdvantage_E_vs_S_bars.pdf",
+#  plot   = p,
+#  width  = 6,
+#  height = 5,
+#  device = "pdf",
+#  bg     = "white"
+#)
+
+print(p)
+
+
+# GLM
+
+data$chose_E <- ifelse(data$chose_right == 0, 1, 0)
+data$rtime_bin <- factor(data$rtime_bin)
+
+# Model with no overall intercept to get log-odds of choosing E per bin
+model <- glmer(chose_E ~ 0 + rtime_bin + (1 | sub_id),
+               data = data,
+               family = binomial)
+em_logit <- as.data.frame(summary(emmeans(model, ~ rtime_bin)))
+em_prob <- as.data.frame(summary(emmeans(model, ~ rtime_bin), type = "response"))
+em_link <- summary(emmeans(model, ~ rtime_bin),
+                   infer = c(TRUE, TRUE))   
+em_resp <- summary(emmeans(model, ~ rtime_bin),
+                   type  = "response",
+                   infer = c(TRUE, TRUE)) 
+
+em_link
+em_resp
+
+```
+
+
+
+# GLMM - chocie E vs S per RT bin
+```{r}
+
+data <- read.csv(file)
+
+excluded_subjects <- c(6,99)  # this here is variable (one could also exclude the participants that have missing data in the eye-tracking code - theese would be more)
+
+data <- read.csv(file) %>%
+  filter(phase == "ES",
+         !sub_id %in% excluded_subjects,
+         rtime >= 0.250,   # >= 250 ms
+         rtime <= 1000) %>% # I don't really have an upper cut off
+  drop_na(DwellTimeAdvantage, OVcate_2, chose_right) %>%
+  mutate(
+    chooseE = as.integer(chose_right == 0),
+    log_rtime = scale(log(rtime)) # log + z-scale for stability
+  )
+
+m <- glmer(chooseE ~ log_rtime + (1|sub_id),
+           data = data,
+           family = binomial)
+
+q_edges <- quantile(data$log_rtime, probs = seq(0,1,length.out=6))
+q_mid <- (head(q_edges,-1) + tail(q_edges,-1)) / 2
+
+preds <- emmeans(m, ~ log_rtime,
+                 at = list(log_rtime = q_mid),
+                 type = "response")
+
+tests <- contrast(
+  emmeans(m, ~ log_rtime, at = list(log_rtime = q_mid), type="link"),
+  method="eff"
+)
+summary(tests, infer=TRUE)
+
+preds_resp <- summary(preds)
+preds_resp$prob_percent <- round(preds_resp$prob * 100, 1)
+preds_resp
+```
+# fixation by fixation 
+```{r}
+
+MAX_BACK <- 4   # or 3
+excluded_subjects <- c(1,4, 5, 6, 14, 99)
+
+dat <- read.csv(file)
+es <- dat %>%
+  filter(phase == "ES", !sub_id %in% excluded_subjects) %>%
+  drop_na(sub_id, rtime, Fixations)
+
+# Fixation pars
+parse_fixes <- function(x){
+  if (is.null(x) || is.na(x) || x=="") return(NULL)
+  if (is.list(x)) return(as.data.frame(x))
+  try1 <- tryCatch(fromJSON(x, simplifyDataFrame=TRUE), error=function(e) NULL)
+  if (!is.null(try1)) return(as.data.frame(try1))
+  x2 <- gsub("'", "\"", x)
+  try2 <- tryCatch(fromJSON(x2, simplifyDataFrame=TRUE), error=function(e) NULL)
+  if (!is.null(try2)) return(as.data.frame(try2))
+  NULL
+}
+
+gather_fixseq <- function(fix_str, rt_sec, back_cap=MAX_BACK){
+  fx <- parse_fixes(fix_str)
+  if (is.null(fx) || nrow(fx)==0 || !all(c("start_time","roi") %in% names(fx))) return(character(0))
+  fx <- fx %>% arrange(start_time)
+  t0 <- fx$start_time[1]; rt_ms <- rt_sec * 1000
+  usable <- fx %>%
+    mutate(rel_start = start_time - t0) %>%
+    filter(rel_start <= rt_ms, roi %in% c(1,2))
+  if (nrow(usable) == 0) return(character(0))
+  lab <- ifelse(usable$roi == 1, "E", "S")
+  rev(lab)[seq_len(min(length(lab), back_cap + 1))]
+}
+
+# long table
+es_seq <- es %>%
+  mutate(fix_seq = map2(Fixations, rtime, gather_fixseq)) %>%
+  filter(map_int(fix_seq, length) > 1)
+
+fix_long <- es_seq %>%
+  transmute(sub_id,
+            fix_idx_list = map(fix_seq, ~ seq(0, length(.x) - 1)),
+            label_list   = fix_seq) %>%
+  unnest(c(fix_idx_list, label_list)) %>%
+  rename(fix_idx = fix_idx_list, label = label_list) %>%
+  filter(fix_idx <= MAX_BACK) %>%
+  mutate(label = factor(label, levels = c("S", "E")),  # S is reference
+         y = as.integer(label == "E"))
+
+# Overall mean and SD
+overall_fix_stats <- fix_long %>%
+  summarise(
+    mean_E = mean(y),   # proportion of fixations on E
+    sd_E   = sd(y),     
+    n      = n()
+  )
+
+print(overall_fix_stats)
+
+# Mean and SD per fixation index (0 = last fixation, 1 = one back etc)
+fixidx_fix_stats <- fix_long %>%
+  group_by(fix_idx) %>%
+  summarise(
+    mean_E = mean(y),
+    sd_E   = sd(y),
+    n      = n(),
+    .groups = "drop"
+  )
+
+print(fixidx_fix_stats)
+
+#Fix model
+model_results <- map_dfr(0:MAX_BACK, function(idx) {
+  df_i <- fix_long %>%
+    filter(fix_idx == idx) %>%
+    filter(!sub_id %in% excluded_subjects)
+
+  model <- tryCatch(
+    glmer(label ~ 1 + (1 | sub_id), data = df_i, family = binomial)
+  )
+
+  tidy(model, effects = "fixed") %>%
+    mutate(fix_idx = idx, x = ifelse(idx == 0, 0, -idx))
+})
+
+# Format
+ttests <- model_results %>%
+  transmute(
+    fix_idx,
+    x,
+    beta    = estimate,
+    se      = std.error,
+    z       = statistic,
+    p_raw   = p.value
+  ) %>%
+  mutate(p_fdr = p.adjust(p_raw, method = "BH")) %>%
+  arrange(fix_idx)
+
+print(ttests, n = Inf)
+
+```
+
+`
+
+# fixation by fixation - EE phase
+
+```{r}
+MAX_BACK <- 4
+excluded_subjects <- c(1,4, 5, 6, 14, 99)
+
+dat <- read.csv(file)
+es <- dat %>%
+  filter(phase == "EE", !sub_id %in% excluded_subjects) %>%
+  drop_na(sub_id, rtime, Fixations)
+
+parse_fixes <- function(x){
+  if (is.null(x) || is.na(x) || x=="") return(NULL)
+  if (is.list(x)) return(as.data.frame(x))
+  try1 <- tryCatch(fromJSON(x, simplifyDataFrame=TRUE), error=function(e) NULL)
+  if (!is.null(try1)) return(as.data.frame(try1))
+  x2 <- gsub("'", "\"", x)
+  try2 <- tryCatch(fromJSON(x2, simplifyDataFrame=TRUE), error=function(e) NULL)
+  if (!is.null(try2)) return(as.data.frame(try2))
+  NULL
+}
+
+gather_fixseq <- function(fix_str, rt_sec, back_cap=MAX_BACK){
+  fx <- parse_fixes(fix_str)
+  if (is.null(fx) || nrow(fx)==0 || !all(c("start_time","roi") %in% names(fx))) return(character(0))
+  fx <- fx %>% arrange(start_time)
+  t0 <- fx$start_time[1]; rt_ms <- rt_sec * 1000
+  usable <- fx %>%
+    mutate(rel_start = start_time - t0) %>%
+    filter(rel_start <= rt_ms, roi %in% c(1,2))
+  if (nrow(usable) == 0) return(character(0))
+  lab <- ifelse(usable$roi == 1, "left", "right")
+  rev(lab)[seq_len(min(length(lab), back_cap + 1))]
+}
+
+es_seq <- es %>%
+  mutate(fix_seq = map2(Fixations, rtime, gather_fixseq)) %>%
+  filter(map_int(fix_seq, length) > 1)
+
+fix_long <- es_seq %>%
+  transmute(sub_id,
+            fix_idx_list = map(fix_seq, ~ seq(0, length(.x) - 1)),
+            label_list   = fix_seq) %>%
+  unnest(c(fix_idx_list, label_list)) %>%
+  rename(fix_idx = fix_idx_list, label = label_list) %>%
+  filter(fix_idx <= MAX_BACK) %>%
+  mutate(label = factor(label, levels = c("right", "left")),  # S is reference
+         y = as.integer(label == "left"))
+
+overall_fix_stats <- fix_long %>%
+  summarise(
+    mean_left = mean(y),   # proportion of fixations on E
+    sd_left   = sd(y),    
+    n      = n()
+  )
+
+print(overall_fix_stats)
+
+# Mean and SD per fixation index (0 = last fixation, 1 = one back, etc.)
+fixidx_fix_stats <- fix_long %>%
+  group_by(fix_idx) %>%
+  summarise(
+    mean_left = mean(y),
+    sd_left   = sd(y),
+    n      = n(),
+    .groups = "drop"
+  )
+
+print(fixidx_fix_stats)
+
+# label == dependent variable
+model_results <- map_dfr(0:MAX_BACK, function(idx) {
+  df_i <- fix_long %>%
+    filter(fix_idx == idx) %>%
+    filter(!sub_id %in% excluded_subjects)  
+
+  if (n_distinct(df_i$sub_id) < 6) return(NULL) 
+  
+  model <- tryCatch(
+    glmer(label ~ 1 + (1 | sub_id), data = df_i, family = binomial),
+    error = function(e) NULL
+  )
+  
+  if (is.null(model)) return(NULL)
+  
+  tidy(model, effects = "fixed") %>%
+    mutate(fix_idx = idx, x = ifelse(idx == 0, 0, -idx))
+})
+
+ttests <- model_results %>%
+  transmute(
+    fix_idx,
+    x,
+    beta    = estimate,
+    se      = std.error,
+    z       = statistic,
+    p_raw   = p.value
+  ) %>%
+  mutate(p_fdr = p.adjust(p_raw, method = "BH")) %>%
+  arrange(fix_idx)
+
+print(ttests, n = Inf)
+
+```
+
+
+# mean nr of fixtions - ES phase
+```{r}
+es_seq <- es %>%
+  mutate(fix_seq = map2(Fixations, rtime, gather_fixseq)) %>%
+  filter(map_int(fix_seq, length) > 1)
+
+es_seq <- es_seq %>%
+  mutate(n_fix = map_int(fix_seq, length))
+
+mean_fixations <- mean(es_seq$n_fix)
+sd_fixations <- sd(es_seq$n_fix)
+median_fixations <- median(es_seq$n_fix)
+
+mean_fixations
+sd_fixations
+```
+
+# ES - gaze difference per bin
+
+```{r}
+
+file_path <- "D:/Aberdeen_Uni_June24/cap/THESIS/Garcia_Analysis/data/data_sets/GarciaParticipants_Eye_Response_Feed_Allfix_addm_OV_Abs_CCT.csv"
+
+data <- read.csv(file)
+phase_filter <- "ES"
+excluded_subjects <- c(1, 4, 5, 6, 14, 99)
+
+data <- data %>%
+  filter(phase == phase_filter & !sub_id %in% excluded_subjects) %>%
+  drop_na(DwellTimeAdvantage, OVcate_2, chose_right)  
+
+data$OVcate_2 <- factor(data$OVcate_2, levels = c("low", "medium", "high"))
+
+data2 <- data %>%
+  mutate(DwellTimeAdvantage_abs = abs(DwellTimeAdvantage)) %>%
+  group_by(sub_id, OVcate_2) %>%
+  mutate(
+    DwellTimeAdvantage_bin = cut(
+      DwellTimeAdvantage,
+      breaks = unique(quantile(DwellTimeAdvantage,
+                               probs = seq(0, 1, length.out = 6),
+                               na.rm = TRUE)),
+      labels = 1:(length(unique(quantile(DwellTimeAdvantage,
+                                         probs = seq(0, 1, length.out = 6),
+                                         na.rm = TRUE))) - 1),
+      include.lowest = TRUE
+    )
+  ) %>%
+  ungroup() %>%
+  mutate(
+    DwellTimeAdvantage_bin = factor(
+      DwellTimeAdvantage_bin,
+      levels = 1:5,
+      labels = c("E>>S", "E>S", "E~S", "S>E", "S>>E")
+    )
+  )
+
+colors <- c("low" = "darkorchid1", "medium" = "darkorchid3", "high" = "darkmagenta")
+
+subject_summary <- data2 %>%
+  group_by(sub_id, OVcate_2, DwellTimeAdvantage_bin) %>%
+  summarise(
+    mean_abs = mean(DwellTimeAdvantage_abs, na.rm = TRUE),
+    .groups  = "drop"
+  )
+
+group_summary2 <- subject_summary %>%
+  group_by(OVcate_2, DwellTimeAdvantage_bin) %>%
+  summarise(
+    Mean = mean(mean_abs),
+    SEM  = sd(mean_abs) / sqrt(n()),
+    .groups = "drop"
+  )
+ggplot() +
+    geom_col(
+    data     = group_summary2,
+    aes(
+      x    = DwellTimeAdvantage_bin,
+      y    = Mean,
+      fill = OVcate_2
+    ),
+    color    = "black",
+    position = position_dodge(width = 0.9),
+    width    = 0.7
+  ) +
+    geom_errorbar(
+    data     = group_summary2,
+    aes(
+      x      = DwellTimeAdvantage_bin,
+      ymin   = Mean - SEM,
+      ymax   = Mean + SEM,
+      group  = OVcate_2
+    ),
+    position = position_dodge(width = 0.9),
+    width    = 0.2
+  ) +
+    geom_point(
+    data     = subject_summary,
+    aes(
+      x     = DwellTimeAdvantage_bin,
+      y     = mean_abs,
+      group = OVcate_2
+    ),
+    shape    = 21,
+    fill     = alpha("white", 0.6),
+    color    = "black",
+    size     = 2,
+    position = position_dodge(width = 0.9)
+  ) +
+    scale_fill_manual(
+    name   = "OV Level",
+    values = colors
+  ) +
+  labs(
+    title = "Mean Absolute Dwell-Time by Advantage Bin & OV Level",
+    x     = "Dwell-Time Advantage Bin",
+    y     = "Mean Absolute Dwell-Time (ms)"
+  ) +
+  theme_classic() +
+  theme(
+    legend.position = "top",
+    axis.text  = element_text(size = 14),
+    axis.title = element_text(size = 16)
+  )
+
+
+```
+
+#EE gaze difference per bin
+
+```{r}
+
+file_path <- "D:/Aberdeen_Uni_June24/cap/THESIS/Garcia_Analysis/data/data_sets/GarciaParticipants_Eye_Response_Feed_Allfix_addm_OV_Abs_CCT.csv"
+
+data <- read.csv(file_path)
+phase_filter <- "EE"
+excluded_subjects <- c(1, 4, 5, 6, 14, 99)
+
+data <- data %>%
+  filter(phase == phase_filter & !sub_id %in% excluded_subjects) %>%
+  drop_na(DwellTimeAdvantage, OVcate_2, chose_right)  
+
+data$OVcate_2 <- factor(data$OVcate_2, levels = c("low", "medium", "high"))
+
+data2 <- data %>%
+  mutate(DwellTimeAdvantage_abs = abs(DwellTimeAdvantage)) %>%
+  group_by(sub_id, OVcate_2) %>%
+  mutate(
+    DwellTimeAdvantage_bin = cut(
+      DwellTimeAdvantage,
+      breaks = unique(quantile(DwellTimeAdvantage,
+                               probs = seq(0, 1, length.out = 6),
+                               na.rm = TRUE)),
+      labels = 1:(length(unique(quantile(DwellTimeAdvantage,
+                                         probs = seq(0, 1, length.out = 6),
+                                         na.rm = TRUE))) - 1),
+      include.lowest = TRUE
+    )
+  ) %>%
+  ungroup() %>%
+  mutate(
+    DwellTimeAdvantage_bin = factor(
+      DwellTimeAdvantage_bin,
+      levels = 1:5,
+      labels = c("L>>R", "L>R", "L ~ R", "R>L", "R>>L")
+    )
+  )
+
+colors <- c("low" = "blue", "medium" = "deepskyblue", "high" = "navy")   # blue , deepskyblue navy
+
+subject_summary <- data %>%
+  group_by(sub_id, OVcate_2, DwellTimeAdvantage_bin) %>%
+  summarise(
+    mean_abs = mean(DwellTimeAdvantage_abs, na.rm = TRUE),
+    .groups  = "drop"
+  )
+
+group_summary2 <- subject_summary %>%
+  group_by(OVcate_2, DwellTimeAdvantage_bin) %>%
+  summarise(
+    Mean = mean(mean_abs),
+    SEM  = sd(mean_abs) / sqrt(n()),
+    .groups = "drop"
+  )
+ggplot() +
+    geom_col(
+    data     = group_summary2,
+    aes(
+      x    = DwellTimeAdvantage_bin,
+      y    = Mean,
+      fill = OVcate_2
+    ),
+    color    = "black",
+    position = position_dodge(width = 0.9),
+    width    = 0.7
+  ) +
+    geom_errorbar(
+    data     = group_summary2,
+    aes(
+      x      = DwellTimeAdvantage_bin,
+      ymin   = Mean - SEM,
+      ymax   = Mean + SEM,
+      group  = OVcate_2
+    ),
+    position = position_dodge(width = 0.9),
+    width    = 0.2
+  ) +
+    geom_point(
+    data     = subject_summary,
+    aes(
+      x     = DwellTimeAdvantage_bin,
+      y     = mean_abs,
+      group = OVcate_2
+    ),
+    shape    = 21,
+    fill     = alpha("white", 0.6),
+    color    = "black",
+    size     = 2,
+    position = position_dodge(width = 0.9)
+  ) +
+  
+  # Your custom colours
+  scale_fill_manual(
+    name   = "OV Level",
+    values = colors
+  ) +
+  
+  labs(
+    title = "Mean Absolute Dwell-Time by Advantage Bin & OV Level",
+    x     = "Dwell-Time Advantage Bin",
+    y     = "Mean Absolute Dwell-Time (ms)"
+  ) +
+  
+  theme_classic() +
+  theme(
+    legend.position = "top",
+    axis.text  = element_text(size = 14),
+    axis.title = element_text(size = 16)
+  )
+
+```
+
+
+
+# EE - Dwell-Time Advantage
+
+```{r}
+data <- read.csv(file)
+phase_filter <- "EE"
+excluded_subjects <- c(1, 4, 5, 6, 14, 99)
+
+data <- data %>%
+  filter(phase == phase_filter & !sub_id %in% excluded_subjects) %>%
+  drop_na(DwellTimeAdvantage, OVcate_2, chose_right)  
+
+data$OVcate_2 <- factor(data$OVcate_2, levels = c("low", "medium", "high"))
+
+data <- data %>%
+  group_by(sub_id, OVcate_2) %>%
+  mutate(DwellTimeAdvantage_bin = cut(DwellTimeAdvantage, 
+                                      breaks = unique(quantile(DwellTimeAdvantage, probs = seq(0, 1, length.out = 6), na.rm = TRUE)), 
+                                      labels = 1:(length(unique(quantile(DwellTimeAdvantage, probs = seq(0, 1, length.out = 6), na.rm = TRUE))) - 1),
+                                      include.lowest = TRUE)) %>%
+  ungroup()
+
+
+summary_df <- data %>%
+  group_by(DwellTimeAdvantage_bin, OVcate_2) %>%
+  summarise(
+    p_choose_right = mean(chose_right, na.rm = TRUE),
+    ci = 1.96 * sd(chose_right, na.rm = TRUE) / sqrt(n()),  # 95% CI
+    .groups = 'drop'
+  )
+
+summary_df$DwellTimeAdvantage_bin <- factor(summary_df$DwellTimeAdvantage_bin, levels = 1:5, labels = c("L>>R", "L>R", "L ~ R", "R>L", "R>>L"))
+
+colors <- c("low" = "deepskyblue", "medium" = "blue", "high" = "navy")   
+
+
+p <- ggplot(summary_df, aes(x = DwellTimeAdvantage_bin, y = p_choose_right, 
+                            group = OVcate_2, color = OVcate_2)) +
+  geom_point(size = 4) +  
+  geom_line(linewidth = 1.2) +  
+  geom_errorbar(aes(ymin = p_choose_right - ci, ymax = p_choose_right + ci), 
+                width = 0.2, linewidth = 0.8) +  
+  geom_hline(yintercept = 0.5, linetype = "dotted", color = "gray50", linewidth = 1) +  
+  scale_color_manual(values = colors, name = "OV Level") +  
+  theme_minimal() +
+  theme(
+    panel.grid.major = element_blank(),  
+    panel.grid.minor = element_blank(),  
+    axis.line = element_line(color = "black", linewidth = 0.8),  
+    legend.position = "top",
+    legend.text = element_text(size = 18),  
+    legend.title = element_text(size = 18),
+    axis.text = element_text(size = 18, color = "black"), 
+    axis.title = element_text(size = 20, color = "black"),  
+    plot.title = element_text(size = 19, hjust = 0.5,color = "black"), 
+    plot.background = element_rect(fill = "white", color = "white") 
+  ) +
+  labs(
+    title = "Dwell-Time Advantage on Choice - EE-Phase",
+    x = "Dwell Time Advantage (R > L)",
+    y = "P(Choose Right)"
+  )
+
+ggsave("D:/Aberdeen_Uni_June24/cap/THESIS/Garcia_Analysis/stats_TingGluth/R_regression_eye_metric/EE_DTA.pdf", 
+       plot = p, width = 5, height = 6, device = "pdf", bg = "white"
+       )
+
+print(p)
+
+
+
+agg_data <- data %>%
+  group_by(sub_id, DwellTimeAdvantage_bin, OVcate_2) %>%
+  summarise(mean_p_choose_right = mean(chose_right, na.rm = TRUE), .groups = 'drop')
+anova_results <- list()  
+
+lmm_model <- lmer(mean_p_choose_right ~ OVcate_2 * DwellTimeAdvantage_bin + (1 | sub_id),
+                  data = agg_data)
+anova(lmm_model)
+
+# post hoc
+posthoc_results <- emmeans(lmm_model, pairwise ~ OVcate_2 | DwellTimeAdvantage_bin, adjust = "bonferroni")
+print(posthoc_results)
+
+
+results_file <- "D:/Aberdeen_Uni_June24/cap/THESIS/Garcia_Analysis/stats_TingGluth/R_regression_eye_metric/EE_DwelltimeAdvantage_Results.txt"
+sink(results_file) 
+
+cat("\n### ANOVA: Effect of DwellTimeAdvantage_bin on P(Choose Right) ###\n")
+print(anova_result)
+cat("\n### Post-hoc Tests: Pairwise Comparisons for DwellTimeAdvantage_bin ###\n")
+print(posthoc_result1)
+cat("\n### Linear Mixed Model: OVcate_2 * DwellTimeAdvantage_bin Effect ###\n")
+print(anova(lmm_model))
+cat("\n### Post-hoc Comparisons for OV Levels within Each Bin (LMM) ###\n")
+print(posthoc_results)
+sink()
+cat("\n results saved to:", results_file, "\n")
+
+# mean P(choose right) per bin for each participant
+agg_data <- data %>%
+  group_by(sub_id, DwellTimeAdvantage_bin) %>%
+  summarise(mean_p_choose_right = mean(chose_right, na.rm = TRUE), .groups = 'drop')
+
+#anova_res <- ezANOVA(
+#  data = agg_data,
+#  dv = mean_p_choose_right,  
+#  wid = sub_id,              
+#  within = DwellTimeAdvantage_bin,  
+#  type = 3,               
+#  detailed = TRUE
+#)
+
+#anova_res
+
+# post-hoc pairwise comparisons with Bonferroni cor
+posthoc_result1 <- emmeans(
+  lm(mean_p_choose_right ~ factor(DwellTimeAdvantage_bin), data = agg_data),  
+  pairwise ~ DwellTimeAdvantage_bin,  
+  adjust = "bonferroni"  
+)
+
+posthoc_result1
+
+
+```
+
+# ES - Final fixations on choice per VD and OV
+
+```{r}
+
+data <- read.csv(file_path)
+phase_filter <- "ES" 
+excluded_subjects <- c(1, 4, 5, 6, 14, 99)
+
+data <- data %>%
+  filter(phase == phase_filter & !sub_id %in% excluded_subjects) %>%
+  drop_na(FinalFixLoc, OVcate_2, chose_right, p1, p2)  
+
+data$OVcate_2 <- factor(data$OVcate_2, levels = c("low", "medium", "high"))
+
+# convert FinalFixLoc to categorical Right or Left
+data$FinalFixLocBinary <- ifelse(data$FinalFixLoc == 2, "S", "E")
+data$FinalFixLocBinary <- factor(data$FinalFixLocBinary, levels = c("E", "S"))
+
+# value difference
+data$ValueDifference <- round(data$p2 - data$p1, 1)
+
+data <- data %>%
+  group_by(sub_id) %>%
+  mutate(ValueDifference_bin = cut(ValueDifference, breaks = unique(quantile(ValueDifference, probs = seq(0, 1, length.out = 6), na.rm = TRUE)),
+                                   labels = c("E>>S", "E>S", "E ~ S", "S>E", "S>>E"),
+                                   include.lowest = TRUE)) %>%
+  ungroup()
+
+summary_df <- data %>%
+  group_by(ValueDifference_bin, OVcate_2, FinalFixLocBinary) %>%
+  summarise(
+    p_choose_right = mean(chose_right, na.rm = TRUE),
+    ci = 1.96 * sd(chose_right, na.rm = TRUE) / sqrt(n()),
+    .groups = 'drop'
+  )
+
+print(summary_df)
+
+
+colors <- c("low" = "darkorchid1", "medium" = "darkorchid3", "high" = "darkmagenta")  
+
+summary_df$FinalFixLocBinary <- factor(summary_df$FinalFixLocBinary,
+                                        levels = c("E", "S"),
+                                        labels = c("Line: E", "Dotted: S"))
+line_types <- c("Line: E" = "solid", "Dotted: S" = "dashed")
+
+
+summary_df$OV_label <- summary_df$OVcate_2
+summary_df$Fix_label <- summary_df$FinalFixLocBinary
+
+p <- ggplot(summary_df, aes(x = ValueDifference_bin, y = p_choose_right,
+                            group = interaction(Fix_label, OV_label),
+                            color = OV_label, linetype = Fix_label)) +
+  geom_point(size = 3, position = position_dodge(width = 0.2)) +  
+  geom_line(position = position_dodge(width = 0.2), linewidth = 1.2) +  
+  geom_errorbar(aes(ymin = p_choose_right - ci, ymax = p_choose_right + ci),
+                width = 0.2, linewidth = 0.8, position = position_dodge(width = 0.2)) +  
+  geom_hline(yintercept = 0.5, linetype = "dotted", color = "gray50", linewidth = 1) +  
+
+  scale_color_manual(values = colors, name = "OV Level") +  
+  scale_linetype_manual(
+    values = line_types,
+    name = "Final Fixation",
+    guide = guide_legend(
+      override.aes = list(linetype = c(0, 0))  
+    )
+  ) +
+
+  guides(
+    linetype = guide_legend(order = 1),
+    color    = guide_legend(order = 2)
+  ) +
+
+  theme_minimal(base_size = 10) +
+  theme(
+    panel.grid.major = element_blank(),  
+    panel.grid.minor = element_blank(),  
+    axis.line = element_line(color = "black", linewidth = 0.8), 
+    legend.position = "top",
+    legend.box = "vertical",
+    legend.text = element_text(size = 17),  
+    legend.title = element_text(size = 17),  
+    legend.spacing.y = unit(-0.2, "cm"),   # reduce vertical spacing
+    axis.text = element_text(size = 19, color = "black"),  
+    axis.title = element_text(size = 20, color = "black"),  
+    plot.title = element_text(size = 19, hjust = 0.5, color = "black"),  
+    plot.background = element_rect(fill = "white", color = "white") 
+  ) +
+  labs(
+    title = paste("Final Fixation Effect on Choice -", phase_filter, "Phase"),
+    x = "Value Difference (S > E)",
+    y = "P(Choose Symbol)"
+  )
+
+
+#ggsave(paste0("D:/Aberdeen_Uni_June24/cap/THESIS/Garcia_Analysis/stats_TingGluth/R_regression_eye_metrics_OV_Abs/", #phase_filter, "_FinalFix.pdf"), 
+#      plot = p, width = 5, height = 6, device = "pdf", bg = "white")
+
+p
+
+agg_data <- data %>%
+  group_by(sub_id, ValueDifference_bin, FinalFixLocBinary, OVcate_2) %>%
+  summarise(mean_p_choose_right = mean(chose_right, na.rm = TRUE), .groups = 'drop')
+
+
+anova_results <- list()  
+
+lmm_model <- lmer(mean_p_choose_right ~ OVcate_2 * ValueDifference_bin * FinalFixLocBinary + (1 | sub_id),
+                  data = agg_data)
+
+anova(lmm_model)
+
+# post hoc
+posthoc_results <- emmeans(lmm_model, pairwise ~ OVcate_2 | ValueDifference_bin * FinalFixLocBinary, adjust = "bonferroni")
+print(posthoc_results)
+
+
+#results_file <- "D:/Aberdeen_Uni_June24/cap/THESIS/Garcia_Analysis/stats_TingGluth/R_regression_eye_metric/ES_FinalFixations_#Results.txt"
+#sink(results_file) 
+
+
+
+cat("\n### ANOVA: Effect of FinalFixations_bin on P(Choose Right) ###\n")
+print(anova_result)
+cat("\n### Post-hoc Tests: Pairwise Comparisons for FinalFixations_bin ###\n")
+print(posthoc_result1)
+cat("\n### Linear Mixed Model: OVcate_2 * FinalFixations_bin Effect ###\n")
+print(anova(lmm_model))
+cat("\n### Post-hoc Comparisons for OV Levels within Each Bin (LMM) ###\n")
+print(posthoc_results)
+sink()
+cat("\n results saved to:", results_file, "\n")
+
+#anova_res <- ezANOVA(
+#  data = agg_data,
+#  dv = mean_p_choose_right,
+#  wid = sub_id,
+#  within = .(ValueDifference_bin),
+#  type = 3,
+#  detailed = TRUE
+#)
+
+#anova_res
+
+# post-hoc pairwise comparisons with Bonferroni cor
+posthoc_result1 <- emmeans(
+  lm(mean_p_choose_right ~ factor(ValueDifference_bin), data = agg_data),  
+  pairwise ~ ValueDifference_bin,  
+  adjust = "bonferroni"  
+)
+
+posthoc_result1
+```
+
+
+# EE - Final fixations on choice per VD and OV
+
+```{r}
+data <- read.csv(file_path)
+phase_filter <- "EE" 
+excluded_subjects <- c(1, 4, 5, 6, 14, 99)
+
+data <- data %>%
+  filter(phase == phase_filter & !sub_id %in% excluded_subjects) %>%
+  drop_na(FinalFixLoc, OVcate_2, chose_right, p1, p2)  
+
+data$OVcate_2 <- factor(data$OVcate_2, levels = c("low", "medium", "high"))
+
+data$FinalFixLocBinary <- ifelse(data$FinalFixLoc == 2, "R", "L")
+data$FinalFixLocBinary <- factor(data$FinalFixLocBinary, levels = c("L", "R"))
+
+data$ValueDifference <- round(data$p2 - data$p1, 1)
+
+data <- data %>%
+  group_by(sub_id) %>%
+  mutate(ValueDifference_bin = cut(ValueDifference, breaks = unique(quantile(ValueDifference, probs = seq(0, 1, length.out = 6), na.rm = TRUE)),
+                                   labels = c("L>>R", "L>R", "L ~ R", "R>L", "R>>L"),
+                                   include.lowest = TRUE)) %>%
+  ungroup()
+
+
+summary_df <- data %>%
+  group_by(ValueDifference_bin, OVcate_2, FinalFixLocBinary) %>%
+  summarise(
+    p_choose_right = mean(chose_right, na.rm = TRUE),
+    ci = 1.96 * sd(chose_right, na.rm = TRUE) / sqrt(n()),
+    .groups = 'drop'
+  )
+
+print(summary_df)
+
+
+colors <- c("low" = "deepskyblue", "medium" = "blue", "high" = "navy")  
+
+summary_df$FinalFixLocBinary <- factor(summary_df$FinalFixLocBinary,
+                                        levels = c("L", "R"),
+                                        labels = c("Line: L", "Dotted: R"))
+line_types <- c("Line: L" = "solid", "Dotted: R" = "dashed")
+
+
+summary_df$OV_label <- summary_df$OVcate_2
+summary_df$Fix_label <- summary_df$FinalFixLocBinary
+
+p <- ggplot(summary_df, aes(x = ValueDifference_bin, y = p_choose_right,
+                            group = interaction(Fix_label, OV_label),
+                            color = OV_label, linetype = Fix_label)) +
+  geom_point(size = 3, position = position_dodge(width = 0.2)) +  
+  geom_line(position = position_dodge(width = 0.2), linewidth = 1.2) +  
+  geom_errorbar(aes(ymin = p_choose_right - ci, ymax = p_choose_right + ci),
+                width = 0.2, linewidth = 0.8, position = position_dodge(width = 0.2)) +  
+  geom_hline(yintercept = 0.5, linetype = "dotted", color = "gray50", linewidth = 1) +  
+
+  scale_color_manual(values = colors, name = "OV Level") +  
+  scale_linetype_manual(
+    values = line_types,
+    name = "Final Fixation",
+    guide = guide_legend(
+      override.aes = list(linetype = c(0, 0))  
+    )
+  ) +
+
+  guides(
+    linetype = guide_legend(order = 1),
+    color    = guide_legend(order = 2)
+  ) +
+
+  theme_minimal(base_size = 10) +
+  theme(
+    panel.grid.major = element_blank(),  
+    panel.grid.minor = element_blank(),  
+    axis.line = element_line(color = "black", linewidth = 0.8), 
+    legend.position = "top",
+    legend.box = "vertical",
+    legend.text = element_text(size = 17),  
+    legend.title = element_text(size = 17),  
+    legend.spacing.y = unit(-0.2, "cm"),   
+    axis.text = element_text(size = 19, color = "black"),  
+    axis.title = element_text(size = 20, color = "black"),  
+    plot.title = element_text(size = 19, hjust = 0.5, color = "black"),  
+    plot.background = element_rect(fill = "white", color = "white") 
+  ) +
+  labs(
+    title = paste("Final Fixation Effect on Choice -", phase_filter, "Phase"),
+    x = "Value Difference (R > L)",
+    y = "P(Choose Right)"
+  )
+
+
+#ggsave(paste0("D:/Aberdeen_Uni_June24/cap/THESIS/Garcia_Analysis/stats_TingGluth/R_regression_eye_metric/", #phase_filter, "_FinalFix.pdf"), 
+#      plot = p, width = 5, height = 6, device = "pdf", bg = "white")
+
+p
+
+
+agg_data <- data %>%
+  group_by(sub_id, ValueDifference_bin, FinalFixLocBinary, OVcate_2) %>%
+  summarise(mean_p_choose_right = mean(chose_right, na.rm = TRUE), .groups = 'drop')
+
+
+anova_results <- list()  
+
+lmm_model <- lmer(mean_p_choose_right ~ OVcate_2 * ValueDifference_bin * FinalFixLocBinary + (1 | sub_id),
+                  data = agg_data)
+
+
+anova(lmm_model)
+
+# post hoc
+posthoc_results <- emmeans(lmm_model, pairwise ~ OVcate_2 | ValueDifference_bin * FinalFixLocBinary, adjust = "bonferroni")
+print(posthoc_results)
+
+
+#results_file <- "D:/Aberdeen_Uni_June24/cap/THESIS/Garcia_Analysis/stats_TingGluth/R_regression_eye_metric/EE_FinalFixations_Results.txt"
+#sink(results_file) 
+
+cat("\n### ANOVA: Effect of FinalFixations_bin on P(Choose Right) ###\n")
+print(anova_result)
+cat("\n### Post-hoc Tests: Pairwise Comparisons for FinalFixations_bin ###\n")
+print(posthoc_result1)
+cat("\n### Linear Mixed Model: OVcate_2 * FinalFixations_bin Effect ###\n")
+print(anova(lmm_model))
+cat("\n###Post-hoc Comparisons for OV Levels within Each Bin (LMM) ###\n")
+print(posthoc_results)
+sink()
+cat("\n results saved to:", results_file, "\n")
+
+#anova_res <- ezANOVA(
+#  data = agg_data,
+#  dv = mean_p_choose_right,
+#  wid = sub_id,
+#  within = .(ValueDifference_bin),
+#  type = 3,
+#  detailed = TRUE
+#)
+
+
+# post-hoc pairwise comparisons with Bonferroni cor
+posthoc_result1 <- emmeans(
+  lm(mean_p_choose_right ~ factor(ValueDifference_bin), data = agg_data),  
+  pairwise ~ ValueDifference_bin,  
+  adjust = "bonferroni"  
+)
+
+posthoc_result1
+```
+
+
+# LMM for role of fixation and duration 
+
+```{r}
+
+file <- "C:/Cluster_Github/HDDM_Vero/data_sets/data_sets_Garcia/GarciaParticipants_Eye_Response_Feed_Allfix_addm_OV_Abs_CCT.csv"
+
+excluded_subs <- c(1, 4, 5, 6, 14, 99)
+
+df <- read_csv(file)
+
+df <- df %>%
+  mutate(sub_id = as.integer(sub_id),
+         phase = toupper(phase)) %>%
+  filter(phase == "ES", !(sub_id %in% excluded_subs))
+
+# 1 = E, 2 = S
+loc_to_opt <- function(x) {
+  ifelse(is.na(x), NA,
+         ifelse(round(x) == 1, "E",
+                ifelse(round(x) == 2, "S", NA)))
+}
+
+# Durations
+dur_long <- bind_rows(
+  df %>% transmute(sub_id, role = "First",
+                   opt_type = loc_to_opt(FirstFixLoc),
+                   dur_ms = FirstFixDur),
+  df %>% transmute(sub_id, role = "Middle",
+                   opt_type = loc_to_opt(MiddleDominantLoc),
+                   dur_ms = MiddleDominantDur),
+  df %>% transmute(sub_id, role = "Final",
+                   opt_type = loc_to_opt(FinalFixLoc),
+                   dur_ms = FinalFixDur)
+) %>%
+  filter(opt_type %in% c("E","S"), !is.na(dur_ms)) %>%
+  mutate(role = factor(role, levels = c("First","Middle","Final")),
+         opt_type = factor(opt_type, levels = c("E","S")))
+
+# Loc
+loc_long <- bind_rows(
+  df %>% transmute(sub_id, role = "First",
+                   opt_type = loc_to_opt(FirstFixLoc)),
+  df %>% transmute(sub_id, role = "Middle",
+                   opt_type = loc_to_opt(MiddleDominantLoc)),
+  df %>% transmute(sub_id, role = "Final",
+                   opt_type = loc_to_opt(FinalFixLoc))
+) %>%
+  filter(opt_type %in% c("E","S")) %>%
+  mutate(role = factor(role, levels = c("First","Middle","Final")),
+         opt_type = factor(opt_type, levels = c("E","S")),
+         E_fix = ifelse(opt_type == "E", 1, 0))
+
+
+m_prob <- glmer(E_fix ~ role + (1 | sub_id),
+                data = loc_long,
+                family = binomial)
+summary(m_prob)
+
+# pairwise contrasts of E vs S 
+emm_prob <- emmeans(m_prob, ~ 1 | role, type = "response")  # to get back to probabilties
+emm_prob
+
+# E vs S
+# since E_fix is binary (1=E, 0=S), the intercept per role tells prob(E)
+# to test against 0.5
+test(emm_prob, null = 0.5, type = "response")
+
+m_dur <- lmer(dur_ms ~ role * opt_type + (1 | sub_id),
+              data = dur_long)
+summary(m_dur)
+emm_dur <- emmeans(m_dur, ~ opt_type | role)
+contrast(emm_dur, "pairwise", by = "role")
+
+```
