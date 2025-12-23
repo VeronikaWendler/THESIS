@@ -1,3 +1,62 @@
+# Garcia Analysis — Study 2
+
+This folder contains scripts that combine behavioural data, attach eye-tracking
+metrics, and run basic analyses for the OV replication experiment (Study 2) + and explanation of the columns in the csv file
+
+---
+
+## Pipeline
+
+### 1. `all_files_into_one.py`
+
+Concatenates EXP1–EXP4 behavioural CSVs that were already preprocessed for
+individual participants in the `Mat_to_Pandas` folder into a single dataset.
+Additionally, exports a compatible `.mat` file that can be used for simulations.
+
+**Output:**
+- `OVParticipants_EXP_1_2_3_4.csv`
+- `OVParticipants_EXP_1_2_3_4.mat`
+
+---
+
+### 2. `all_files_into_one_eye.py`
+
+Merges trial-level eye-tracking metrics into the combined behavioural dataset.
+
+**Output:**
+- `OVParticipants_EXP_1_2_3_4_with_eyetracking.csv`
+
+---
+
+### 3. `quick_data_frame.py`
+
+Adds gaze and attention-based regressors (e.g. `AttentionW`,
+`InattentionW`, fixation indicators) required for HDDM modelling.
+
+**Output:**
+- Updated modelling CSV
+
+---
+
+### 4. `convert_to_mat_for_sim.py`
+
+Converts the final CSV into a MATLAB table for simulation purposes.
+
+---
+
+## Analysis & Reporting
+
+- **`learning_curves_OV.py`**  
+  Computes and plots learning curves for the LE phase in Study 2
+
+- **`OV_Behavioural_R.Rmd`**  
+  Behavioural analyses in R for Study 2
+
+- **`OV_Eye_tracking_and_OV_R.Rmd`**  
+  Eye-tracking and OV analyses in R for Study 2
+
+---
+
 # Readme file — Study 2  
 `OVParticipants_Eye_Response_Feed_Allfix_addm_OV_Abs.csv`
 
