@@ -1,4 +1,4 @@
-# Garcia Analysis — Study 2
+# Garcia Analysis (Study 2)
 
 This folder contains scripts that combine behavioural data, attach eye-tracking
 metrics, and run basic analyses for the OV replication experiment (Study 2) + and explanation of the columns in the csv file
@@ -11,7 +11,7 @@ metrics, and run basic analyses for the OV replication experiment (Study 2) + an
 
 Concatenates EXP1–EXP4 behavioural CSVs that were already preprocessed for
 individual participants in the `Mat_to_Pandas` folder into a single dataset.
-Additionally, exports a compatible `.mat` file that can be used for simulations.
+Additionally, exports a compatible `.mat` file that can be used for simulations/matlab computations
 
 **Output:**
 - `OVParticipants_EXP_1_2_3_4.csv`
@@ -57,7 +57,7 @@ Converts the final CSV into a MATLAB table for simulation purposes.
 
 ---
 
-# Readme file — Study 2  
+# Readme file (Study 2)  
 `OVParticipants_Eye_Response_Feed_Allfix_addm_OV_Abs.csv`
 
 This folder also contains a file called  
